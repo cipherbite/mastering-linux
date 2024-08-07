@@ -11,7 +11,7 @@
 
 ### SSH in Scripts
 
-Automating SSH tasks can significantly improve efficiency when managing multiple servers. Here's how to incorporate SSH into your scripts:
+Automating SSH tasks can greatly improve efficiency when managing multiple servers. Here's how to incorporate SSH into your scripts:
 
 #### Basic SSH Automation
 
@@ -24,6 +24,8 @@ done
 ```
 
 This script connects to each server in the array and restarts the Nginx service.
+
+{screenshot: Example of a basic SSH automation script}
 
 #### Advanced Scripting with SSH
 
@@ -46,6 +48,8 @@ done
 
 This script includes a function for restarting services and basic error handling.
 
+{screenshot: Example of an advanced SSH scripting with error handling}
+
 ### Parallel Execution
 
 To execute SSH commands on multiple servers simultaneously, use GNU Parallel:
@@ -57,6 +61,8 @@ parallel -u -j 2 ssh user@{} 'sudo systemctl restart nginx' ::: "${servers[@]}"
 ```
 
 This command runs SSH tasks on two servers concurrently, improving execution speed.
+
+{screenshot: Example of parallel SSH execution using GNU Parallel}
 
 ## 6.2 Advanced SSH Configuration
 
@@ -82,6 +88,8 @@ Host *
 
 With this configuration, you can simply use `ssh server1` instead of the full command.
 
+{screenshot: Example SSH client configuration file}
+
 ### ProxyJump
 
 Use ProxyJump to easily access servers behind a bastion host:
@@ -98,6 +106,8 @@ Host internal-server
 ```
 
 Now you can directly access the internal server with `ssh internal-server`.
+
+{screenshot: Example SSH configuration with ProxyJump}
 
 ## 6.3 Enhancing Security
 
@@ -119,6 +129,8 @@ Always use SSH keys instead of passwords for better security:
    ```plaintext
    PasswordAuthentication no
    ```
+
+{screenshot: Generating SSH key pair and copying to server}
 
 ### Two-Factor Authentication (2FA)
 
@@ -144,6 +156,8 @@ Implement 2FA for an additional layer of security:
    sudo systemctl restart sshd
    ```
 
+{screenshot: Configuring Two-Factor Authentication on server}
+
 ## 6.4 Performance Optimization
 
 ### SSH Multiplexing
@@ -161,6 +175,8 @@ Host *
 
 This configuration allows multiple SSH sessions to share a single network connection, reducing latency and improving performance.
 
+{screenshot: SSH multiplexing configuration}
+
 ### Compression
 
 Enable compression for slow connections:
@@ -175,6 +191,8 @@ Or add to your `~/.ssh/config`:
 Host *
     Compression yes
 ```
+
+{screenshot: Example of SSH compression configuration}
 
 ## 6.5 Best Practices for Advanced Users
 
@@ -191,3 +209,5 @@ Host *
 6. **Keep Software Updated**: Regularly update OpenSSH and related software to patch security vulnerabilities.
 
 7. **Use SSH Agents**: Utilize SSH agents to manage your keys securely, especially when using multiple keys.
+
+{screenshot: SSH best practices checklist}
