@@ -1,15 +1,16 @@
 # Part Three: Intermediate SSH Usage
 
 ## Table of Contents
-3.1 SSH Configuration Files
-3.2 Advanced SSH Key Management
-3.3 Leveraging SSH Agent
-3.4 Port Forwarding and Tunneling
-3.5 SSH Jump Hosts
+
+- [3.1 SSH Configuration Files](#31-ssh-configuration-files)
+- [3.2 Advanced SSH Key Management](#32-advanced-ssh-key-management)
+- [3.3 Leveraging SSH Agent](#33-leveraging-ssh-agent)
+- [3.4 Port Forwarding and Tunneling](#34-port-forwarding-and-tunneling)
+- [3.5 SSH Jump Hosts](#35-ssh-jump-hosts)
 
 ## 3.1 SSH Configuration Files
 
-SSH configuration files allow for customization and streamlining of SSH connections. Understanding and utilizing these files effectively can greatly enhance your SSH workflow.
+SSH configuration files allow for customization and streamlining of SSH connections.
 
 ### Client-Side Configuration
 
@@ -70,8 +71,6 @@ sudo systemctl restart sshd     # Restart SSH service to apply changes
 
 ## 3.2 Advanced SSH Key Management
 
-Effective key management is crucial for maintaining secure and efficient SSH access across multiple systems.
-
 ### Managing Multiple SSH Keys
 
 Use `~/.ssh/config` to manage multiple keys for different servers or purposes:
@@ -118,8 +117,6 @@ Prepend `authorized_keys` entry with options to restrict key usage:
 command="/usr/bin/uptime",no-port-forwarding,no-x11-forwarding,no-agent-forwarding ssh-ed25519 AAAAC3Nza...
 ```
 
-This key can only execute the `uptime` command and cannot use port forwarding, X11 forwarding, or agent forwarding.
-
 ### Setting Key Expiration
 
 For temporary access (OpenSSH 8.2+):
@@ -128,11 +125,7 @@ For temporary access (OpenSSH 8.2+):
 ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed25519_temp
 ```
 
-This creates a key that expires in 7 days.
-
 ## 3.3 Leveraging SSH Agent
-
-SSH Agent holds private keys in memory, eliminating the need for repeated passphrase entry.
 
 ### Usage
 
@@ -182,8 +175,6 @@ ssh-agent -k
 
 ## 3.4 Port Forwarding and Tunneling
 
-SSH port forwarding allows you to securely tunnel network connections through an SSH connection.
-
 ### Local Port Forwarding
 
 Access a remote service through a local port:
@@ -191,8 +182,6 @@ Access a remote service through a local port:
 ```bash
 ssh -L 8080:remote-host:80 user@ssh-server
 ```
-
-This forwards your local port 8080 to `remote-host:80` through `ssh-server`.
 
 ### Remote Port Forwarding
 
@@ -202,8 +191,6 @@ Make a local service accessible from a remote machine:
 ssh -R 8080:localhost:80 user@remote-server
 ```
 
-This makes your local port 80 accessible on `remote-server:8080`.
-
 ### Dynamic Port Forwarding (SOCKS Proxy)
 
 Create a SOCKS proxy for flexible routing:
@@ -212,11 +199,7 @@ Create a SOCKS proxy for flexible routing:
 ssh -D 1080 user@ssh-server
 ```
 
-Configure your applications to use localhost:1080 as a SOCKS proxy.
-
 ## 3.5 SSH Jump Hosts
-
-Use an intermediary host to access a target that's not directly accessible.
 
 ### Basic Jump Host Configuration
 
@@ -238,8 +221,6 @@ Now you can simply run:
 ```bash
 ssh targethost
 ```
-
-This will automatically route through the jump host.
 
 ### Multiple Jump Hosts
 
@@ -269,3 +250,4 @@ Host targethost
 - [SSH.com Security Best Practices](https://www.ssh.com/academy/ssh/security)
 - [NIST Guidelines on Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
 - [The Secure Shell (SSH) Protocol Architecture](https://tools.ietf.org/html/rfc4251)
+
