@@ -32,6 +32,8 @@ Host *
     ServerAliveCountMax 5
 ```
 
+{screenshot: Example SSH client configuration file}
+
 | Option               | Description                                                |
 |----------------------|------------------------------------------------------------|
 | Host                 | Alias for the SSH connection                               |
@@ -63,6 +65,8 @@ Host *
 | LoginGraceTime         | 60                 | Sets timeout for successful authentication      |
 | X11Forwarding          | no                 | Disables X11 forwarding for security            |
 
+{screenshot: Example SSH server configuration file}
+
 **Applying Changes:**
 ```bash
 sudo nano /etc/ssh/sshd_config  # Edit the file
@@ -92,6 +96,8 @@ Host github.com
     IdentityFile ~/.ssh/id_rsa_github
 ```
 
+{screenshot: SSH config file for multiple keys}
+
 ### Adding New SSH Keys
 
 1. Generate a new key:
@@ -102,7 +108,7 @@ Host github.com
 2. Add to server:
    - Manual method:
      ```bash
-     cat ~/.ssh/id_ed25519_newserver.pub | ssh user@host "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+     cat ~/.ssh/id_ed25519_newserver.pub | ssh user@host 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
      ```
    - Automated method:
      ```bash
@@ -124,6 +130,8 @@ For temporary access (OpenSSH 8.2+):
 ```bash
 ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed25519_temp
 ```
+
+{screenshot: Setting SSH key expiration}
 
 ## 3.3 Leveraging SSH Agent
 
@@ -149,6 +157,8 @@ ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed2
    ```bash
    ssh-add -d ~/.ssh/id_rsa
    ```
+
+{screenshot: SSH agent usage example}
 
 ### Automation Example
 
@@ -183,6 +193,8 @@ Access a remote service through a local port:
 ssh -L 8080:remote-host:80 user@ssh-server
 ```
 
+{screenshot: Local port forwarding diagram}
+
 ### Remote Port Forwarding
 
 Make a local service accessible from a remote machine:
@@ -191,6 +203,8 @@ Make a local service accessible from a remote machine:
 ssh -R 8080:localhost:80 user@remote-server
 ```
 
+{screenshot: Remote port forwarding diagram}
+
 ### Dynamic Port Forwarding (SOCKS Proxy)
 
 Create a SOCKS proxy for flexible routing:
@@ -198,6 +212,8 @@ Create a SOCKS proxy for flexible routing:
 ```bash
 ssh -D 1080 user@ssh-server
 ```
+
+{screenshot: Dynamic port forwarding (SOCKS proxy) setup}
 
 ## 3.5 SSH Jump Hosts
 
@@ -222,6 +238,8 @@ Now you can simply run:
 ssh targethost
 ```
 
+{screenshot: SSH jump host configuration}
+
 ### Multiple Jump Hosts
 
 For scenarios requiring multiple jumps:
@@ -244,10 +262,11 @@ Host targethost
 7. Use key types like Ed25519 for better security and performance
 8. Implement fail2ban or similar tools to prevent brute-force attacks
 
+{screenshot: SSH best practices checklist}
+
 ## Further Reading
 
 - [OpenSSH Manual](https://www.openssh.com/manual.html)
 - [SSH.com Security Best Practices](https://www.ssh.com/academy/ssh/security)
 - [NIST Guidelines on Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
 - [The Secure Shell (SSH) Protocol Architecture](https://tools.ietf.org/html/rfc4251)
-
