@@ -2,11 +2,11 @@
 
 ## Table of Contents
 
-4.1 SSH Tunneling (Port Forwarding)
-4.2 SSH Agent Forwarding
-4.3 SSH Security Best Practices
-4.4 Advanced SSH Configurations
-4.5 Troubleshooting and Debugging SSH
+- [4.1 SSH Tunneling (Port Forwarding)](#41-ssh-tunneling-port-forwarding)
+- [4.2 SSH Agent Forwarding](#42-ssh-agent-forwarding)
+- [4.3 SSH Security Best Practices](#43-ssh-security-best-practices)
+- [4.4 Advanced SSH Configurations](#44-advanced-ssh-configurations)
+- [4.5 Troubleshooting and Debugging SSH](#45-troubleshooting-and-debugging-ssh)
 
 ## 4.1 SSH Tunneling (Port Forwarding)
 
@@ -109,7 +109,7 @@ ssh -A username@remote_host
 
 #### Permanent Configuration
 In `~/.ssh/config`:
-```
+```plaintext
 Host remote_host
     HostName example.com
     User username
@@ -180,12 +180,12 @@ ssh-add -t 3600 ~/.ssh/id_rsa  # Key usable for 1 hour
    ```
 
 2. Configure PAM (`/etc/pam.d/sshd`):
-   ```
+   ```plaintext
    auth required pam_google_authenticator.so
    ```
 
 3. Enable challenge-response authentication in `sshd_config`:
-   ```
+   ```plaintext
    ChallengeResponseAuthentication yes
    ```
 
@@ -199,7 +199,7 @@ ssh-add -t 3600 ~/.ssh/id_rsa  # Key usable for 1 hour
 ### Client-Side Configurations
 
 #### SSH Config File (`~/.ssh/config`)
-```
+```plaintext
 Host *
     ServerAliveInterval 60
     ServerAliveCountMax 3
@@ -220,7 +220,7 @@ Host internal
 
 #### Chroot SFTP Users
 In `sshd_config`:
-```
+```plaintext
 Match Group sftponly
     ChrootDirectory /home/%u
     ForceCommand internal-sftp
