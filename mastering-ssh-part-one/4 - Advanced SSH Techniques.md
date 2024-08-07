@@ -31,6 +31,8 @@ This forwards requests to `localhost:8080` through `gateway.example.com` to `int
 - Accessing internal web servers
 - Secure database connections
 
+{screenshot: Local Port Forwarding Diagram}
+
 #### 2. Remote Port Forwarding
 
 **Syntax:**
@@ -47,6 +49,8 @@ This exposes your local service on port 3000 via port 8080 on `public.example.co
 **Use Cases:**
 - Sharing local development servers
 - Temporary access to internal services
+
+{screenshot: Remote Port Forwarding Diagram}
 
 #### 3. Dynamic Port Forwarding (SOCKS Proxy)
 
@@ -65,6 +69,8 @@ This establishes a SOCKS proxy on `localhost:1080`.
 - Secure browsing through an encrypted tunnel
 - Bypassing geographic restrictions
 
+{screenshot: Dynamic Port Forwarding (SOCKS Proxy) Setup}
+
 #### 4. Reverse SSH Tunneling
 
 **Syntax:**
@@ -82,19 +88,25 @@ This allows connections to `public.example.com:2222` to reach your local SSH ser
 - Remote access to machines behind NAT
 - Providing support access to internal networks
 
+{screenshot: Reverse SSH Tunneling Diagram}
+
 ### Advanced Tunneling Techniques
 
 #### Persistent Tunnels
+
 Use `autossh` to maintain persistent tunnels:
 ```bash
 autossh -M 0 -f -N -L 3306:localhost:3306 user@remote_host
 ```
 
 #### Tunnel All Traffic
+
 Create a full VPN-like setup using a SOCKS proxy and `proxychains`:
 1. Set up dynamic port forwarding
 2. Configure `proxychains`
 3. Run applications through `proxychains`
+
+{screenshot: Tunnel All Traffic Setup}
 
 ## 4.2 SSH Agent Forwarding
 
@@ -117,6 +129,7 @@ Host remote_host
 ```
 
 ### Security Considerations
+
 1. Only enable on trusted servers
 2. Use `ssh-add -c` for confirmation before key usage
 3. Monitor agent forwarding usage with `SSH_AUTH_SOCK` environment variable
@@ -134,6 +147,8 @@ Limit the lifetime of added keys:
 ```bash
 ssh-add -t 3600 ~/.ssh/id_rsa  # Key usable for 1 hour
 ```
+
+{screenshot: SSH Agent Forwarding Configuration}
 
 ## 4.3 SSH Security Best Practices
 
@@ -172,6 +187,8 @@ ssh-add -t 3600 ~/.ssh/id_rsa  # Key usable for 1 hour
    sudo systemctl start fail2ban
    ```
 
+{screenshot: Fail2Ban Configuration}
+
 ### Setting Up Two-Factor Authentication (2FA)
 
 1. Install Google Authenticator:
@@ -193,6 +210,8 @@ ssh-add -t 3600 ~/.ssh/id_rsa  # Key usable for 1 hour
    ```bash
    google-authenticator
    ```
+
+{screenshot: Two-Factor Authentication Setup}
 
 ## 4.4 Advanced SSH Configurations
 
@@ -234,6 +253,8 @@ Use `iptables` to limit SSH bandwidth:
 iptables -A OUTPUT -p tcp --sport 22 -m limit --limit 512kb/s
 ```
 
+{screenshot: Client and Server Configurations}
+
 ## 4.5 Troubleshooting and Debugging SSH
 
 ### Verbose Logging
@@ -266,6 +287,8 @@ Use tools like `ssh-audit` to check for vulnerabilities:
 ssh-audit hostname
 ```
 
+{screenshot: SSH Troubleshooting and Debugging}
+
 ## Best Practices Summary
 
 1. Use unique, strong SSH keys for different purposes
@@ -276,8 +299,11 @@ ssh-audit hostname
 6. Combine SSH security with network-level security measures
 7. Educate users on safe SSH practices
 
+{screenshot: Best Practices Summary}
+
 ## Further Reading
 
 - [OpenSSH Manual Pages](https://www.openssh.com/manual.html)
 - [NIST Guidelines for Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
 - [SSH.com Security Best Practices](https://www.ssh.com/ssh/security/)
+
