@@ -31,6 +31,8 @@ ssh [options] username@remote_host
 - The host key fingerprint is stored in `~/.ssh/known_hosts`
 - Use `ssh -v` for verbose output to diagnose connection issues
 
+  {screenshot: SSH connection example}
+
 ### Executing Remote Commands
 
 Execute a command on a remote server without initiating an interactive session:
@@ -38,6 +40,7 @@ Execute a command on a remote server without initiating an interactive session:
 ```bash
 ssh username@remote_host 'command'
 ```
+{screenshot: Remote command execution}
 
 **Examples:** 
 - Check system uptime: `ssh john@example.com 'uptime'`
@@ -46,8 +49,6 @@ ssh username@remote_host 'command'
 
 **Advanced Usage:**
 - Chain multiple commands: `ssh user@host 'command1 && command2'`
-- Use sudo with password prompt: `ssh user@host 'echo "password" | sudo -S command'`
-  (Note: This method is not secure for production environments)
 
 ### Secure File Transfer with SCP
 
@@ -74,6 +75,8 @@ scp [options] username@remote_host:source_file(s) destination
 - `-l limit`: Limit bandwidth in Kbit/s
 - `-C`: Enable compression
 
+  {screenshot: SCP file transfer}
+
 ### Interactive File Management with SFTP
 
 SFTP (SSH File Transfer Protocol) provides an interactive file transfer session.
@@ -82,6 +85,8 @@ Initiate an SFTP session:
 ```bash
 sftp [options] username@remote_host
 ```
+
+{screenshot: SFTP session}
 
 **Essential SFTP Commands:**
 - `put local_file [remote_file]`: Upload a file
@@ -106,7 +111,7 @@ sftp [options] username@remote_host
 ### Generating a New SSH Key Pair
 
 ```bash
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+ssh-keygen -t rsa -b 4096 -C 'your_email@example.com'
 ```
 
 - **-t rsa:** Specifies RSA key type (alternatives: ed25519, ecdsa)
@@ -116,13 +121,18 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 **Important Notes:**
 - Default key locations: `~/.ssh/id_rsa` (private) and `~/.ssh/id_rsa.pub` (public)
 - Adding a strong passphrase is highly recommended for additional security
-- Consider using Ed25519 keys for better performance: `ssh-keygen -t ed25519 -C "your_email@example.com"`
+- Consider using Ed25519 keys for better performance:
+  ```bash
+  ssh-keygen -t ed25519 -C 'your_email@example.com'
+  ```
 
 **Key Management Best Practices:**
 - Generate different keys for different purposes or servers
 - Regularly rotate your SSH keys (e.g., annually)
 - Back up your private keys securely
 - Never share your private key
+
+{screenshot: SSH key generation}
 
 ### Deploying Your Public Key to a Server
 
@@ -143,8 +153,10 @@ cat ~/.ssh/id_rsa.pub | ssh username@remote_host 'mkdir -p ~/.ssh && cat >> ~/.s
   ```
 - Then, append it to `authorized_keys`:
   ```
-  ssh username@remote_host "cat ~/.ssh/uploaded_key.pub >> ~/.ssh/authorized_keys && rm ~/.ssh/uploaded_key.pub"
+  ssh username@remote_host 'cat ~/.ssh/uploaded_key.pub >> ~/.ssh/authorized_keys && rm ~/.ssh/uploaded_key.pub'
   ```
+
+{screenshot: ssh-copy-id example}
 
 ### Setting Appropriate Permissions
 
@@ -174,7 +186,6 @@ chmod 644 ~/.ssh/id_rsa.pub
      eval $(ssh-agent)
      ssh-add ~/.ssh/id_rsa
      ```
-
 3. **Disable root login:**
    - Set `PermitRootLogin no` in `/etc/ssh/sshd_config`
    - Use sudo for privileged operations
@@ -186,6 +197,8 @@ chmod 644 ~/.ssh/id_rsa.pub
 5. **Implement fail2ban or similar tools:**
    - Install fail2ban: `sudo apt install fail2ban`
    - Configure `/etc/fail2ban/jail.local` for SSH protection
+  
+      {screenshot: fail2ban configuration}
 
 6. **Keep SSH software and system packages up-to-date:**
    - Regular system updates: `sudo apt update && sudo apt upgrade`
@@ -204,7 +217,12 @@ chmod 644 ~/.ssh/id_rsa.pub
 
 8. **Implement two-factor authentication (2FA):**
    - Use Google Authenticator or similar TOTP apps
-   - Install and configure `libpam-google-authenticator`
+   - Install and configure `libpam-google-authenticator`:
+     ```bash
+     sudo apt install libpam-google-authenticator
+     google-authenticator
+     ```
+   - Follow the prompts to set up 2FA
 
 9. **Regularly audit SSH logs:**
    - Monitor `/var/log/auth.log` or `/var/log/secure`
@@ -234,6 +252,8 @@ chmod 644 ~/.ssh/id_rsa.pub
 
 15. **Use SSH certificates for larger deployments:**
     - Implement an SSH Certificate Authority (CA) for easier key management
+   
+      {screenshot: SSH config file example}
 
 ## Further Reading and Resources
 
@@ -243,4 +263,3 @@ chmod 644 ~/.ssh/id_rsa.pub
 - [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line)
 - [SSH Mastery](https://www.tiltedwindmillpress.com/product/ssh-mastery/) by Michael W Lucas (Book)
 - [Linux Server Security: Hack and Defend](https://www.wiley.com/en-us/Linux+Server+Security%3A+Hack+and+Defend-p-9781119277651) by Chris Binnie (Book)
-
