@@ -1,0 +1,115 @@
+## 2. Getting Started with SSH
+
+### 2.1 Basic SSH Commands
+
+#### Connecting to a Remote Server
+
+```bash
+ssh username@remote_host
+```
+
+- **username:** Your login name on the remote server
+- **remote_host:** IP address or domain name of the server
+- **Example:** `ssh john@example.com`
+
+**Key Points:**
+
+- First connection prompts verification of server's host key
+- Use `ssh -v` for verbose output to troubleshoot connection issues
+
+#### Running a Remote Command
+
+```bash
+ssh username@remote_host 'command'
+```
+
+**Example:** `ssh john@example.com 'uptime'`
+
+#### File Transfer with SCP
+
+**To Remote Server:**
+
+```bash
+scp /path/to/local/file username@remote_host:/path/to/remote/directory/
+```
+
+**From Remote Server:**
+
+```bash
+scp username@remote_host:/path/to/remote/file /path/to/local/directory/
+```
+
+#### Interactive File Transfer with SFTP
+
+```bash
+sftp username@remote_host
+```
+
+**Common SFTP Commands:**
+
+- `put`: Upload file
+- `get`: Download file
+- `ls`: List directory contents
+- `cd`: Change directory
+
+### 2.2 Generating and Using SSH Keys
+
+#### Generate a New SSH Key Pair
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+```
+
+- **-t rsa:** Specifies RSA key type
+- **-b 4096:** Sets 4096-bit key size
+- **-C:** Adds a comment (usually email)
+
+**Key Points:**
+
+- Default location: `~/.ssh/id_rsa` (private) and `~/.ssh/id_rsa.pub` (public)
+- Optional passphrase adds extra security
+
+#### Copy Public Key to Server
+
+**Using ssh-copy-id:**
+
+```bash
+ssh-copy-id username@remote_host
+```
+
+**Manual Method:**
+
+```bash
+cat ~/.ssh/id_rsa.pub | ssh username@remote_host 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+```
+
+#### Set Correct Permissions
+
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+### 2.3 Best Practices for SSH Security
+
+1. Use key-based authentication instead of passwords
+2. Employ strong passphrases for SSH keys
+3. Disable root login (`PermitRootLogin no` in `sshd_config`)
+4. Use a non-standard port (change `Port` in `sshd_config`)
+5. Implement fail2ban to prevent brute-force attacks
+6. Regularly update SSH software
+7. Use SSH config files for managing multiple connections
+
+### 2.4 Troubleshooting Common SSH Issues
+
+1. **Connection refused:** Check if SSH service is running and firewall settings
+2. **Permission denied:** Verify username, password, or key permissions
+3. **Host key verification failed:** Update known_hosts file or verify server identity
+4. **Slow connection:** Check network issues or consider using compression (`ssh -C`)
+
+### Further Reading
+
+- [OpenSSH Manual Pages](https://www.openssh.com/manual.html)
+- [SSH.com Security Best Practices](https://www.ssh.com/academy/ssh/security)
+
+---
