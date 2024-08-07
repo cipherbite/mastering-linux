@@ -2,21 +2,19 @@
 
 ## Table of Contents
 
-5.1 Common SSH Errors and Solutions
-5.2 Advanced Debugging Techniques
-5.3 Performance Optimization
-5.4 Security Auditing
+- [5.1 Common SSH Errors and Solutions](#51-common-ssh-errors-and-solutions)
+- [5.2 Advanced Debugging Techniques](#52-advanced-debugging-techniques)
+- [5.3 Performance Optimization](#53-performance-optimization)
+- [5.4 Security Auditing](#54-security-auditing)
 
 ## 5.1 Common SSH Errors and Solutions
 
 ### Permission Denied (Publickey)
 
 **Symptoms:**
-
 - Error message: `Permission denied (publickey)` when attempting to log in.
 
 **Causes:**
-
 1. Improper SSH key setup on the server
 2. Incorrect permissions on key files
 3. SSH agent not running or key not added
@@ -24,13 +22,11 @@
 **Solutions:**
 
 1. Verify public key in `authorized_keys`:
-
    ```bash
    cat ~/.ssh/id_rsa.pub | ssh user@host "cat >> ~/.ssh/authorized_keys"
    ```
 
 2. Check and correct file permissions:
-
    ```bash
    chmod 700 ~/.ssh
    chmod 600 ~/.ssh/authorized_keys
@@ -45,11 +41,9 @@
 ### Connection Refused
 
 **Symptoms:**
-
 - SSH connection attempts fail with `Connection refused` error.
 
 **Causes:**
-
 1. SSH service not running
 2. Firewall blocking SSH port
 3. Incorrect SSH port configuration
@@ -57,14 +51,12 @@
 **Solutions:**
 
 1. Check and restart SSH service:
-
    ```bash
    sudo systemctl status sshd
    sudo systemctl restart sshd
    ```
 
 2. Verify firewall settings:
-
    ```bash
    sudo ufw status
    sudo ufw allow ssh
@@ -78,18 +70,15 @@
 ### Host Key Verification Failed
 
 **Symptoms:**
-
 - Warning that the remote host identification has changed.
 
 **Causes:**
-
 1. Server's SSH key has changed (reinstallation or potential security breach)
 2. Man-in-the-middle attack attempt
 
 **Solutions:**
 
 1. Remove old key from `known_hosts`:
-
    ```bash
    ssh-keygen -R hostname
    ```
@@ -114,7 +103,6 @@ ssh -vvv username@remote_host  # Maximum detail
 ### Analyzing Server Logs
 
 1. Real-time log monitoring:
-
    ```bash
    sudo tail -f /var/log/auth.log
    ```
@@ -127,7 +115,6 @@ ssh -vvv username@remote_host  # Maximum detail
 ### Network Connectivity Testing
 
 1. Test SSH port accessibility:
-
    ```bash
    nc -zv remote_host 22
    ```
@@ -140,7 +127,6 @@ ssh -vvv username@remote_host  # Maximum detail
 ### SSH Config Debugging
 
 1. Test SSH with default config:
-
    ```bash
    ssh -F /dev/null username@remote_host
    ```
@@ -186,7 +172,6 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 ### Key Management
 
 1. List and review SSH keys:
-
    ```bash
    for key in ~/.ssh/id_*; do ssh-keygen -l -f "${key}"; done | uniq
    ```
@@ -237,3 +222,4 @@ sudo systemctl start fail2ban
 - [OpenSSH Manual](https://www.openssh.com/manual.html)
 - [SSH.com Security Best Practices](https://www.ssh.com/ssh/security/)
 - [NIST Guidelines for Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
+
