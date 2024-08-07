@@ -1,4 +1,10 @@
-# 2. Getting Started with SSH
+# Part Two: Getting Started with SSH
+
+## Table of Contents
+
+- [2.1 Essential SSH Commands](#21-essential-ssh-commands)
+- [2.2 SSH Key Management](#22-ssh-key-management)
+- [2.3 SSH Security Best Practices](#23-ssh-security-best-practices)
 
 ## 2.1 Essential SSH Commands
 
@@ -237,3 +243,4 @@ chmod 644 ~/.ssh/id_rsa.pub
 - [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line)
 - [SSH Mastery](https://www.tiltedwindmillpress.com/product/ssh-mastery/) by Michael W Lucas (Book)
 - [Linux Server Security: Hack and Defend](https://www.wiley.com/en-us/Linux+Server+Security%3A+Hack+and+Defend-p-9781119277651) by Chris Binnie (Book)
+
