@@ -75,8 +75,7 @@ scp [options] username@remote_host:source_file(s) destination
 - `-l limit`: Limit bandwidth in Kbit/s
 - `-C`: Enable compression
 
-  {screenshot: SCP file transfer}
-  
+![SCP-file-transfer](https://github.com/user-attachments/assets/17877152-dbf5-406c-a013-f52db9e944b2)
 
 ### Interactive File Management with SFTP
 
@@ -86,8 +85,7 @@ Initiate an SFTP session:
 ```bash
 sftp [options] username@remote_host
 ```
-
-{screenshot: SFTP session}
+![sftp-file-transfer](https://github.com/user-attachments/assets/8f7c7c96-fd4e-4067-a338-f4b18b79df36)
 
 **Essential SFTP Commands:**
 - `put local_file [remote_file]`: Upload a file
@@ -133,7 +131,7 @@ ssh-keygen -t rsa -b 4096 -C 'your_email@example.com'
 - Back up your private keys securely
 - Never share your private key
 
-{screenshot: SSH key generation}
+![ssh-key-generation](https://github.com/user-attachments/assets/d20ed43e-e731-4443-bd56-c421fd57f904)
 
 ### Deploying Your Public Key to a Server
 
@@ -157,7 +155,7 @@ cat ~/.ssh/id_rsa.pub | ssh username@remote_host 'mkdir -p ~/.ssh && cat >> ~/.s
   ssh username@remote_host 'cat ~/.ssh/uploaded_key.pub >> ~/.ssh/authorized_keys && rm ~/.ssh/uploaded_key.pub'
   ```
 
-{screenshot: ssh-copy-id example}
+![ssh-copy-id](https://github.com/user-attachments/assets/e7f1af8f-5741-4242-97ff-c866c0b9f4be)
 
 ### Setting Appropriate Permissions
 
@@ -199,7 +197,7 @@ chmod 644 ~/.ssh/id_rsa.pub
    - Install fail2ban: `sudo apt install fail2ban`
    - Configure `/etc/fail2ban/jail.local` for SSH protection
   
-      {screenshot: fail2ban configuration}
+    ![faile2ban](https://github.com/user-attachments/assets/2e039437-fce1-4936-84dd-8ded6e2145da)
 
 6. **Keep SSH software and system packages up-to-date:**
    - Regular system updates: `sudo apt update && sudo apt upgrade`
@@ -254,7 +252,7 @@ chmod 644 ~/.ssh/id_rsa.pub
 15. **Use SSH certificates for larger deployments:**
     - Implement an SSH Certificate Authority (CA) for easier key management
    
-      {screenshot: SSH config file example}
+    ![config-file](https://github.com/user-attachments/assets/7c0485f0-3136-4446-b2b3-e5ebebe3c0cc)
 
 ## Further Reading and Resources
 
