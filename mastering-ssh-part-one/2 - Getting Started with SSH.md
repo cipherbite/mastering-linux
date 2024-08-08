@@ -20,6 +20,8 @@ ssh [options] username@remote_host
 - **remote_host:** IP address or domain name of the target server
 - **Example:** `ssh john@example.com`
 
+  ![ssh-first-connection](https://github.com/user-attachments/assets/98a3b8ac-f02b-4951-9a18-5d41f6a245d5)
+
 **Common Options:**
 - `-p port`: Specify a custom port (e.g., `ssh -p 2222 john@example.com`)
 - `-i identity_file`: Use a specific private key file
@@ -31,8 +33,6 @@ ssh [options] username@remote_host
 - The host key fingerprint is stored in `~/.ssh/known_hosts`
 - Use `ssh -v` for verbose output to diagnose connection issues
 
-  {screenshot: SSH connection example}
-
 ### Executing Remote Commands
 
 Execute a command on a remote server without initiating an interactive session:
@@ -40,7 +40,7 @@ Execute a command on a remote server without initiating an interactive session:
 ```bash
 ssh username@remote_host 'command'
 ```
-{screenshot: Remote command execution}
+![ssh-number-one](https://github.com/user-attachments/assets/c7d00d69-d9d0-4633-9461-d976577d474d)
 
 **Examples:** 
 - Check system uptime: `ssh john@example.com 'uptime'`
@@ -76,6 +76,7 @@ scp [options] username@remote_host:source_file(s) destination
 - `-C`: Enable compression
 
   {screenshot: SCP file transfer}
+  
 
 ### Interactive File Management with SFTP
 
