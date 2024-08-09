@@ -6,7 +6,12 @@
 - [3.2 Advanced SSH Key Management](#32-advanced-ssh-key-management)
 - [3.3 Leveraging SSH Agent](#33-leveraging-ssh-agent)
 - [3.4 Port Forwarding and Tunneling](#34-port-forwarding-and-tunneling)
+  - [3.4.1 Local Port Forwarding](#341-local-port-forwarding)
+  - [3.4.2 Remote Port Forwarding](#342-remote-port-forwarding)
+  - [3.4.3 Dynamic Port Forwarding (SOCKS Proxy)](#343-dynamic-port-forwarding-socks-proxy)
 - [3.5 SSH Jump Hosts](#35-ssh-jump-hosts)
+
+---
 
 ## 3.1 SSH Configuration Files
 
@@ -14,7 +19,7 @@ SSH configuration files allow for customization and streamlining of SSH connecti
 
 ### Client-Side Configuration
 
-**File Location:** `~/.ssh/config`
+**File Location:** `~/.ssh/config`  
 **Purpose:** Simplifies SSH commands, manages multiple connections, and customizes client behavior.
 
 #### Example Configuration:
@@ -32,46 +37,45 @@ Host *
     ServerAliveCountMax 5
 ```
 
-{screenshot: Example SSH client configuration file}
+| Option                | Description                                                |
+|-----------------------|------------------------------------------------------------|
+| `Host`                | Alias for the SSH connection                               |
+| `HostName`            | Server's hostname or IP address                            |
+| `User`                | Login username                                             |
+| `Port`                | SSH port (if not default 22)                               |
+| `IdentityFile`        | Path to private key for authentication                     |
+| `ForwardAgent`        | Enables SSH agent forwarding                               |
+| `ServerAliveInterval` | Time interval for sending keep-alive messages              |
+| `ServerAliveCountMax` | Maximum number of keep-alive messages without response     |
 
-| Option               | Description                                                |
-|----------------------|------------------------------------------------------------|
-| Host                 | Alias for the SSH connection                               |
-| HostName             | Server's hostname or IP address                            |
-| User                 | Login username                                             |
-| Port                 | SSH port (if not default 22)                               |
-| IdentityFile         | Path to private key for authentication                     |
-| ForwardAgent         | Enables SSH agent forwarding                               |
-| ServerAliveInterval  | Time interval for sending keep-alive messages              |
-| ServerAliveCountMax  | Maximum number of keep-alive messages without response     |
-
-**Usage:** With this configuration, you can simply run `ssh myserver` instead of `ssh -p 2222 john@example.com -i ~/.ssh/id_rsa_myserver`.
+With this configuration, you can simply run `ssh myserver` instead of the full command `ssh -p 2222 john@example.com -i ~/.ssh/id_rsa_myserver`.
 
 ### Server-Side Configuration
 
-**File Location:** `/etc/ssh/sshd_config`
+**File Location:** `/etc/ssh/sshd_config`  
 **Purpose:** Controls SSH daemon (`sshd`) operation, including security settings and login policies.
 
 #### Key Settings:
 
 | Setting                | Recommended Value | Purpose                                        |
-|------------------------|--------------------|-------------------------------------------------|
-| PermitRootLogin        | no                 | Disables root login via SSH                     |
-| PasswordAuthentication | no                 | Enforces key-based logins                       |
-| PubkeyAuthentication   | yes                | Enables key-based authentication                |
-| Port                   | 2222               | Changes default SSH port                        |
-| AllowUsers             | john alice         | Restricts SSH access to specific users          |
-| MaxAuthTries           | 3                  | Limits authentication attempts                  |
-| LoginGraceTime         | 60                 | Sets timeout for successful authentication      |
-| X11Forwarding          | no                 | Disables X11 forwarding for security            |
+|------------------------|-------------------|------------------------------------------------|
+| `PermitRootLogin`      | no                | Disables root login via SSH                    |
+| `PasswordAuthentication` | no              | Enforces key-based logins                      |
+| `PubkeyAuthentication` | yes               | Enables key-based authentication               |
+| `Port`                 | 2222              | Changes default SSH port                       |
+| `AllowUsers`           | john alice        | Restricts SSH access to specific users         |
+| `MaxAuthTries`         | 3                 | Limits authentication attempts                 |
+| `LoginGraceTime`       | 60                | Sets timeout for successful authentication     |
+| `X11Forwarding`        | no                | Disables X11 forwarding for security           |
 
-{screenshot: Example SSH server configuration file}
+To apply changes:
 
-**Applying Changes:**
 ```bash
 sudo nano /etc/ssh/sshd_config  # Edit the file
 sudo systemctl restart sshd     # Restart SSH service to apply changes
 ```
+
+---
 
 ## 3.2 Advanced SSH Key Management
 
@@ -96,21 +100,19 @@ Host github.com
     IdentityFile ~/.ssh/id_rsa_github
 ```
 
-{screenshot: SSH config file for multiple keys}
-
 ### Adding New SSH Keys
 
-1. Generate a new key:
+1. **Generate a new key:**
    ```bash
    ssh-keygen -t ed25519 -C "your_email@example.com" -f ~/.ssh/id_ed25519_newserver
    ```
 
-2. Add to server:
-   - Manual method:
+2. **Add to server:**
+   - **Manual method:**
      ```bash
      cat ~/.ssh/id_ed25519_newserver.pub | ssh user@host 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
      ```
-   - Automated method:
+   - **Automated method:**
      ```bash
      ssh-copy-id -i ~/.ssh/id_ed25519_newserver.pub user@host
      ```
@@ -131,34 +133,32 @@ For temporary access (OpenSSH 8.2+):
 ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed25519_temp
 ```
 
-{screenshot: Setting SSH key expiration}
+---
 
 ## 3.3 Leveraging SSH Agent
 
 ### Usage
 
-1. Start SSH Agent:
+1. **Start SSH Agent:**
    ```bash
    eval "$(ssh-agent -s)"
    ```
 
-2. Add keys:
+2. **Add keys:**
    ```bash
    ssh-add ~/.ssh/id_rsa
    ssh-add ~/.ssh/id_ed25519_work
    ```
 
-3. List added keys:
+3. **List added keys:**
    ```bash
    ssh-add -l
    ```
 
-4. Remove a specific key:
+4. **Remove a specific key:**
    ```bash
    ssh-add -d ~/.ssh/id_rsa
    ```
-
-{screenshot: SSH agent usage example}
 
 ### Automation Example
 
@@ -183,39 +183,75 @@ ssh personalserver 'df -h'
 ssh-agent -k
 ```
 
+---
+
 ## 3.4 Port Forwarding and Tunneling
 
-### Local Port Forwarding
+Port forwarding and tunneling allow you to securely forward traffic through SSH to access remote services that might not be directly accessible.
 
-Access a remote service through a local port:
+### 3.4.1 Local Port Forwarding
 
+Local Port Forwarding allows you to forward traffic from a local port to a remote server and port. It's useful for accessing a service on a remote server that isn't publicly accessible.
+
+**Basic Syntax:**
 ```bash
-ssh -L 8080:remote-host:80 user@ssh-server
+ssh -L [local_address:]local_port:remote_address:remote_port [user@]ssh_server
 ```
 
-{screenshot: Local port forwarding diagram}
+**Examples:**
 
-### Remote Port Forwarding
+- **Example 1: Accessing a remote service through a local port**
+   ```bash
+   ssh -L 8080:remote-host:80 user@ssh-server
+   ```
+   This forwards traffic from local port 8080 to port 80 on `remote-host` through `ssh-server`.
 
-Make a local service accessible from a remote machine:
+- **Example 2: Accessing an internal web server**
+   ```bash
+   ssh -L 10.10.10.1:8001:localhost:8000 user@REMOTE-MACHINE
+   ```
+   This allows access to a web server on `REMOTE-MACHINE` that only listens on `127.0.0.1:8000`.
 
+### 3.4.2 Remote Port Forwarding
+
+Remote Port Forwarding allows you to forward traffic from a port on the remote SSH server to a port on your local machine.
+
+**Basic Syntax:**
+```bash
+ssh -R [remote_address:]remote_port:local_address:local_port [user@]ssh_server
+```
+ 
+**Example:**
 ```bash
 ssh -R 8080:localhost:80 user@remote-server
 ```
+This forwards traffic from port 8080 on the remote server to port 80 on your local machine.
 
-{screenshot: Remote port forwarding diagram}
+### 3.4.3 Dynamic Port Forwarding (SOCKS Proxy)
 
-### Dynamic Port Forwarding (SOCKS Proxy)
+Dynamic Port Forwarding creates a local SOCKS proxy server that can route traffic to multiple remote destinations.
 
-Create a SOCKS proxy for flexible routing:
-
+**Basic Syntax:**
 ```bash
-ssh -D 1080 user@ssh-server
+ssh -D [local_address:]local_port [user@]ssh_server
 ```
 
-{screenshot: Dynamic port forwarding (SOCKS proxy) setup}
+**Example:**
+```bash
+ssh -D 1080 user@remote-server
+```
+This creates a SOCKS proxy on local port 1080.
+
+**Applications:**
+- Secure browsing through an encrypted tunnel.
+- Accessing multiple services in a remote network without setting up individual port forwards.
+- Bypassing geographical restrictions on web services.
+
+---
 
 ## 3.5 SSH Jump Hosts
+
+Jump Host, or ProxyJump, allows you to connect to a target server by first connecting through an intermediate server.
 
 ### Basic Jump Host Configuration
 
@@ -238,8 +274,6 @@ Now you can simply run:
 ssh targethost
 ```
 
-{screenshot: SSH jump host configuration}
-
 ### Multiple Jump Hosts
 
 For scenarios requiring multiple jumps:
@@ -251,18 +285,35 @@ Host targethost
     ProxyJump jumphost1,jumphost2
 ```
 
+---
+
+## 3.6 SSH TUN/TAP Tunneling
+
+SSH TUN/TAP tunneling can create a bi-directional TCP tunnel using the `-w` flag. This allows you to set up a secure connection that can pass all kinds of network traffic between your local and remote
+
+ machines.
+
+**Basic Syntax:**
+```bash
+ssh -w [local_tun]:[remote_tun] [user@]ssh_server
+```
+
+Note that the network interfaces (`tunX`) need to be created beforehand.
+
+---
+
 ## Best Practices
 
-1. Use unique keys for different purposes (work, personal, etc.)
-2. Regularly rotate SSH keys (e.g., annually)
-3. Implement strong passphrases for private keys
-4. Use SSH agent forwarding cautiously and only on trusted systems
-5. Audit and remove unused authorized keys regularly
-6. Keep your SSH client and server software updated
-7. Use key types like Ed25519 for better security and performance
-8. Implement fail2ban or similar tools to prevent brute-force attacks
+1. Use unique keys for different purposes (work, personal, etc.).
+2. Regularly rotate SSH keys (e.g., annually).
+3. Implement strong passphrases for private keys.
+4. Use SSH agent forwarding cautiously and only on trusted systems.
+5. Audit and remove unused authorized keys regularly.
+6. Keep your SSH client and server software updated.
+7. Use key types like Ed25519 for better security and performance.
+8. Implement fail2ban or similar tools to prevent brute-force attacks.
 
-{screenshot: SSH best practices checklist}
+---
 
 ## Further Reading
 
@@ -270,3 +321,5 @@ Host targethost
 - [SSH.com Security Best Practices](https://www.ssh.com/academy/ssh/security)
 - [NIST Guidelines on Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
 - [The Secure Shell (SSH) Protocol Architecture](https://tools.ietf.org/html/rfc4251)
+```
+
