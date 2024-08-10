@@ -241,6 +241,9 @@ ssh -D [local_address:]local_port [user@]ssh_server
 ssh -D 1080 user@remote-server
 ```
 This creates a SOCKS proxy on local port 1080.
+This technique if often used to circumvent the restrictions put in place by firewalls, and allow an external entity to bypass the firewal and acess a service. Another benefit of using SOCKS proxy for pivoting and forwarding data is that SOCKS proxies can pivot via creating a route to an external server from NAT networks.
+
+{screenshot of socks diagram }
 
 **Applications:**
 - Secure browsing through an encrypted tunnel.
