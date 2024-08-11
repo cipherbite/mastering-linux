@@ -1,4 +1,3 @@
-```markdown
 # Part Three: Intermediate SSH Usage
 
 ## Table of Contents
@@ -339,4 +338,4 @@ Host targethost
 **License:** This document is released under the MIT License. See LICENSE file for details.
 
 **Contributions:** We welcome contributions to improve this guide. Please see CONTRIBUTING.md for guidelines on how to submit improvements or corrections.
-```
+
