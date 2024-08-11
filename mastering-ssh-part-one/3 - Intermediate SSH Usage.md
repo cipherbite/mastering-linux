@@ -1,3 +1,4 @@
+```markdown
 # Part Three: Intermediate SSH Usage
 
 ## Table of Contents
@@ -10,6 +11,8 @@
   - [3.4.2 Remote Port Forwarding](#342-remote-port-forwarding)
   - [3.4.3 Dynamic Port Forwarding (SOCKS Proxy)](#343-dynamic-port-forwarding-socks-proxy)
 - [3.5 SSH Jump Hosts](#35-ssh-jump-hosts)
+- [3.6 Best Practices](#36-best-practices)
+- [3.7 Further Reading](#37-further-reading)
 
 ---
 
@@ -187,68 +190,90 @@ ssh-agent -k
 
 ## 3.4 Port Forwarding and Tunneling
 
-Port forwarding and tunneling allow you to securely forward traffic through SSH to access remote services that might not be directly accessible.
+SSH port forwarding, also known as SSH tunneling, allows you to securely redirect network traffic through an encrypted SSH connection. This feature is invaluable for accessing services on remote networks, bypassing firewalls, and enhancing overall network security.
 
 ### 3.4.1 Local Port Forwarding
 
-Local Port Forwarding allows you to forward traffic from a local port to a remote server and port. It's useful for accessing a service on a remote server that isn't publicly accessible.
+Local port forwarding enables you to securely access a remote service as if it were running on your local machine.
 
-**Basic Syntax:**
+**Syntax:**
 ```bash
 ssh -L [local_address:]local_port:remote_address:remote_port [user@]ssh_server
 ```
 
-**Examples:**
+**Key Components:**
+- `local_address`: (Optional) The local interface to bind to (default: localhost)
+- `local_port`: The port on your local machine to forward from
+- `remote_address`: The destination host as seen from the SSH server
+- `remote_port`: The port on the remote destination
+- `ssh_server`: The intermediary SSH server
 
-- **Example 1: Accessing a remote service through a local port**
-   ```bash
-   ssh -L 8080:remote-host:80 user@ssh-server
-   ```
-   This forwards traffic from local port 8080 to port 80 on `remote-host` through `ssh-server`.
+[Insert diagram of local port forwarding here]
 
-- **Example 2: Accessing an internal web server**
+**Practical Examples:**
+
+1. Accessing a remote web server:
    ```bash
-   ssh -L 10.10.10.1:8001:localhost:8000 user@REMOTE-MACHINE
+   ssh -L 8080:remote-webserver:80 user@ssh-server
    ```
-   This allows access to a web server on `REMOTE-MACHINE` that only listens on `127.0.0.1:8000`.
+   This command forwards your local port 8080 to port 80 on `remote-webserver`.
+
+2. Securely accessing a database server:
+   ```bash
+   ssh -L 3306:database-server:3306 user@ssh-server
+   ```
+   This setup allows you to connect to a remote MySQL database as if it were running locally.
 
 ### 3.4.2 Remote Port Forwarding
 
-Remote Port Forwarding allows you to forward traffic from a port on the remote SSH server to a port on your local machine.
+Remote port forwarding allows you to make a service on your local machine accessible from a remote location.
 
-**Basic Syntax:**
+**Syntax:**
 ```bash
 ssh -R [remote_address:]remote_port:local_address:local_port [user@]ssh_server
 ```
- 
-**Example:**
+
+**Key Components:**
+- `remote_address`: (Optional) The remote interface to bind to (default: localhost on the SSH server)
+- `remote_port`: The port on the remote SSH server to forward to
+- `local_address`: The local destination host (usually localhost)
+- `local_port`: The port of the local service you're exposing
+- `ssh_server`: The intermediary SSH server
+
+[Insert diagram of remote port forwarding here]
+
+**Practical Example:**
+
+Exposing a local web development server:
 ```bash
-ssh -R 8080:localhost:80 user@remote-server
+ssh -R 8080:localhost:3000 user@remote-server
 ```
-This forwards traffic from port 8080 on the remote server to port 80 on your local machine.
+This command makes your local development server running on port 3000 accessible on the remote server at `http://localhost:8080`.
 
 ### 3.4.3 Dynamic Port Forwarding (SOCKS Proxy)
 
-Dynamic Port Forwarding creates a local SOCKS proxy server that can route traffic to multiple remote destinations.
+Dynamic port forwarding creates a local SOCKS proxy server that can route traffic to multiple remote destinations through an SSH tunnel.
 
-**Basic Syntax:**
+**Syntax:**
 ```bash
 ssh -D [local_address:]local_port [user@]ssh_server
 ```
 
-**Example:**
+**Key Components:**
+- `local_address`: (Optional) The local interface to bind the SOCKS proxy to
+- `local_port`: The local port to run the SOCKS proxy on
+- `ssh_server`: The SSH server acting as the proxy endpoint
+
+[Insert diagram of SOCKS proxy here]
+
+**Practical Example:**
+
+Setting up a SOCKS proxy on port 1080:
 ```bash
 ssh -D 1080 user@remote-server
 ```
-This creates a SOCKS proxy on local port 1080.
-This technique if often used to circumvent the restrictions put in place by firewalls, and allow an external entity to bypass the firewal and acess a service. Another benefit of using SOCKS proxy for pivoting and forwarding data is that SOCKS proxies can pivot via creating a route to an external server from NAT networks.
 
-{screenshot of socks diagram }
-
-**Applications:**
-- Secure browsing through an encrypted tunnel.
-- Accessing multiple services in a remote network without setting up individual port forwards.
-- Bypassing geographical restrictions on web services.
+This command establishes a SOCKS proxy on your local port 1080, which can be used to route application traffic through the SSH tunnel.
 
 ---
 
@@ -259,7 +284,6 @@ Jump Host, or ProxyJump, allows you to connect to a target server by first conne
 ### Basic Jump Host Configuration
 
 In `~/.ssh/config`:
-
 ```plaintext
 Host jumphost
     HostName jump.example.com
@@ -272,7 +296,6 @@ Host targethost
 ```
 
 Now you can simply run:
-
 ```bash
 ssh targethost
 ```
@@ -280,7 +303,6 @@ ssh targethost
 ### Multiple Jump Hosts
 
 For scenarios requiring multiple jumps:
-
 ```plaintext
 Host targethost
     HostName 192.168.1.100
@@ -290,22 +312,7 @@ Host targethost
 
 ---
 
-## 3.6 SSH TUN/TAP Tunneling
-
-SSH TUN/TAP tunneling can create a bi-directional TCP tunnel using the `-w` flag. This allows you to set up a secure connection that can pass all kinds of network traffic between your local and remote
-
- machines.
-
-**Basic Syntax:**
-```bash
-ssh -w [local_tun]:[remote_tun] [user@]ssh_server
-```
-
-Note that the network interfaces (`tunX`) need to be created beforehand.
-
----
-
-## Best Practices
+## 3.6 Best Practices
 
 1. Use unique keys for different purposes (work, personal, etc.).
 2. Regularly rotate SSH keys (e.g., annually).
@@ -318,11 +325,18 @@ Note that the network interfaces (`tunX`) need to be created beforehand.
 
 ---
 
-## Further Reading
+## 3.7 Further Reading
 
 - [OpenSSH Manual](https://www.openssh.com/manual.html)
 - [SSH.com Security Best Practices](https://www.ssh.com/academy/ssh/security)
 - [NIST Guidelines on Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
 - [The Secure Shell (SSH) Protocol Architecture](https://tools.ietf.org/html/rfc4251)
-```
 
+---
+
+**Note:** This guide is based on OpenSSH version 8.0 and later. Some features may not be available in earlier versions.
+
+**License:** This document is released under the MIT License. See LICENSE file for details.
+
+**Contributions:** We welcome contributions to improve this guide. Please see CONTRIBUTING.md for guidelines on how to submit improvements or corrections.
+```
