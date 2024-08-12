@@ -161,6 +161,7 @@ ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed2
    ```bash
    ssh-add -d ~/.ssh/id_rsa
    ```
+![eval-ssh-agent-commends](https://github.com/user-attachments/assets/60544ef1-52ea-46f2-a024-28ef4880191b)
 
 ### Automation Example
 
@@ -199,6 +200,7 @@ Local port forwarding enables you to securely access a remote service as if it w
 ```bash
 ssh -L [local_address:]local_port:remote_address:remote_port [user@]ssh_server
 ```
+![local-port-forwarding](https://github.com/user-attachments/assets/3d46e482-b042-46a6-997b-fcc5812232ed)
 
 **Key Components:**
 - `local_address`: (Optional) The local interface to bind to (default: localhost)
@@ -231,6 +233,7 @@ Remote port forwarding allows you to make a service on your local machine access
 ```bash
 ssh -R [remote_address:]remote_port:local_address:local_port [user@]ssh_server
 ```
+![remote-port-forwarding](https://github.com/user-attachments/assets/dc4fa32d-9b11-4105-80b1-1ddede604677)
 
 **Key Components:**
 - `remote_address`: (Optional) The remote interface to bind to (default: localhost on the SSH server)
@@ -257,13 +260,14 @@ Dynamic port forwarding creates a local SOCKS proxy server that can route traffi
 ```bash
 ssh -D [local_address:]local_port [user@]ssh_server
 ```
+![dynamic port forwarding](https://github.com/user-attachments/assets/84d349a0-0b36-4d4c-9253-746d33c9b6b4)
 
 **Key Components:**
 - `local_address`: (Optional) The local interface to bind the SOCKS proxy to
 - `local_port`: The local port to run the SOCKS proxy on
 - `ssh_server`: The SSH server acting as the proxy endpoint
 
-[Insert diagram of SOCKS proxy here]
+![proxy-diagr](https://github.com/user-attachments/assets/33de6fd7-17ad-4edf-a30f-ff65603e4908)
 
 **Practical Example:**
 
