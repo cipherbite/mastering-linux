@@ -1,74 +1,74 @@
 # Advanced SSH Techniques and Security
 
+This comprehensive guide explores advanced SSH techniques and security practices, designed for system administrators, DevOps engineers, and security professionals. It covers a wide range of topics from SSH certificates to container integration, providing practical examples and best practices for each concept.
+
 ## Table of Contents
 
-- [1. SSH Certificates](#1-ssh-certificates)
-- [2. SSH Multiplexing](#2-ssh-multiplexing)
-- [3. SSH Escape Sequences](#3-ssh-escape-sequences)
-- [4. SSH Honeypots](#4-ssh-honeypots)
-- [5. SSH Hardening Techniques](#5-ssh-hardening-techniques)
-- [6. Advanced SSH Scripting](#6-advanced-ssh-scripting)
-- [7. SSH over TOR](#7-ssh-over-tor)
-- [8. SSH File Transfer Optimization](#8-ssh-file-transfer-optimization)
-- [9. SSH and Containers](#9-ssh-and-containers)
+1. [SSH Certificates](#1-ssh-certificates)
+2. [SSH Multiplexing](#2-ssh-multiplexing)
+3. [SSH Escape Sequences](#3-ssh-escape-sequences)
+4. [SSH Honeypots](#4-ssh-honeypots)
+5. [SSH Hardening Techniques](#5-ssh-hardening-techniques)
+6. [Advanced SSH Scripting](#6-advanced-ssh-scripting)
+7. [SSH over TOR](#7-ssh-over-tor)
+8. [SSH File Transfer Optimization](#8-ssh-file-transfer-optimization)
+9. [SSH and Containers](#9-ssh-and-containers)
 
 ## 1. SSH Certificates
 
-SSH certificates provide a more scalable and secure alternative to traditional SSH key-based authentication, especially in large environments.
+SSH certificates offer a more scalable and secure alternative to traditional SSH key-based authentication, particularly beneficial in large-scale environments.
 
-### Benefits of SSH Certificates:
+### Benefits of SSH Certificates
 
-1. Centralized access control
-2. Time-based access with automatic expiration
-3. Simplified key distribution and revocation
-4. Reduced risk of unauthorized key copying
+- Centralized access control
+- Time-based access with automatic expiration
+- Simplified key distribution and revocation
+- Reduced risk of unauthorized key copying
 
-### Implementing SSH Certificates:
+### Implementing SSH Certificates
 
-1. **Generate a Certificate Authority (CA) key pair:**
+#### 1.1 Generate a Certificate Authority (CA) Key Pair
 
-   ```bash
-   ssh-keygen -f ca_key -C "SSH CA"
-   ```
+```bash
+ssh-keygen -f ca_key -C "SSH CA"
+```
 
-2. **Create a user certificate:**
+#### 1.2 Create a User Certificate
 
-   ```bash
-   ssh-keygen -s ca_key -I "user@example.com" -n user -V +1w /path/to/user_key.pub
-   ```
+```bash
+ssh-keygen -s ca_key -I "user@example.com" -n user -V +1w /path/to/user_key.pub
+```
 
-3. **Configure the SSH server to trust the CA:**
+#### 1.3 Configure the SSH Server to Trust the CA
 
-   Add the following line to `/etc/ssh/sshd_config`:
+Add to `/etc/ssh/sshd_config`:
 
-   ```
-   TrustedUserCAKeys /etc/ssh/ca_key.pub
-   ```
+```
+TrustedUserCAKeys /etc/ssh/ca_key.pub
+```
 
-4. **Client configuration:**
+#### 1.4 Client Configuration
 
-   Add the following to `~/.ssh/config`:
+Add to `~/.ssh/config`:
 
-   ```
-   Host *.example.com
-       CertificateFile ~/.ssh/user_key-cert.pub
-   ```
+```
+Host *.example.com
+    CertificateFile ~/.ssh/user_key-cert.pub
+```
 
-### Advanced Certificate Management:
+### Advanced Certificate Management
 
 - Implement a certificate revocation list (CRL) for immediate access revocation
 - Use principals in certificates for fine-grained access control
 - Set up automated certificate renewal processes
 
-:{screenshot of SSH certificate implementation:}
-
 ## 2. SSH Multiplexing
 
 SSH multiplexing allows multiple SSH sessions to share a single network connection, significantly reducing connection overhead and improving performance.
 
-### Enabling Multiplexing:
+### Enabling Multiplexing
 
-Add the following to `~/.ssh/config`:
+Add to `~/.ssh/config`:
 
 ```
 Host *
@@ -77,48 +77,46 @@ Host *
     ControlPersist 10m
 ```
 
-### Advanced Multiplexing Techniques:
+### Advanced Multiplexing Techniques
 
-1. **Manual control socket management:**
+#### 2.1 Manual Control Socket Management
 
-   ```bash
-   ssh -M -S ~/.ssh/ctrl-socket user@host
-   ssh -S ~/.ssh/ctrl-socket user@host
-   ```
+```bash
+ssh -M -S ~/.ssh/ctrl-socket user@host
+ssh -S ~/.ssh/ctrl-socket user@host
+```
 
-2. **Checking socket status:**
+#### 2.2 Checking Socket Status
 
-   ```bash
-   ssh -O check -S ~/.ssh/ctrl-socket user@host
-   ```
+```bash
+ssh -O check -S ~/.ssh/ctrl-socket user@host
+```
 
-3. **Forwarding ports through an existing connection:**
+#### 2.3 Forwarding Ports Through an Existing Connection
 
-   ```bash
-   ssh -O forward -L 8080:localhost:80 -S ~/.ssh/ctrl-socket user@host
-   ```
+```bash
+ssh -O forward -L 8080:localhost:80 -S ~/.ssh/ctrl-socket user@host
+```
 
-4. **Multiplexing with ProxyJump:**
+#### 2.4 Multiplexing with ProxyJump
 
-   ```
-   Host jumphost
-       HostName jumphost.example.com
-       ControlMaster auto
-       ControlPath ~/.ssh/control:%h:%p:%r
-       ControlPersist 10m
+```
+Host jumphost
+    HostName jumphost.example.com
+    ControlMaster auto
+    ControlPath ~/.ssh/control:%h:%p:%r
+    ControlPersist 10m
 
-   Host internal
-       HostName internal.example.com
-       ProxyJump jumphost
-   ```
-
-:{screenshot of SSH multiplexing in action:}
+Host internal
+    HostName internal.example.com
+    ProxyJump jumphost
+```
 
 ## 3. SSH Escape Sequences
 
-SSH escape sequences provide powerful control over active SSH sessions.
+SSH escape sequences provide powerful control over active SSH sessions, allowing users to manage connections and perform various actions without disconnecting.
 
-### Common Escape Sequences:
+### Common Escape Sequences
 
 | Sequence | Action |
 |----------|--------|
@@ -130,199 +128,193 @@ SSH escape sequences provide powerful control over active SSH sessions.
 | `~v`     | Increase verbosity |
 | `~#`     | List forwarded connections |
 
-### Advanced Escape Sequence Usage:
+### Advanced Escape Sequence Usage
 
-1. **Dynamic port forwarding mid-session:**
+#### 3.1 Dynamic Port Forwarding Mid-session
 
-   ```
-   ~C
-   -D 8080
-   ```
+```
+~C
+-D 8080
+```
 
-2. **Adding a local port forward without disconnecting:**
+#### 3.2 Adding a Local Port Forward Without Disconnecting
 
-   ```
-   ~C
-   -L 3306:localhost:3306
-   ```
+```
+~C
+-L 3306:localhost:3306
+```
 
-3. **Suspending an SSH session:**
+#### 3.3 Suspending an SSH Session
 
-   ```
-   ~^Z
-   ```
+```
+~^Z
+```
 
-   To resume: `fg`
+To resume: `fg`
 
-4. **Changing the escape character:**
+#### 3.4 Changing the Escape Character
 
-   ```bash
-   ssh -e ^ user@host
-   ```
-
-:{screenshot of using SSH escape sequences:}
+```bash
+ssh -e ^ user@host
+```
 
 ## 4. SSH Honeypots
 
 SSH honeypots are decoy systems designed to attract and study potential attackers, providing valuable insights into attack patterns and techniques.
 
-### Implementing a Basic SSH Honeypot with Cowrie:
+### Implementing a Basic SSH Honeypot with Cowrie
 
-1. **Install Cowrie:**
+#### 4.1 Install Cowrie
 
-   ```bash
-   git clone https://github.com/cowrie/cowrie.git
-   cd cowrie
-   ```
+```bash
+git clone https://github.com/cowrie/cowrie.git
+cd cowrie
+```
 
-2. **Set up a virtual environment:**
+#### 4.2 Set Up a Virtual Environment
 
-   ```bash
-   python3 -m venv cowrie-env
-   source cowrie-env/bin/activate
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
+```bash
+python3 -m venv cowrie-env
+source cowrie-env/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-3. **Configure Cowrie:**
+#### 4.3 Configure Cowrie
 
-   ```bash
-   cp etc/cowrie.cfg.dist etc/cowrie.cfg
-   ```
+```bash
+cp etc/cowrie.cfg.dist etc/cowrie.cfg
+```
 
-   Edit `etc/cowrie.cfg` to set up your honeypot parameters, such as:
+Edit `etc/cowrie.cfg`:
 
-   ```
-   [ssh]
-   listen_endpoints = tcp:2222:interface=0.0.0.0
-   ```
+```
+[ssh]
+listen_endpoints = tcp:2222:interface=0.0.0.0
+```
 
-4. **Run the honeypot:**
+#### 4.4 Run the Honeypot
 
-   ```bash
-   bin/cowrie start
-   ```
+```bash
+bin/cowrie start
+```
 
-### Advanced Honeypot Techniques:
+### Advanced Honeypot Techniques
 
-1. **Integration with threat intelligence platforms:**
+1. **Integration with Threat Intelligence Platforms**
    - Use MISP (Malware Information Sharing Platform) to share and receive threat intelligence
    - Implement automatic IOC (Indicators of Compromise) extraction and sharing
 
-2. **Custom emulation of specific environments:**
+2. **Custom Emulation of Specific Environments**
    - Create realistic file systems and command responses
    - Implement fake services and vulnerabilities to study attacker behavior
 
-3. **Machine learning-based attacker profiling:**
+3. **Machine Learning-based Attacker Profiling**
    - Use Natural Language Processing (NLP) to analyze attacker commands
    - Implement clustering algorithms to identify attack patterns and attacker groups
 
-:{screenshot of Cowrie honeypot logs:}
-
 ## 5. SSH Hardening Techniques
 
-Advanced techniques to further secure SSH beyond basic configuration.
+These advanced techniques further secure SSH beyond basic configuration, providing multi-layered protection against various attack vectors.
 
-1. **Two-factor authentication (2FA) with Google Authenticator:**
+### 5.1 Two-factor Authentication (2FA) with Google Authenticator
 
-   ```bash
-   sudo apt install libpam-google-authenticator
-   google-authenticator
-   ```
+```bash
+sudo apt install libpam-google-authenticator
+google-authenticator
+```
 
-   Add to `/etc/pam.d/sshd`:
+Add to `/etc/pam.d/sshd`:
 
-   ```
-   auth required pam_google_authenticator.so
-   ```
+```
+auth required pam_google_authenticator.so
+```
 
-   Update `/etc/ssh/sshd_config`:
+Update `/etc/ssh/sshd_config`:
 
-   ```
-   ChallengeResponseAuthentication yes
-   AuthenticationMethods publickey,keyboard-interactive
-   ```
+```
+ChallengeResponseAuthentication yes
+AuthenticationMethods publickey,keyboard-interactive
+```
 
-2. **SSH over Kerberos:**
+### 5.2 SSH over Kerberos
 
-   Install Kerberos:
+Install Kerberos:
 
-   ```bash
-   sudo apt install krb5-user libpam-krb5
-   ```
+```bash
+sudo apt install krb5-user libpam-krb5
+```
 
-   Enable Kerberos support in `/etc/ssh/sshd_config`:
+Enable Kerberos support in `/etc/ssh/sshd_config`:
 
-   ```
-   KerberosAuthentication yes
-   KerberosOrLocalPasswd yes
-   KerberosTicketCleanup yes
-   GSSAPIAuthentication yes
-   GSSAPICleanupCredentials yes
-   ```
+```
+KerberosAuthentication yes
+KerberosOrLocalPasswd yes
+KerberosTicketCleanup yes
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+```
 
-3. **TCP Wrappers for IP-based access control:**
+### 5.3 TCP Wrappers for IP-based Access Control
 
-   Add to `/etc/hosts.allow`:
+Add to `/etc/hosts.allow`:
 
-   ```
-   sshd: 192.168.1.0/24, 10.0.0.0/8
-   ```
+```
+sshd: 192.168.1.0/24, 10.0.0.0/8
+```
 
-   Add to `/etc/hosts.deny`:
+Add to `/etc/hosts.deny`:
 
-   ```
-   sshd: ALL
-   ```
+```
+sshd: ALL
+```
 
-4. **Custom SSH version string:**
+### 5.4 Custom SSH Version String
 
-   Add to `/etc/ssh/sshd_config`:
+Add to `/etc/ssh/sshd_config`:
 
-   ```
-   DebianBanner no
-   ```
+```
+DebianBanner no
+```
 
-   Create `/etc/ssh/sshd-banner`:
+Create `/etc/ssh/sshd-banner`:
 
-   ```
-   SSH-2.0-SecureServer
-   ```
+```
+SSH-2.0-SecureServer
+```
 
-5. **Implement port knocking:**
+### 5.5 Implement Port Knocking
 
-   Install `knockd`:
+Install `knockd`:
 
-   ```bash
-   sudo apt install knockd
-   ```
+```bash
+sudo apt install knockd
+```
 
-   Configure `/etc/knockd.conf`:
+Configure `/etc/knockd.conf`:
 
-   ```
-   [options]
-       UseSyslog
+```
+[options]
+    UseSyslog
 
-   [openSSH]
-       sequence    = 7000,8000,9000
-       seq_timeout = 5
-       command     = /sbin/iptables -A INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
-       tcpflags    = syn
+[openSSH]
+    sequence    = 7000,8000,9000
+    seq_timeout = 5
+    command     = /sbin/iptables -A INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
+    tcpflags    = syn
 
-   [closeSSH]
-       sequence    = 9000,8000,7000
-       seq_timeout = 5
-       command     = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
-       tcpflags    = syn
-   ```
-
-:{screenshot of SSH hardening configuration:}
+[closeSSH]
+    sequence    = 9000,8000,7000
+    seq_timeout = 5
+    command     = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
+    tcpflags    = syn
+```
 
 ## 6. Advanced SSH Scripting
 
-Leveraging SSH for complex automation and system management tasks.
+Leveraging SSH for complex automation and system management tasks can significantly improve efficiency and reduce manual intervention.
 
-### Parallel SSH Execution:
+### 6.1 Parallel SSH Execution
 
 Using `pssh` for executing commands on multiple servers simultaneously:
 
@@ -330,7 +322,7 @@ Using `pssh` for executing commands on multiple servers simultaneously:
 pssh -h hosts.txt -i "uname -a && uptime"
 ```
 
-### SSH-based Distributed Shell:
+### 6.2 SSH-based Distributed Shell
 
 Creating a simple distributed shell using SSH:
 
@@ -346,7 +338,7 @@ done
 wait
 ```
 
-### Dynamic Inventory Management:
+### 6.3 Dynamic Inventory Management
 
 Integrating SSH with cloud APIs for dynamic server management:
 
@@ -368,7 +360,7 @@ for instance in instances:
     ssh.close()
 ```
 
-### Advanced SSH Tunneling Script:
+### 6.4 Advanced SSH Tunneling Script
 
 ```bash
 #!/bin/bash
@@ -399,124 +391,116 @@ while true; do
 done
 ```
 
-:{screenshot of advanced SSH scripting in action:}
-
 ## 7. SSH over TOR
 
 Enhancing anonymity and bypassing network restrictions by routing SSH connections through the TOR network.
 
-1. **Install TOR:**
+### 7.1 Install TOR
 
-   ```bash
-   sudo apt install tor
-   ```
+```bash
+sudo apt install tor
+```
 
-2. **Configure TOR as a SOCKS proxy:**
+### 7.2 Configure TOR as a SOCKS Proxy
 
-   Add to `/etc/tor/torrc`:
+Add to `/etc/tor/torrc`:
 
-   ```
-   SOCKSPort 9050
-   ```
+```
+SOCKSPort 9050
+```
 
-3. **Connect via TOR:**
+### 7.3 Connect via TOR
 
-   ```bash
-   torsocks ssh user@onion-address.onion
-   ```
+```bash
+torsocks ssh user@onion-address.onion
+```
 
-4. **Creating a hidden SSH service:**
+### 7.4 Creating a Hidden SSH Service
 
-   Add to `/etc/tor/torrc`:
+Add to `/etc/tor/torrc`:
 
-   ```
-   HiddenServiceDir /var/lib/tor/hidden_service/
-   HiddenServicePort 22 127.0.0.1:22
-   ```
+```
+HiddenServiceDir /var/lib/tor/hidden_service/
+HiddenServicePort 22 127.0.0.1:22
+```
 
-5. **Configuring SSH client for TOR:**
+### 7.5 Configuring SSH Client for TOR
 
-   Add to `~/.ssh/config`:
+Add to `~/.ssh/config`:
 
-   ```
-   Host *.onion
-       ProxyCommand nc -X 5 -x 127.0.0.1:9050 %h %p
-   ```
+```
+Host *.onion
+    ProxyCommand nc -X 5 -x 127.0.0.1:9050 %h %p
+```
 
-6. **Using TOR with SSH jump hosts:**
+### 7.6 Using TOR with SSH Jump Hosts
 
-   ```
-   Host jumphost
-       HostName abcdefghijklmnop.onion
-       ProxyCommand nc -X 5 -x 127.0.0.1:9050 %h %p
+```
+Host jumphost
+    HostName abcdefghijklmnop.onion
+    ProxyCommand nc -X 5 -x 127.0.0.1:9050 %h %p
 
-   Host hidden-service
-       ProxyJump jumphost
-       HostName qrstuvwxyz123456.onion
-   ```
-
-:{screenshot of SSH over TOR connection:}
+Host hidden-service
+    ProxyJump jumphost
+    HostName qrstuvwxyz123456.onion
+```
 
 ## 8. SSH File Transfer Optimization
 
-Techniques for optimizing large file transfers over SSH.
+Techniques for optimizing large file transfers over SSH to improve speed and reliability.
 
-1. **Compression:**
+### 8.1 Compression
 
-   ```bash
-   rsync -avz -e "ssh -c aes128-gcm@openssh.com" source/ user@host:destination/
-   ```
+```bash
+rsync -avz -e "ssh -c aes128-gcm@openssh.com" source/ user@host:destination/
+```
 
-2. **Parallel file transfer:**
+### 8.2 Parallel File Transfer
 
-   ```bash
-   tar cf - source_dir | parallel --pipe --block 1M ssh user@host 'cat > destination.tar'
-   ```
+```bash
+tar cf - source_dir | parallel --pipe --block 1M ssh user@host 'cat > destination.tar'
+```
 
-3. **Resume interrupted transfers:**
+### 8.3 Resume Interrupted Transfers
 
-   ```bash
-   rsync --partial --progress --rsh=ssh source_file user@host:destination_file
-   ```
+```bash
+rsync --partial --progress --rsh=ssh source_file user@host:destination_file
+```
 
-4. **Using `mosh` for unstable connections:**
+### 8.4 Using `mosh` for Unstable Connections
 
-   ```bash
-   mosh user@host -- rsync -avz source/ destination/
-   ```
+```bash
+mosh user@host -- rsync -avz source/ destination/
+```
 
-5. **Optimizing SSH configuration for file transfers:**
+### 8.5 Optimizing SSH Configuration for File Transfers
 
-   Add to `~/.ssh/config`:
+Add to `~/.ssh/config`:
 
-   ```
-   Host *
-       Compression yes
-       CompressionLevel 9
-       IPQoS throughput
-       TCPKeepAlive yes
-       ServerAliveInterval 60
-   ```
+```
+Host *
+    Compression yes
+    CompressionLevel 9
+    IPQoS throughput
+    TCPKeepAlive yes
+    ServerAliveInterval 60
+```
 
-6. **Using `scp` with multiple threads:**
+### 8.6 Using `scp` with Multiple Threads
 
-   ```bash
-   scp -l 8000 source_file user@host:destination_file
-   ```
+```bash
+scp -l 8000 source_file user@host:destination_file
+```
 
-   This limits the bandwidth to 8000 Kbit/s, allowing for better control over network usage.
-
-:{screenshot of optimized SSH file transfer:}
-
-I'll complete your document by adding the final section on using SSH to access Kubernetes pods, including the missing advanced techniques, usage, and best practices.
+This limits the bandwidth to 8000 Kbit/s, allowing for better control over network usage.
 
 ## 9. SSH and Containers
 
 Integrating SSH with containerized environments provides secure access and management, especially within Docker and Kubernetes.
 
-### 1. SSH Access to Docker Containers:
+### 9.1 SSH Access to Docker Containers
 
-You can set up SSH access to a Docker container by configuring the container to run an SSH server. This is helpful for debugging, managing, and interacting with containerized applications directly.
+Create a Dockerfile with SSH access:
 
 ```Dockerfile
 FROM ubuntu:20.04
@@ -532,21 +516,15 @@ EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
 ```
 
-This Dockerfile sets up an Ubuntu container with an SSH server, allowing root login. Remember to replace `password` with a strong password or use SSH keys for secure authentication.
-
-### 2. SSH Agent Forwarding in Docker:
-
-SSH agent forwarding allows you to use your SSH keys stored on the host machine inside Docker containers. This is useful for accessing other SSH services securely from within the container.
+### 9.2 SSH Agent Forwarding in Docker
 
 ```bash
 docker run -it --rm -v /tmp/ssh-agent:/tmp/ssh-agent -e SSH_AUTH_SOCK=/tmp/ssh-agent/socket ubuntu
 ```
 
-This command runs a Docker container with access to your SSH agent, enabling seamless SSH key authentication within the container.
+### 9.3 Kubernetes SSH Proxy
 
-### 3. Kubernetes SSH Proxy:
-
-In Kubernetes environments, you may need to access pods or nodes securely. Setting up an SSH proxy within a Kubernetes cluster can facilitate secure access.
+Deploy an SSH proxy in Kubernetes:
 
 ```yaml
 apiVersion: apps/v1
@@ -572,50 +550,26 @@ spec:
         - containerPort: 22
 ```
 
-This YAML file deploys a simple SSH proxy server using Alpine Linux within a Kubernetes cluster. This can be scaled up or down based on the needs of your environment.
+### 9.4 Using SSH to Access Kubernetes Pods
 
-### 4. Using SSH to Access Kubernetes Pods:
+Access a pod via SSH:
 
-SSH access to Kubernetes pods can be achieved by running an SSH server within the pod. This approach is typically used for troubleshooting and administrative tasks.
+```bash
+kubectl get pods -o wide  # Get the pod's IP
+ssh root@<pod-ip>
+```
 
-1. **Modify the Pod's Dockerfile:**
+Or use port forwarding:
 
-   Ensure that your pod's Dockerfile includes the necessary setup for SSH, similar to the Docker setup mentioned earlier.
+```bash
+kubectl port-forward pod/<pod-name> 2222:22
+ssh root@localhost -p 2222
+```
 
-2. **Access the Pod via SSH:**
+### Best Practices for SSH in Containerized Environments
 
-   Once the pod is running with an SSH server, you can access it using the following command:
-
-   ```bash
-   kubectl get pods -o wide  # Get the pod's IP
-   ssh root@<pod-ip>
-   ```
-
-   Alternatively, use port forwarding:
-
-   ```bash
-   kubectl port-forward pod/<pod-name> 2222:22
-   ssh root@localhost -p 2222
-   ```
-
-   This approach forwards the local port to the pod's SSH server, allowing direct SSH access.
-
-### Best Practices for SSH in Containerized Environments:
-
-1. **Avoid Running SSH in Production Pods:**
-   - SSH adds overhead and potential security risks. Prefer using Kubernetes-native tools like `kubectl exec` for pod access.
-
-2. **Use SSH Keys:**
-   - Always use SSH keys over passwords to enhance security.
-
-3. **Restrict SSH Access:**
-   - Use network policies or firewalls to limit SSH access to only trusted IPs.
-
-4. **Monitor SSH Activity:**
-   - Implement logging and monitoring for all SSH activities to detect unauthorized access.
-
-5. **Automate and Manage SSH Access:**
-   - Integrate SSH access with centralized management tools like Ansible or Puppet to maintain control and auditability.
-
-:{screenshot of using SSH with Kubernetes pods:}
-
+1. Avoid running SSH in production pods
+2. Use SSH keys instead of passwords
+3. Restrict SSH access using network policies or firewalls
+4. Monitor SSH activity
+5. Automate and manage SSH access with centralized management tools
