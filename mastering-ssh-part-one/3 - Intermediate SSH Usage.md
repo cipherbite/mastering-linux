@@ -302,6 +302,7 @@ Now you can simply run:
 ```bash
 ssh targethost
 ```
+![jump-host](https://github.com/user-attachments/assets/093a88ed-5c80-4167-a3f2-111fd1a0f57b)
 
 ### Multiple Jump Hosts
 
