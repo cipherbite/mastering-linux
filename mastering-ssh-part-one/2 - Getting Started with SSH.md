@@ -22,6 +22,8 @@ ssh [options] username@remote_host
 
   ![ssh-first-connection](https://github.com/user-attachments/assets/98a3b8ac-f02b-4951-9a18-5d41f6a245d5)
 
+  Once connected we can start perfoming various command like uptime or anthing else.
+
 **Common Options:**
 - `-p port`: Specify a custom port (e.g., `ssh -p 2222 john@example.com`)
 - `-i identity_file`: Use a specific private key file
@@ -40,7 +42,6 @@ Execute a command on a remote server without initiating an interactive session:
 ```bash
 ssh username@remote_host 'command'
 ```
-![ssh-number-one](https://github.com/user-attachments/assets/c7d00d69-d9d0-4633-9461-d976577d474d)
 
 **Examples:** 
 - Check system uptime: `ssh john@example.com 'uptime'`
@@ -63,6 +64,7 @@ scp [options] source_file(s) username@remote_host:destination
 ```bash
 scp [options] username@remote_host:source_file(s) destination
 ```
+![SCP-file-transfer](https://github.com/user-attachments/assets/17877152-dbf5-406c-a013-f52db9e944b2)
 
 **Examples:**
 - Upload a file: `scp /path/to/local/file.txt john@example.com:/home/john/`
@@ -75,11 +77,12 @@ scp [options] username@remote_host:source_file(s) destination
 - `-l limit`: Limit bandwidth in Kbit/s
 - `-C`: Enable compression
 
-![SCP-file-transfer](https://github.com/user-attachments/assets/17877152-dbf5-406c-a013-f52db9e944b2)
-
 ### Interactive File Management with SFTP
 
 SFTP (SSH File Transfer Protocol) provides an interactive file transfer session.
+How SFTP works: 
+
+{sftp diagram}
 
 Initiate an SFTP session:
 ```bash
