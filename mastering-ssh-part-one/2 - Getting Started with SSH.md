@@ -145,18 +145,6 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub username@remote_host
 cat ~/.ssh/id_rsa.pub | ssh username@remote_host 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
 ```
 
-**For Windows Users:**
-- Use `scp` to copy the public key:
-  ```
-  scp C:\Users\YourUsername\.ssh\id_rsa.pub username@remote_host:~/.ssh/uploaded_key.pub
-  ```
-- Then, append it to `authorized_keys`:
-  ```
-  ssh username@remote_host 'cat ~/.ssh/uploaded_key.pub >> ~/.ssh/authorized_keys && rm ~/.ssh/uploaded_key.pub'
-  ```
-
-![ssh-copy-id](https://github.com/user-attachments/assets/e7f1af8f-5741-4242-97ff-c866c0b9f4be)
-
 ### Setting Appropriate Permissions
 
 Ensure correct permissions for SSH directories and files:
@@ -171,6 +159,8 @@ chmod 644 ~/.ssh/id_rsa.pub
 - 700 for `.ssh/`: Owner can read, write, execute; others have no access
 - 600 for private keys and `authorized_keys`: Owner can read and write; others have no access
 - 644 for public keys: Owner can read and write; others can read
+
+![permissions-chmod](https://github.com/user-attachments/assets/df3dc29c-20ad-4914-93f0-5009833f505a)
 
 ## 2.3 SSH Security Best Practices
 
