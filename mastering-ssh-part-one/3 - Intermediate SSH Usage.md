@@ -163,6 +163,8 @@ ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed2
    ```
 ![eval-ssh-agent-commends](https://github.com/user-attachments/assets/60544ef1-52ea-46f2-a024-28ef4880191b)
 
+We can also remove the ssh-eval with the -D command or weith the kill command.
+
 ### Automation Example
 
 Create a script to automate SSH tasks:
