@@ -6,14 +6,10 @@
 - [3.2 Advanced SSH Key Management](#32-advanced-ssh-key-management)
 - [3.3 Leveraging SSH Agent](#33-leveraging-ssh-agent)
 - [3.4 Port Forwarding and Tunneling](#34-port-forwarding-and-tunneling)
-  - [3.4.1 Local Port Forwarding](#341-local-port-forwarding)
-  - [3.4.2 Remote Port Forwarding](#342-remote-port-forwarding)
-  - [3.4.3 Dynamic Port Forwarding (SOCKS Proxy)](#343-dynamic-port-forwarding-socks-proxy)
 - [3.5 SSH Jump Hosts](#35-ssh-jump-hosts)
-- [3.6 Best Practices](#36-best-practices)
-- [3.7 Further Reading](#37-further-reading)
-
----
+- [3.6 Command-Line Control Using ~C](#36-command-line-control-using-c)
+- [3.7 Best Practices](#37-best-practices)
+- [3.8 Further Reading](#38-further-reading)
 
 ## 3.1 SSH Configuration Files
 
@@ -77,8 +73,6 @@ sudo nano /etc/ssh/sshd_config  # Edit the file
 sudo systemctl restart sshd     # Restart SSH service to apply changes
 ```
 
----
-
 ## 3.2 Advanced SSH Key Management
 
 ### Managing Multiple SSH Keys
@@ -135,8 +129,6 @@ For temporary access (OpenSSH 8.2+):
 ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed25519_temp
 ```
 
----
-
 ## 3.3 Leveraging SSH Agent
 
 ### Usage
@@ -161,9 +153,6 @@ ssh-keygen -t ed25519 -O verify-required -O expiration-time=+7d -f ~/.ssh/id_ed2
    ```bash
    ssh-add -d ~/.ssh/id_rsa
    ```
-![eval-ssh-agent-commends](https://github.com/user-attachments/assets/60544ef1-52ea-46f2-a024-28ef4880191b)
-
-We can also remove the ssh-eval with the -D command or weith the kill command.
 
 ### Automation Example
 
@@ -188,99 +177,45 @@ ssh personalserver 'df -h'
 ssh-agent -k
 ```
 
----
-
 ## 3.4 Port Forwarding and Tunneling
 
-SSH port forwarding, also known as SSH tunneling, allows you to securely redirect network traffic through an encrypted SSH connection. This feature is invaluable for accessing services on remote networks, bypassing firewalls, and enhancing overall network security.
+SSH port forwarding, also known as SSH tunneling, allows you to securely redirect network traffic through an encrypted SSH connection.
 
 ### 3.4.1 Local Port Forwarding
-
-Local port forwarding enables you to securely access a remote service as if it were running on your local machine.
 
 **Syntax:**
 ```bash
 ssh -L [local_address:]local_port:remote_address:remote_port [user@]ssh_server
 ```
-![local-port-forwarding](https://github.com/user-attachments/assets/3d46e482-b042-46a6-997b-fcc5812232ed)
 
-**Key Components:**
-- `local_address`: (Optional) The local interface to bind to (default: localhost)
-- `local_port`: The port on your local machine to forward from
-- `remote_address`: The destination host as seen from the SSH server
-- `remote_port`: The port on the remote destination
-- `ssh_server`: The intermediary SSH server
-
-[Insert diagram of local port forwarding here]
-
-**Practical Examples:**
-
-1. Accessing a remote web server:
-   ```bash
-   ssh -L 8080:remote-webserver:80 user@ssh-server
-   ```
-   This command forwards your local port 8080 to port 80 on `remote-webserver`.
-
-2. Securely accessing a database server:
-   ```bash
-   ssh -L 3306:database-server:3306 user@ssh-server
-   ```
-   This setup allows you to connect to a remote MySQL database as if it were running locally.
+**Example:**
+```bash
+ssh -L 8080:remote-webserver:80 user@ssh-server
+```
 
 ### 3.4.2 Remote Port Forwarding
-
-Remote port forwarding allows you to make a service on your local machine accessible from a remote location.
 
 **Syntax:**
 ```bash
 ssh -R [remote_address:]remote_port:local_address:local_port [user@]ssh_server
 ```
-![remote-port-forwarding](https://github.com/user-attachments/assets/dc4fa32d-9b11-4105-80b1-1ddede604677)
 
-**Key Components:**
-- `remote_address`: (Optional) The remote interface to bind to (default: localhost on the SSH server)
-- `remote_port`: The port on the remote SSH server to forward to
-- `local_address`: The local destination host (usually localhost)
-- `local_port`: The port of the local service you're exposing
-- `ssh_server`: The intermediary SSH server
-
-[Insert diagram of remote port forwarding here]
-
-**Practical Example:**
-
-Exposing a local web development server:
+**Example:**
 ```bash
 ssh -R 8080:localhost:3000 user@remote-server
 ```
-This command makes your local development server running on port 3000 accessible on the remote server at `http://localhost:8080`.
 
 ### 3.4.3 Dynamic Port Forwarding (SOCKS Proxy)
-
-Dynamic port forwarding creates a local SOCKS proxy server that can route traffic to multiple remote destinations through an SSH tunnel.
 
 **Syntax:**
 ```bash
 ssh -D [local_address:]local_port [user@]ssh_server
 ```
-![dynamic port forwarding](https://github.com/user-attachments/assets/84d349a0-0b36-4d4c-9253-746d33c9b6b4)
 
-**Key Components:**
-- `local_address`: (Optional) The local interface to bind the SOCKS proxy to
-- `local_port`: The local port to run the SOCKS proxy on
-- `ssh_server`: The SSH server acting as the proxy endpoint
-
-![proxy-diagr](https://github.com/user-attachments/assets/33de6fd7-17ad-4edf-a30f-ff65603e4908)
-
-**Practical Example:**
-
-Setting up a SOCKS proxy on port 1080:
+**Example:**
 ```bash
 ssh -D 1080 user@remote-server
 ```
-
-This command establishes a SOCKS proxy on your local port 1080, which can be used to route application traffic through the SSH tunnel.
-
----
 
 ## 3.5 SSH Jump Hosts
 
@@ -300,25 +235,57 @@ Host targethost
     ProxyJump jumphost
 ```
 
-Now you can simply run:
+Usage:
 ```bash
 ssh targethost
 ```
-![jump-host](https://github.com/user-attachments/assets/093a88ed-5c80-4167-a3f2-111fd1a0f57b)
 
-### Multiple Jump Hosts
+## 3.6 Command-Line Control Using ~C
 
-For scenarios requiring multiple jumps:
-```plaintext
-Host targethost
-    HostName 192.168.1.100
-    User targetuser
-    ProxyJump jumphost1,jumphost2
+SSH provides a command-line interface during an active session using the `~C` escape sequence. This allows you to manage port forwarding and other connection parameters on-the-fly.
+
+To access this interface:
+
+1. Press `Enter` to ensure you're on a new line
+2. Type `~C` (tilde followed by capital C)
+
+You'll see a prompt like this:
+```
+ssh>
 ```
 
----
+Available commands:
 
-## 3.6 Best Practices
+- `-L [bind_address:]port:host:hostport`: Add local port forwarding
+- `-R [bind_address:]port:host:hostport`: Add remote port forwarding
+- `-D [bind_address:]port`: Add dynamic port forwarding
+- `-KL[bind_address:]port`: Cancel local forwarding
+- `-KR[bind_address:]port`: Cancel remote forwarding
+- `-KD[bind_address:]port`: Cancel dynamic forwarding
+- `?`: Display help
+- `exit` or `~.`: Exit the SSH session
+
+Example usage:
+
+```
+ssh> -L 8080:localhost:80
+Forwarding port.
+ssh> -KL 8080
+Cancelling forwarding port 8080
+ssh> ?
+Commands:
+      -L[bind_address:]port:host:hostport    Request local forward
+      -R[bind_address:]port:host:hostport    Request remote forward
+      -D[bind_address:]port                  Request dynamic forward
+      -KL[bind_address:]port                 Cancel local forward
+      -KR[bind_address:]port                 Cancel remote forward
+      -KD[bind_address:]port                 Cancel dynamic forward
+ssh> exit
+```
+
+This feature is particularly useful for adding or removing port forwards without disconnecting and reconnecting to the SSH session.
+
+## 3.7 Best Practices
 
 1. Use unique keys for different purposes (work, personal, etc.).
 2. Regularly rotate SSH keys (e.g., annually).
@@ -329,9 +296,7 @@ Host targethost
 7. Use key types like Ed25519 for better security and performance.
 8. Implement fail2ban or similar tools to prevent brute-force attacks.
 
----
-
-## 3.7 Further Reading
+## 3.8 Further Reading
 
 - [OpenSSH Manual](https://www.openssh.com/manual.html)
 - [SSH.com Security Best Practices](https://www.ssh.com/academy/ssh/security)
@@ -345,4 +310,3 @@ Host targethost
 **License:** This document is released under the MIT License. See LICENSE file for details.
 
 **Contributions:** We welcome contributions to improve this guide. Please see CONTRIBUTING.md for guidelines on how to submit improvements or corrections.
-
