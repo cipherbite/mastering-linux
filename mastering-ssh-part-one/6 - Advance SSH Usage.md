@@ -291,4 +291,3 @@ Configure `knockd` (`/etc/knockd.conf`):
 - [Fail2Ban Documentation](https://www.fail2ban.org/wiki/index.php/Main_Page)
 - [Port Knocking: Concepts and Implementation](https://www.digitalocean.com/community/tutorials/how-to-use-port-knocking-to-hide-your-ssh-daemon-from-attackers-on-ubuntu)
 
----
