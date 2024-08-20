@@ -26,7 +26,7 @@ This setting, located in `/etc/ssh/sshd_config`, provides detailed logs about lo
 
 ![ssh-config](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-**Screenshot Description:** The SSH configuration file (`/etc/ssh/sshd_config`) is open, with the `LogLevel VERBOSE` setting highlighted, showing where to configure this important logging option.
+**Screenshot Description:** The screenshot shows the SSH server configuration file (`/etc/ssh/sshd_config`) with the `LogLevel VERBOSE` setting highlighted. This setting ensures that the SSH server logs detailed information about user activities, which is essential for security monitoring and auditing.
 
 ---
 
@@ -47,12 +47,12 @@ grep "Failed password" /var/log/auth.log | wc -l
 grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr
 ```
 
-- The first command counts failed login attempts, indicating potential brute-force attacks.
-- The second command identifies the IP addresses of failed attempts, helping trace attack origins.
+- The first command counts the number of failed login attempts, which can indicate potential brute-force attacks.
+- The second command identifies the unique IP addresses that have attempted to log in unsuccessfully, allowing you to track the origin of the failed login attempts.
 
 ![log-analysis-command](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-**Screenshot Description:** Terminal output showing a list of IP addresses sorted by the number of failed login attempts, highlighting the most frequent offenders.
+**Screenshot Description:** The terminal output shows the result of running the second command, which lists the IP addresses that have attempted to log in unsuccessfully, sorted by the number of failed attempts. This information helps identify the source of potential brute-force attacks on the SSH server.
 
 ---
 
@@ -86,7 +86,7 @@ This configuration bans IP addresses after three failed login attempts for one h
 
 ![etcfail2banjail](https://github.com/user-attachments/assets/ff7cc96a-0334-4359-9ddc-53e29d25ad4d)
 
-**Screenshot Description:** The Fail2Ban configuration file (`/etc/fail2ban/jail.local`) is shown, with the `[sshd]` section highlighted, demonstrating the configuration for SSH protection.
+**Screenshot Description:** The screenshot shows the Fail2Ban configuration file (`/etc/fail2ban/jail.local`) with the `[sshd]` section highlighted. This section configures Fail2Ban to monitor the SSH server's log file (`/var/log/auth.log`) for failed login attempts, and to automatically ban any IP address that exceeds the specified number of failed attempts (3) for a certain duration (1 hour).
 
 ---
 
@@ -110,7 +110,7 @@ These sequences are essential for managing unresponsive sessions or port forward
 
 ![ssh-escape-sequence](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-**Screenshot Description:** Terminal output showing the result of typing `~?`, listing all available escape sequences in an active SSH session.
+**Screenshot Description:** The terminal output shows the result of typing the `~?` escape sequence, which displays a list of all available SSH escape sequences and their corresponding actions. This information is crucial for understanding how to effectively manage and control an active SSH session.
 
 ---
 
@@ -120,7 +120,7 @@ To use an escape sequence, press `Enter` to start a new line, then type the sequ
 
 ![ssh-terminate-escape](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-**Screenshot Description:** An SSH session is terminated using the `~.` escape sequence, illustrating its immediate effect.
+**Screenshot Description:** The screenshot demonstrates the use of the `~.` escape sequence to immediately terminate the current SSH session. This is a valuable tool for quickly and safely disconnecting from an unresponsive or problematic SSH connection.
 
 ---
 
@@ -130,7 +130,7 @@ SSH honeypots are deceptive systems designed to attract and monitor attackers. T
 
 ### 4.3.1 Setting Up a Basic SSH Honeypot
 
-**Kippo** is a widely used low-interaction SSH honeypot. Here’s how to set it up:
+**Kippo** is a widely used low-interaction SSH honeypot. Here's how to set it up:
 
 1. Clone Kippo from GitHub:
     ```bash
@@ -159,7 +159,7 @@ This setup simulates a vulnerable SSH server on port 2222, capturing attacker in
 
 ![kippo-1](https://github.com/user-attachments/assets/ff329295-21fc-42be-a85d-b9365ea91932)
 
-**Screenshot Description:** The `kippo.log` file displays unauthorized access attempts, logging activity captured by the honeypot.
+**Screenshot Description:** The screenshot shows the Kippo honeypot's log file (`kippo.log`), which displays the unauthorized access attempts that have been captured by the honeypot. This information is valuable for analyzing the tactics and techniques used by potential attackers, allowing you to enhance the overall security of your SSH infrastructure.
 
 ---
 
@@ -199,6 +199,8 @@ docker run -d -p 2222:22 ssh-server
 
 ![docker](https://github.com/user-attachments/assets/56dd2384-b9a3-41f4-b72d-7cdf68ad45f6)
 
+**Screenshot Description:** The screenshot shows a terminal session where a Docker container with an SSH server is running. The container's SSH server is listening on port 2222, and the user can connect to it using SSH from the host system.
+
 ---
 
 ### 4.4.2 SSH Agent Forwarding with Docker
@@ -214,7 +216,7 @@ docker run -it --rm \
 
 This allows your container to use SSH keys from your local environment.
 
-**Screenshot Description:** A Docker container terminal shows successful SSH agent forwarding, enabling the container to authenticate with the user’s local SSH keys.
+**Screenshot Description:** The screenshot demonstrates the successful use of SSH agent forwarding within a Docker container. By mounting the host system's SSH agent socket (`$SSH_AUTH_SOCK`) and setting the appropriate environment variable, the container can access the user's local SSH keys, enabling seamless authentication with remote systems.
 
 ---
 
@@ -226,7 +228,4 @@ Following SSH best practices helps maintain a secure environment. Here are some 
 2. **Implement two-factor authentication (2FA)**: Tools like Google Authenticator or Duo add an extra layer of protection.
 3. **Restrict access to known IP addresses**: Use `AllowUsers` or `AllowGroups` in `sshd_config` to limit who can log in.
 4. **Deploy honeypots**: Use honeypots to gather intelligence on potential attacks.
-5. **Secure containers**: Ensure SSH containers are isolated and properly segmented within
-
- the network.
-
+5. **Secure containers**: Ensure SSH containers are isolated and properly segmented within the network.
