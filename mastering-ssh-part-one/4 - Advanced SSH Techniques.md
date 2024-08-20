@@ -1,5 +1,3 @@
-Certainly! I'll create a version similar to the provided document, including spots for screenshots and descriptions of what those screenshots should show. Here's the revised version:
-
 # Part Four: Advanced SSH Techniques
 
 ## Table of Contents
