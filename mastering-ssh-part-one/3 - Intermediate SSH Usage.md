@@ -19,7 +19,7 @@ SSH configuration files are like the control panel for your secure connections. 
 
 The client-side configuration file is located at `~/.ssh/config`. This file is your personal command center for SSH connections. It allows you to set up aliases, specify default settings, and customize how your SSH client behaves.
 
-{screenshot of: A sample ~/.ssh/config file with multiple host configurations}
+![ssh-multiple-hosts](https://github.com/user-attachments/assets/5aca31a2-a97b-4b17-946b-951f2667d371)
 
 Typical ~/.ssh/config file with several host configurations. Each configuration block starts with "Host" followed by an alias name, and includes settings like HostName, User, and IdentityFile.
 
@@ -44,7 +44,7 @@ This configuration allows you to simply type `ssh myserver` instead of the full 
 
 The server-side configuration file is located at `/etc/ssh/sshd_config`. This file controls how the SSH server (daemon) operates. It's like setting the rules for who can enter your house and how they can do it.
 
-{screenshot of: A sample /etc/ssh/sshd_config file with key security settings highlighted}
+![ssh-konfig-file](https://github.com/user-attachments/assets/bfef0dc0-5f91-4836-908d-e235d451026f)
 
 Portion of the /etc/ssh/sshd_config file, highlighting important security settings such as PermitRootLogin, PasswordAuthentication, and AllowUsers.
 
@@ -95,7 +95,6 @@ This setup allows you to use different keys for different servers automatically.
    ssh-copy-id -i ~/.ssh/id_ed25519_newserver.pub user@host
    ```
 
-{screenshot of: The ssh-keygen command in action, showing the key generation process}
 Start by opening a terminal or command prompt. Enter the command ssh-keygen and press Enter.
 The terminal asks where to save the new key. You can accept the default location by pressing Enter.
 You are prompted to enter a passphrase for added security. Press Enter to skip if you don’t want a passphrase.
@@ -103,8 +102,6 @@ You are prompted to enter a passphrase for added security. Press Enter to skip i
 ![ssh-keygen](https://github.com/user-attachments/assets/4a09d39a-abff-4165-8772-fd8e0f0eef6b)
 
 The key pair is generated, and the terminal displays confirmation with the file locations and key fingerprint.
-
-
 
 ### Restricting Key Usage
 
@@ -142,7 +139,6 @@ First start the SSH agent with "eval '$(ssh-agent -s)'" command.
 Add Your SSH Private Key to the Agent.
 Verify That The Key Has Been Added.
 
-{screenshot of: SSH agent in action, showing the process of starting the agent and adding keys}
 ![ssh-agent](https://github.com/user-attachments/assets/000bf214-0eb7-47fe-9f72-42b45ad30103)
 
 Terminal output when starting the SSH agent and adding multiple keys. It shows the agent pid when started and the fingerprints of the added keys.
@@ -167,7 +163,6 @@ ssh -L 8080:remote-webserver:80 user@ssh-server
 
 This command creates a tunnel that forwards traffic from your local port 8080 to port 80 on remote-webserver, through ssh-server.
 
-{screenshot of: A diagram illustrating local port forwarding}
 ![local-port-forwarding](https://github.com/user-attachments/assets/21ad2efd-315e-4560-93b1-b8f22acca220)
 
 This diagram shows a visual representation of local port forwarding. It depicts the local machine, the SSH server, and the remote web server, with arrows showing the flow of traffic through the SSH tunnel.
@@ -210,8 +205,6 @@ Usage:
 ```bash
 ssh targethost
 ```
-
-{screenshot of: A diagram showing the SSH connection flow through a jump host}
 ![ssh-jumphost-diagram](https://github.com/user-attachments/assets/36dc6eb8-2293-45d2-aa1b-7abaa2037a24)
 
 This diagram illustrates the path of an SSH connection using a jump host. It shows the user's machine connecting to the jump host, and then the jump host connecting to the target server, with the SSH connection flowing through this path.
@@ -225,16 +218,17 @@ To access this interface:
 1. Press `Enter` to ensure you're on a new line
 2. Type `~C` (tilde followed by capital C)
 
+![escape-sequence-~C](https://github.com/user-attachments/assets/e2bdea1b-d39b-4ac6-a753-b9c513d9088e)
+
 You'll see a prompt like this:
 ```
 ssh>
 ```
 
-{screenshot of: The SSH command-line interface accessed via ~C, showing available commands}
-![escape-sequence-~C](https://github.com/user-attachments/assets/e2bdea1b-d39b-4ac6-a753-b9c513d9088e)
+![~C-command](https://github.com/user-attachments/assets/755ad72d-143c-44f3-a0a4-e93cd94252e3)
 
 SSH command-line interface after entering ~C. It shows the "ssh>" prompt and lists several available commands such as -L for local forwarding and -R for remote forwarding.
-![~C-command](https://github.com/user-attachments/assets/755ad72d-143c-44f3-a0a4-e93cd94252e3)
+
 
 ## 3.7 Best Practices
 
