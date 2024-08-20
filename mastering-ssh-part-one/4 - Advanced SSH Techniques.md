@@ -276,11 +276,3 @@ For more in-depth knowledge and best practices, explore the following resources:
 - [The Honeynet Project](https://www.honeynet.org/)
 - [NIST Guide to SSH Key Management](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
 
----
-
-**Note:** This guide covers advanced topics that should be implemented with caution. Always test configurations in a safe environment before applying them to production systems.
-
-**License:** This document is released under the MIT License. See LICENSE file for details.
-
-**Contributions:** We welcome contributions to improve this guide. Please see CONTRIBUTING.md for guidelines on how to submit improvements or corrections.
-
