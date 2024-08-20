@@ -53,9 +53,9 @@ grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | 
 - The first command counts the total number of failed password attempts, providing a quick overview of potential brute-force attacks.
 - The second command lists unique IP addresses with the number of failed attempts, helping identify the sources of these attempts.
 
-<div style="text-align: center;"> 
+
   ![log-analysis-command](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
-</div>
+
 
 Terminal output after running the log analysis commands. It displays a list of IP addresses sorted by the number of failed login attempts, with the most frequent offenders at the top.
 
