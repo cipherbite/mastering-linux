@@ -209,17 +209,14 @@ docker build -t ssh-server .
 docker run -d -p 2222:22 ssh-server
 ```
 
+![docker](https://github.com/user-attachments/assets/56dd2384-b9a3-41f4-b72d-7cdf68ad45f6)
+
+
 Connect to the container:
 
 ```bash
 ssh root@localhost -p 2222
 ```
-
-<div style="text-align: center;"> 
-  **Screenshot of:** Terminal showing Docker build and run commands and a successful SSH connection to the container.
-</div>
-
-Terminal output demonstrates the Docker build and run process, followed by a successful SSH connection to the running container.
 
 ---
 
