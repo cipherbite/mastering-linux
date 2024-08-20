@@ -13,34 +13,32 @@
 
 ## 4.1 SSH Security Monitoring and Auditing
 
-Effective monitoring and auditing of SSH activities are crucial for maintaining a secure environment. This section covers setting up logging, analyzing logs, and implementing intrusion detection systems to fortify your SSH access.
+SSH security monitoring and auditing are critical for maintaining a secure environment. This section discusses how to set up logging, analyze logs, and implement intrusion detection systems to enhance your SSH security.
 
 ### 4.1.1 Logging SSH Activities
 
-To ensure comprehensive logging of SSH activities, configure the `LogLevel` setting in the SSH server configuration file:
+To comprehensively log SSH activities, configure the `LogLevel` in your SSH server configuration:
 
 ```plaintext
 LogLevel VERBOSE
 ```
 
-This setting, typically found in `/etc/ssh/sshd_config`, provides detailed logs about login attempts, key usage, and session activities, which are essential for effective monitoring.
+This setting, located in `/etc/ssh/sshd_config`, provides detailed logs about login attempts, key usage, and session activities—crucial data for monitoring and auditing.
 
-<div style="text-align: center;"> 
-  **Screenshot of:** The SSH configuration file (`/etc/ssh/sshd_config`) with `LogLevel VERBOSE` highlighted.  
-</div>
+![ssh-config](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-The SSH daemon configuration file is open in a text editor. The `LogLevel VERBOSE` line is highlighted, demonstrating where to set this crucial logging parameter.
+**Screenshot Description:** The SSH configuration file (`/etc/ssh/sshd_config`) is open, with the `LogLevel VERBOSE` setting highlighted, showing where to configure this important logging option.
 
 ---
 
 ### 4.1.2 Analyzing SSH Logs
 
-Analyzing SSH logs helps identify suspicious activities. The key log files to focus on are:
+Analyzing SSH logs helps detect suspicious activities. Focus on the following log files:
 
-- `/var/log/auth.log` (Debian/Ubuntu systems)
-- `/var/log/secure` (Red Hat/CentOS systems)
+- `/var/log/auth.log` (Debian/Ubuntu)
+- `/var/log/secure` (Red Hat/CentOS)
 
-Here are some useful commands for log analysis:
+Here are some useful commands:
 
 ```bash
 # Count failed login attempts
@@ -50,27 +48,25 @@ grep "Failed password" /var/log/auth.log | wc -l
 grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr
 ```
 
-- The first command counts the total number of failed password attempts, providing a quick overview of potential brute-force attacks.
-- The second command lists unique IP addresses with the number of failed attempts, helping identify the sources of these attempts.
+- The first command counts failed login attempts, indicating potential brute-force attacks.
+- The second command identifies the IP addresses of failed attempts, helping trace attack origins.
 
+![log-analysis-command](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-  ![log-analysis-command](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
-
-
-Terminal output after running the log analysis commands. It displays a list of IP addresses sorted by the number of failed login attempts, with the most frequent offenders at the top.
+**Screenshot Description:** Terminal output showing a list of IP addresses sorted by the number of failed login attempts, highlighting the most frequent offenders.
 
 ---
 
 ### 4.1.3 Implementing Intrusion Detection
 
-**Fail2Ban** is a powerful tool that automates the process of blocking suspicious IP addresses. Here's how to set up Fail2Ban for SSH:
+**Fail2Ban** automates blocking suspicious IP addresses. To set up Fail2Ban for SSH:
 
 1. Install Fail2Ban:
     ```bash
     sudo apt-get install fail2ban
     ```
 
-2. Configure the jail for SSH:
+2. Configure the SSH jail:
     ```bash
     sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
     sudo nano /etc/fail2ban/jail.local
@@ -87,17 +83,17 @@ Terminal output after running the log analysis commands. It displays a list of I
     bantime = 3600
     ```
 
-This setup automatically bans IP addresses after three failed login attempts for one hour.
+This configuration bans IP addresses after three failed login attempts for one hour.
 
 ![etcfail2banjail](https://github.com/user-attachments/assets/ff7cc96a-0334-4359-9ddc-53e29d25ad4d)
 
-The Fail2Ban configuration file (`/etc/fail2ban/jail.local`) is open in a text editor, with the `[sshd]` settings section highlighted to show how to configure Fail2Ban for SSH.
+**Screenshot Description:** The Fail2Ban configuration file (`/etc/fail2ban/jail.local`) is shown, with the `[sshd]` section highlighted, demonstrating the configuration for SSH protection.
 
 ---
 
 ## 4.2 SSH Escape Sequences
 
-SSH escape sequences allow you to manage SSH connections dynamically without terminating your session. These sequences are especially useful for handling unresponsive connections and inspecting forwarded ports.
+SSH escape sequences allow you to manage SSH connections dynamically without terminating the session. These sequences are especially useful for handling unresponsive connections and inspecting forwarded ports.
 
 ### 4.2.1 Common Escape Sequences
 
@@ -111,35 +107,31 @@ Here are some commonly used escape sequences:
 | `~?`     | Show a list of available escape sequences. |
 | `~~`     | Send the escape character itself.     |
 
-These sequences are useful for recovering from unresponsive sessions or managing port forwarding.
+These sequences are essential for managing unresponsive sessions or port forwarding.
 
-<div style="text-align: center;"> 
-  **Screenshot of:** Terminal showing the result of typing `~?`, listing all available escape sequences in an active SSH session.
-</div>
+![ssh-escape-sequence](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-**Screenshot Description:** The terminal displays a list of available SSH escape sequences after the user types `~?`. This illustrates how escape sequences can be used to control an SSH session.
+**Screenshot Description:** Terminal output showing the result of typing `~?`, listing all available escape sequences in an active SSH session.
 
 ---
 
 ### 4.2.2 Using Escape Sequences
 
-To use an escape sequence, press `Enter` to start a new line, then type the sequence. For example, `~.` will immediately terminate the session.
+To use an escape sequence, press `Enter` to start a new line, then type the sequence. For instance, `~.` will immediately terminate the session.
 
-<div style="text-align: center;"> 
-  **Screenshot of:** An SSH session in which the escape sequence `~.` is used to terminate the connection.
-</div>
+![ssh-terminate-escape](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
 
-The terminal shows the SSH session being terminated using the `~.` escape sequence, illustrating its immediate effect on closing the connection.
+**Screenshot Description:** An SSH session is terminated using the `~.` escape sequence, illustrating its immediate effect.
 
 ---
 
 ## 4.3 SSH Honeypots
 
-SSH honeypots are deceptive environments designed to attract and monitor attackers. These honeypots gather intelligence on potential attacks and help improve security practices by capturing information about attack methods and behaviors.
+SSH honeypots are deceptive systems designed to attract and monitor attackers. These honeypots collect data on attack methods and behaviors, enhancing overall security.
 
 ### 4.3.1 Setting Up a Basic SSH Honeypot
 
-**Kippo** is a popular low-interaction SSH honeypot. To set it up:
+**Kippo** is a widely used low-interaction SSH honeypot. Here’s how to set it up:
 
 1. Clone Kippo from GitHub:
     ```bash
@@ -153,7 +145,7 @@ SSH honeypots are deceptive environments designed to attract and monitor attacke
     nano kippo.cfg
     ```
 
-3. Edit the key settings:
+3. Edit key settings:
     ```plaintext
     ssh_port = 2222
     hostname = FakeServer
@@ -164,20 +156,17 @@ SSH honeypots are deceptive environments designed to attract and monitor attacke
     ./start.sh
     ```
 
-This setup simulates a vulnerable SSH server on port 2222, capturing attacker interactions for analysis.
-
-Logging with Kippo
-There are a few things which are logged without any extra configuration. One of which is the logging of unauthorized access. For example, when someone tries to login to our server with SSH, not knowing that we have changed the port number, they would see something like this:
+This setup simulates a vulnerable SSH server on port 2222, capturing attacker interactions.
 
 ![kippo-1](https://github.com/user-attachments/assets/ff329295-21fc-42be-a85d-b9365ea91932)
 
-As long as our start.sh script is running, our events will be logged in /home/kippo/kippo/log/kippo.log. Lets open that file with a text editor (of your choice) and see what has been logged.
+**Screenshot Description:** The `kippo.log` file displays unauthorized access attempts, logging activity captured by the honeypot.
 
 ---
 
 ### 4.3.2 Analyzing Honeypot Data
 
-Kippo generates logs stored in the `log` directory. These logs can be analyzed using tools such as the **ELK Stack** (Elasticsearch, Logstash, and Kibana) to visualize attack trends and patterns.
+Kippo logs are stored in the `log` directory. You can analyze these logs using tools like the **ELK Stack** (Elasticsearch, Logstash, Kibana) to visualize attack patterns.
 
 ---
 
@@ -211,13 +200,6 @@ docker run -d -p 2222:22 ssh-server
 
 ![docker](https://github.com/user-attachments/assets/56dd2384-b9a3-41f4-b72d-7cdf68ad45f6)
 
-
-Connect to the container:
-
-```bash
-ssh root@localhost -p 2222
-```
-
 ---
 
 ### 4.4.2 SSH Agent Forwarding with Docker
@@ -231,30 +213,28 @@ docker run -it --rm \
   ubuntu /bin/bash
 ```
 
-This setup allows your container to use SSH keys from your local environment.
+This allows your container to use SSH keys from your local environment.
 
-<div style="text-align: center;"> 
-  **Screenshot of:** Docker container terminal showing successful SSH agent forwarding and key usage within the container.
-</div>
-
-The terminal shows a Docker container using SSH agent forwarding, allowing the container to authenticate with the user's local SSH keys.
+**Screenshot Description:** A Docker container terminal shows successful SSH agent forwarding, enabling the container to authenticate with the user’s local SSH keys.
 
 ---
 
-### 
+## 4.5 Best Practices
 
-4.5 Best Practices
+Following SSH best practices helps maintain a secure environment. Here are some key recommendations:
 
-1. **Enforce strong authentication methods**: Use SSH key-based authentication instead of passwords, and disable password login for additional security.
-2. **Use two-factor authentication (2FA)**: Integrate tools like Google Authenticator or Duo for an extra layer of security.
-3. **Limit access to known IP addresses**: Configure `AllowUsers` or `AllowGroups` in `sshd_config` to restrict login access.
-4. **Deploy honeypots**: Set up honeypots to gather intelligence on potential attacks.
-5. **Secure containers**: Ensure SSH containers are isolated and utilize proper network segmentation.
+1. **Enforce strong authentication**: Use SSH key-based authentication instead of passwords, and disable password login for added security.
+2. **Implement two-factor authentication (2FA)**: Tools like Google Authenticator or Duo add an extra layer of protection.
+3. **Restrict access to known IP addresses**: Use `AllowUsers` or `AllowGroups` in `sshd_config` to limit who can log in.
+4. **Deploy honeypots**: Use honeypots to gather intelligence on potential attacks.
+5. **Secure containers**: Ensure SSH containers are isolated and properly segmented within
+
+ the network.
 
 ---
 
-### 4.6 Further Reading
+## 4.6 Further Reading
 
-- [OpenSSH Security Best Practices](https://www.openssh.com/security.html)
-- [Intrusion Detection with Fail2Ban](https://www.fail2ban.org)
-- [Setting up an ELK Stack for Honeypot Monitoring](https://www.elastic.co)
+- **SSH Mastery** by Michael W. Lucas
+- **Linux Server Security** by Chris Binnie
+- **Docker: Up & Running** by Karl Matthias and Sean P. Kane
