@@ -21,7 +21,7 @@ The client-side configuration file is located at `~/.ssh/config`. This file is y
 
 {screenshot of: A sample ~/.ssh/config file with multiple host configurations}
 
-Description: This screenshot shows a typical ~/.ssh/config file with several host configurations. Each configuration block starts with "Host" followed by an alias name, and includes settings like HostName, User, and IdentityFile.
+Typical ~/.ssh/config file with several host configurations. Each configuration block starts with "Host" followed by an alias name, and includes settings like HostName, User, and IdentityFile.
 
 #### Example Configuration:
 
@@ -46,7 +46,7 @@ The server-side configuration file is located at `/etc/ssh/sshd_config`. This fi
 
 {screenshot of: A sample /etc/ssh/sshd_config file with key security settings highlighted}
 
-Description: This screenshot displays a portion of the /etc/ssh/sshd_config file, highlighting important security settings such as PermitRootLogin, PasswordAuthentication, and AllowUsers.
+Portion of the /etc/ssh/sshd_config file, highlighting important security settings such as PermitRootLogin, PasswordAuthentication, and AllowUsers.
 
 Key settings to consider:
 
@@ -97,7 +97,7 @@ This setup allows you to use different keys for different servers automatically.
 
 {screenshot of: The ssh-keygen command in action, showing the key generation process}
 
-Description: This screenshot shows the output of the ssh-keygen command, including prompts for the file location and passphrase, and the resulting fingerprint of the new key.
+Output of the ssh-keygen command, including prompts for the file location and passphrase, and the resulting fingerprint of the new key.
 
 ### Restricting Key Usage
 
@@ -133,7 +133,7 @@ The SSH agent is like a secure, intelligent key ring for your SSH keys. It holds
 
 {screenshot of: SSH agent in action, showing the process of starting the agent and adding keys}
 
-Description: This screenshot displays the terminal output when starting the SSH agent and adding multiple keys. It shows the agent pid when started and the fingerprints of the added keys.
+Terminal output when starting the SSH agent and adding multiple keys. It shows the agent pid when started and the fingerprints of the added keys.
 
 ## 3.4 Port Forwarding and Tunneling
 
@@ -157,7 +157,7 @@ This command creates a tunnel that forwards traffic from your local port 8080 to
 
 {screenshot of: A diagram illustrating local port forwarding}
 
-Description: This diagram shows a visual representation of local port forwarding. It depicts the local machine, the SSH server, and the remote web server, with arrows showing the flow of traffic through the SSH tunnel.
+This diagram shows a visual representation of local port forwarding. It depicts the local machine, the SSH server, and the remote web server, with arrows showing the flow of traffic through the SSH tunnel.
 
 ### Remote Port Forwarding
 
@@ -200,7 +200,7 @@ ssh targethost
 
 {screenshot of: A diagram showing the SSH connection flow through a jump host}
 
-Description: This diagram illustrates the path of an SSH connection using a jump host. It shows the user's machine connecting to the jump host, and then the jump host connecting to the target server, with the SSH connection flowing through this path.
+This diagram illustrates the path of an SSH connection using a jump host. It shows the user's machine connecting to the jump host, and then the jump host connecting to the target server, with the SSH connection flowing through this path.
 
 ## 3.6 Command-Line Control Using ~C
 
@@ -218,7 +218,7 @@ ssh>
 
 {screenshot of: The SSH command-line interface accessed via ~C, showing available commands}
 
-Description: This screenshot displays the SSH command-line interface after entering ~C. It shows the "ssh>" prompt and lists several available commands such as -L for local forwarding and -R for remote forwarding.
+SSH command-line interface after entering ~C. It shows the "ssh>" prompt and lists several available commands such as -L for local forwarding and -R for remote forwarding.
 
 ## 3.7 Best Practices
 
@@ -235,7 +235,7 @@ Following SSH best practices is like following the rules of the road for secure 
 
 {screenshot of: A checklist or infographic of SSH best practices}
 
-Description: This image presents a visually appealing checklist or infographic of the SSH best practices mentioned above. Each practice is accompanied by a small icon or illustration to make the information more engaging and memorable.
+This image presents a visually appealing checklist or infographic of the SSH best practices mentioned above. Each practice is accompanied by a small icon or illustration to make the information more engaging and memorable.
 
 ## 3.8 Further Reading
 
