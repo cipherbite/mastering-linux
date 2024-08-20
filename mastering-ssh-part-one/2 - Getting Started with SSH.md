@@ -22,7 +22,7 @@ This command is like knocking on the door of a remote computer and requesting ac
 - **remote_host:** The IP address or domain name of the remote server.
 - **Example:** `ssh john@example.com`
 
-{screenshot of: A terminal window showing a successful SSH connection, including the initial welcome message}
+![ssh-first-connection](https://github.com/user-attachments/assets/e5b2fc4f-d56c-41a5-8fa6-cb4aad2163ba)
 
 **Key Options:**
 - `-p port`: Specify a non-standard SSH port (if the server uses one other than the default port 22).
@@ -53,7 +53,7 @@ This is like sending a quick task to the remote computer, instructing it to perf
 **Advanced Usage:**
 - Chain multiple commands together: `ssh user@host 'command1 && command2'`
 
-{screenshot of: A terminal window showing the output of a remote command execution}
+![ssh-remote-code-execute](https://github.com/user-attachments/assets/4953a5ea-df1c-4af5-940b-d715cd7bcbef)
 
 ### Secure File Transfer with SCP
 
@@ -71,7 +71,7 @@ scp [options] username@remote_host:source_file(s) destination
 
 SCP ensures that your files are transferred securely and remain encrypted during transit.
 
-{screenshot of: An SCP file transfer in progress, showing the transfer rate and progress bar}
+![scp-FILE-TRANSFER](https://github.com/user-attachments/assets/6aa4862c-ca36-4b6f-9880-567686568ca9)
 
 **Examples:**
 - Upload a file: `scp /path/to/local/file.txt john@example.com:/home/john/`
@@ -88,7 +88,7 @@ SCP ensures that your files are transferred securely and remain encrypted during
 
 SFTP (SSH File Transfer Protocol) is an interactive, command-line interface for secure file management on remote systems. It offers a more user-friendly way to navigate and manage files compared to SCP:
 
-{screenshot of: A diagram illustrating how SFTP works, showing the encrypted connection between client and server}
+![SFTPT-DIAGRAM](https://github.com/user-attachments/assets/de4ba01f-93b0-4ed6-909f-5b88f45dc2a5)
 
 **Start an SFTP Session:**
 ```bash
@@ -97,7 +97,7 @@ sftp [options] username@remote_host
 
 SFTP provides a familiar interface for users who have experience with FTP, but with the added benefit of SSH encryption.
 
-{screenshot of: An active SFTP session, showing various SFTP commands and their outputs}
+![SFPT-Connection](https://github.com/user-attachments/assets/a68d910b-10b5-4afe-9424-bc049c8481e2)
 
 **Essential SFTP Commands:**
 - `put local_file [remote_file]`: Upload a file to the remote server.
