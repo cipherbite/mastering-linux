@@ -21,7 +21,7 @@ To enhance your ability to monitor SSH activities, it is essential to enable det
 LogLevel VERBOSE
 ```
 
-**Description**: This configuration ensures that SSH logs contain detailed information about login attempts, key usage, and session activities, which is crucial for security monitoring.
+This configuration ensures that SSH logs contain detailed information about login attempts, key usage, and session activities, which is crucial for security monitoring.
 
 {**Screenshot**: The SSH configuration file (`/etc/ssh/sshd_config`) open in a text editor with the `LogLevel VERBOSE` line highlighted.}
 
@@ -42,7 +42,7 @@ grep "Failed password" /var/log/auth.log | wc -l
 grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr
 ```
 
-**Description**: These commands help you quickly assess the number of failed login attempts and identify the IP addresses involved, enabling you to take preventive actions against potential threats.
+These commands help you quickly assess the number of failed login attempts and identify the IP addresses involved, enabling you to take preventive actions against potential threats.
 
 {**Screenshot**: A terminal window displaying the output of the commands, showing a list of IP addresses with their respective counts of failed login attempts.}
 
@@ -70,7 +70,7 @@ To automate the blocking of suspicious IP addresses, tools like Fail2Ban can be 
     bantime = 3600
     ```
 
-**Description**: This setup configures Fail2Ban to monitor SSH logs for failed login attempts and automatically ban offending IP addresses after a set number of failed attempts, enhancing your server’s security.
+This setup configures Fail2Ban to monitor SSH logs for failed login attempts and automatically ban offending IP addresses after a set number of failed attempts, enhancing your server’s security.
 
 {**Screenshot**: The Fail2Ban configuration file (`/etc/fail2ban/jail.local`) open in a text editor, highlighting the SSH-specific settings.}
 
@@ -94,7 +94,7 @@ For comprehensive SSH auditing, use `auditd` to track and record SSH-related act
     sudo service auditd restart
     ```
 
-**Description**: These audit rules track changes to critical SSH-related files and logs, helping you detect unauthorized modifications or suspicious activities.
+These audit rules track changes to critical SSH-related files and logs, helping you detect unauthorized modifications or suspicious activities.
 
 {**Screenshot**: A terminal window showing the process of adding audit rules and restarting the `auditd` service, confirming that SSH auditing is active.}
 
@@ -114,7 +114,7 @@ Here are some of the most useful SSH escape sequences:
 | `~?`     | Display a list of available escape sequences. |
 | `~~`     | Send the escape character itself to the remote server. |
 
-**Description**: These sequences are particularly useful when a session becomes unresponsive, or you need to quickly perform a specific action, like terminating or suspending a connection.
+These sequences are particularly useful when a session becomes unresponsive, or you need to quickly perform a specific action, like terminating or suspending a connection.
 
 {**Screenshot**: A terminal window showing the use of the `~?` escape sequence, with the resulting list of available escape sequences displayed.}
 
@@ -122,7 +122,7 @@ Here are some of the most useful SSH escape sequences:
 
 To use an escape sequence, simply press `Enter` to ensure you're on a new line, then type the desired sequence, such as `~.` to close the connection.
 
-**Description**: This straightforward process allows for immediate control over your SSH session, whether you need to exit, suspend, or inspect connections.
+This straightforward process allows for immediate control over your SSH session, whether you need to exit, suspend, or inspect connections.
 
 ### 4.2.3 Customizing Escape Character
 
@@ -132,7 +132,7 @@ You can change the default escape character from `~` to something else by using 
 ssh -e '^' user@host
 ```
 
-**Description**: Customizing the escape character can be useful in environments where the default `~` is already used for other purposes, ensuring there are no conflicts during your SSH sessions.
+Customizing the escape character can be useful in environments where the default `~` is already used for other purposes, ensuring there are no conflicts during your SSH sessions.
 
 {**Screenshot**: An SSH command being executed with a custom escape character, followed by the use of the new escape sequence.}
 
@@ -170,7 +170,7 @@ One popular SSH honeypot is Kippo, a medium-interaction honeypot that simulates 
     ./start.sh
     ```
 
-**Description**: Kippo creates a realistic SSH environment that can attract attackers, allowing you to monitor their activities and gather intelligence on their techniques.
+Kippo creates a realistic SSH environment that can attract attackers, allowing you to monitor their activities and gather intelligence on their techniques.
 
 {**Screenshot**: A terminal window showing the process of setting up and starting Kippo, including a confirmation message that the honeypot is running successfully.}
 
@@ -178,7 +178,7 @@ One popular SSH honeypot is Kippo, a medium-interaction honeypot that simulates 
 
 Kippo logs all interactions in the `log` directory. For deeper insights, you can use the ELK (Elasticsearch, Logstash, Kibana) stack to analyze and visualize this data:
 
-**Description**: ELK stack helps you transform raw Kippo logs into actionable intelligence, with dashboards displaying trends in attack patterns and the geographical distribution of attackers.
+ELK stack helps you transform raw Kippo logs into actionable intelligence, with dashboards displaying trends in attack patterns and the geographical distribution of attackers.
 
 {**Screenshot**: A Kibana dashboard showcasing visualizations of Kippo log data, including attack attempts over time and the locations of attackers.}
 
@@ -216,7 +216,7 @@ bash
 ssh root@localhost -p 2222
 ```
 
-**Description**: This setup allows you to deploy a fully functional SSH server within a Docker container, providing a secure and isolated environment for testing or lightweight deployments.
+This setup allows you to deploy a fully functional SSH server within a Docker container, providing a secure and isolated environment for testing or lightweight deployments.
 
 {**Screenshot**: A terminal window showing the Docker build process, running the container, and successfully connecting to it via SSH.}
 
@@ -231,7 +231,7 @@ docker run -it --rm \
   ubuntu /bin/bash
 ```
 
-**Description**: This command mounts your local SSH agent socket inside the container, allowing you to authenticate to remote servers from within the container without exposing your SSH keys.
+This command mounts your local SSH agent socket inside the container, allowing you to authenticate to remote servers from within the container without exposing your SSH keys.
 
 {**Screenshot**: A terminal window demonstrating SSH agent forwarding within a Docker container, showing successful key usage.}
 
@@ -248,7 +248,7 @@ docker run -d --name jump-host \
 ssh -J root@localhost:2222 user@target-host
 ```
 
-**Description**: This approach allows you to centralize SSH access through a Docker-based jump host, adding an extra layer of security and control over your SSH connections.
+This approach allows you to centralize SSH access through a Docker-based jump host, adding an extra layer of security and control over your SSH connections.
 
 {**Screenshot**: A terminal window showing the setup of a Docker-based jump host and a successful SSH connection through it to a target host.}
 
