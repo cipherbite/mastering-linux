@@ -96,8 +96,15 @@ This setup allows you to use different keys for different servers automatically.
    ```
 
 {screenshot of: The ssh-keygen command in action, showing the key generation process}
+Start by opening a terminal or command prompt. Enter the command ssh-keygen and press Enter.
+The terminal asks where to save the new key. You can accept the default location by pressing Enter.
+You are prompted to enter a passphrase for added security. Press Enter to skip if you don’t want a passphrase.
 
-Output of the ssh-keygen command, including prompts for the file location and passphrase, and the resulting fingerprint of the new key.
+![ssh-keygen](https://github.com/user-attachments/assets/4a09d39a-abff-4165-8772-fd8e0f0eef6b)
+
+The key pair is generated, and the terminal displays confirmation with the file locations and key fingerprint.
+
+
 
 ### Restricting Key Usage
 
@@ -131,7 +138,12 @@ The SSH agent is like a secure, intelligent key ring for your SSH keys. It holds
    ssh-add -l
    ```
 
+First start the SSH agent with "eval '$(ssh-agent -s)'" command.
+Add Your SSH Private Key to the Agent.
+Verify That The Key Has Been Added.
+
 {screenshot of: SSH agent in action, showing the process of starting the agent and adding keys}
+![ssh-agent](https://github.com/user-attachments/assets/000bf214-0eb7-47fe-9f72-42b45ad30103)
 
 Terminal output when starting the SSH agent and adding multiple keys. It shows the agent pid when started and the fingerprints of the added keys.
 
@@ -156,6 +168,7 @@ ssh -L 8080:remote-webserver:80 user@ssh-server
 This command creates a tunnel that forwards traffic from your local port 8080 to port 80 on remote-webserver, through ssh-server.
 
 {screenshot of: A diagram illustrating local port forwarding}
+![local-port-forwarding](https://github.com/user-attachments/assets/21ad2efd-315e-4560-93b1-b8f22acca220)
 
 This diagram shows a visual representation of local port forwarding. It depicts the local machine, the SSH server, and the remote web server, with arrows showing the flow of traffic through the SSH tunnel.
 
@@ -199,6 +212,7 @@ ssh targethost
 ```
 
 {screenshot of: A diagram showing the SSH connection flow through a jump host}
+![ssh-jumphost-diagram](https://github.com/user-attachments/assets/36dc6eb8-2293-45d2-aa1b-7abaa2037a24)
 
 This diagram illustrates the path of an SSH connection using a jump host. It shows the user's machine connecting to the jump host, and then the jump host connecting to the target server, with the SSH connection flowing through this path.
 
@@ -217,8 +231,10 @@ ssh>
 ```
 
 {screenshot of: The SSH command-line interface accessed via ~C, showing available commands}
+![escape-sequence-~C](https://github.com/user-attachments/assets/e2bdea1b-d39b-4ac6-a753-b9c513d9088e)
 
 SSH command-line interface after entering ~C. It shows the "ssh>" prompt and lists several available commands such as -L for local forwarding and -R for remote forwarding.
+![~C-command](https://github.com/user-attachments/assets/755ad72d-143c-44f3-a0a4-e93cd94252e3)
 
 ## 3.7 Best Practices
 
@@ -232,10 +248,6 @@ Following SSH best practices is like following the rules of the road for secure 
 6. Keep your SSH client and server software updated.
 7. Use key types like Ed25519 for better security and performance.
 8. Implement fail2ban or similar tools to prevent brute-force attacks.
-
-{screenshot of: A checklist or infographic of SSH best practices}
-
-This image presents a visually appealing checklist or infographic of the SSH best practices mentioned above. Each practice is accompanied by a small icon or illustration to make the information more engaging and memorable.
 
 ## 3.8 Further Reading
 
