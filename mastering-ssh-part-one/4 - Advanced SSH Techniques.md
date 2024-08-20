@@ -7,7 +7,6 @@
 - [4.3 SSH Honeypots](#43-ssh-honeypots)
 - [4.4 SSH and Containers](#44-ssh-and-containers)
 - [4.5 Best Practices](#45-best-practices)
-- [4.6 Further Reading](#46-further-reading)
 
 ---
 
@@ -231,10 +230,3 @@ Following SSH best practices helps maintain a secure environment. Here are some 
 
  the network.
 
----
-
-## 4.6 Further Reading
-
-- **SSH Mastery** by Michael W. Lucas
-- **Linux Server Security** by Chris Binnie
-- **Docker: Up & Running** by Karl Matthias and Sean P. Kane
