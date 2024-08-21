@@ -132,7 +132,7 @@ For example, you could use local port forwarding to access a web application run
 
 ### Remote Port Forwarding
 
-Remote port forwarding is like installing a two-way magic door in a remote location that leads back to your local machine.
+Remote port forwarding is like installing a two-way door in a remote location that leads back to your local machine.
 
 In this case, the remote server creates a tunnel back to your local machine, allowing you to access services running on your local network from the remote location. This can be useful for scenarios where you need to access resources on your local machine from a remote server, such as a development environment or a private network service.
 
