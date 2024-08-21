@@ -18,9 +18,9 @@ Maintaining a secure SSH infrastructure requires diligent monitoring and auditin
 
 Comprehensive logging is the foundation of effective SSH security monitoring. By configuring the SSH server's `LogLevel` to `VERBOSE`, you'll capture detailed information about login attempts, key usage, and session activities – essential data for thorough auditing and analysis.
 
-![ssh-config](https://github.com/user-attachments/assets/ddd8b7eb-3fe3-45aa-885a-6260548c9fc5)
+![loglelvel_verbose](https://github.com/user-attachments/assets/ea692d4e-f786-48a3-8056-0e4734e2e64b)
 
-The screenshot showcases the SSH server configuration file (`/etc/ssh/sshd_config`) with the `LogLevel VERBOSE` setting highlighted. This setting ensures that the SSH server logs a wealth of details about user actions, providing network professionals with the necessary information to monitor and investigate any security-related events. By enabling verbose logging, you can gain deeper visibility into the SSH traffic on your network, which is crucial for detecting and responding to potential security incidents.
+The screenshot showcases the SSH server configuration file (`/etc/ssh/sshd_config`) with the `LogLevel VERBOSE` setting highlighted. This setting ensures that the SSH server logs a lot of details about user actions, providing network professionals with the necessary information to monitor and investigate any security-related events. By enabling verbose logging, you can gain deeper visibility into the SSH traffic on your network, which is crucial for detecting and responding to potential security incidents.
 
 ### 4.1.2 Analyzing SSH Logs
 
