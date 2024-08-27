@@ -1,11 +1,12 @@
-### Part 2: Advanced SSH Techniques
+```Markdown
+## Part 2: Advanced SSH Techniques
 
-#### Table of Contents
-- [2.1 🔄 SSH Multiplexing and Connection Sharing](#21--ssh-multiplexing-and-connection-sharing)
-- [2.2 🔀 Advanced Port Forwarding](#22--advanced-port-forwarding)
-- [2.3 🧪 SSH as a SOCKS Proxy](#23--ssh-as-a-socks-proxy)
-- [2.4 🔌 SSH over HTTPS](#24--ssh-over-https)
-- [2.5 📡 Reverse SSH Tunneling](#25--reverse-ssh-tunneling)
+### Table of Contents
+- [2.1 🔄 SSH Multiplexing and Connection Sharing](#21-🔄-ssh-multiplexing-and-connection-sharing)
+- [2.2 🔀 Advanced Port Forwarding](#22-🔀-advanced-port-forwarding)
+- [2.3 🧪 SSH as a SOCKS Proxy](#23-🧪-ssh-as-a-socks-proxy)
+- [2.4 🔌 SSH over HTTPS](#24-🔌-ssh-over-https)
+- [2.5 📡 Reverse SSH Tunneling](#25-📡-reverse-ssh-tunneling)
 
 ---
 
@@ -15,7 +16,7 @@ SSH multiplexing allows multiple SSH sessions to share a single connection, impr
 
 #### 2.1.1 Configuring Multiplexing
 
-To configure SSH multiplexing, you can add the following lines to your `~/.ssh/config` file:
+To configure SSH multiplexing, add the following lines to your `~/.ssh/config` file:
 
 ```plaintext
 ControlMaster auto
@@ -27,11 +28,11 @@ ControlPersist 10m
 - **ControlPath**: Defines where the shared socket files are stored.
 - **ControlPersist 10m**: Keeps the master connection open for 10 minutes after the last session has closed.
 
-This configuration means that any subsequent SSH connections to the same host will reuse the existing connection if it's still open.
+This setup ensures that subsequent SSH connections to the same host reuse the existing connection if it's still open.
 
 #### 2.1.2 Script for Managing Multiplexed Connections
 
-Below is a Python script that allows you to manage SSH multiplexed connections by checking the connection status, starting, or stopping them as needed.
+The Python script below allows you to manage SSH multiplexed connections by checking the connection status, starting, or stopping them as needed.
 
 ```python
 import os
@@ -58,7 +59,7 @@ else:
 
 ### 2.2 🔀 Advanced Port Forwarding
 
-SSH port forwarding is a powerful tool for securely accessing services on remote hosts. Here, we'll explore advanced techniques such as dynamic port forwarding and using ProxyJump for multi-hop connections.
+SSH port forwarding is a powerful tool for securely accessing services on remote hosts. Below are advanced techniques, such as dynamic port forwarding and using ProxyJump for multi-hop connections.
 
 #### 2.2.1 Dynamic Port Forwarding
 
@@ -68,10 +69,10 @@ Dynamic port forwarding allows SSH to act as a SOCKS proxy, forwarding traffic t
 ssh -D 8080 -f -C -q -N user@remote_host
 ```
 
-- **-D 8080**: Specifies that dynamic port forwarding will be set up on local port 8080.
-- **-f**: Requests SSH to go to the background just before command execution.
+- **-D 8080**: Sets up dynamic port forwarding on local port 8080.
+- **-f**: Sends SSH to the background before command execution.
 - **-C**: Enables compression.
-- **-q**: Disables all warnings and diagnostic messages.
+- **-q**: Disables warnings and diagnostic messages.
 - **-N**: Instructs SSH not to execute any remote commands, just to forward ports.
 
 #### 2.2.2 Port Forwarding with ProxyJump
@@ -116,7 +117,7 @@ while True:
 
 This script checks every 60 seconds if the tunnels are active and recreates them if necessary.
 
-```
+```plaintext
        [ Local Machine ]  <--- Tunnel --->  [ Gateway ]  <--- Tunnel --->  [ Remote Servers ]
       +---------------+                    +---------+                    +----------------+
       | Port: 8080    |                    |         |                    |  Port: 80       |
@@ -134,7 +135,7 @@ Using SSH as a SOCKS proxy is useful when you need to route traffic securely thr
 ssh -D 1080 -f -C -q -N user@remote_host
 ```
 
-This command creates a SOCKS proxy on `localhost:1080` that forwards traffic through `remote_host`.
+This command creates a SOCKS proxy on `localhost:1080`, forwarding traffic through `remote_host`.
 
 #### 2.3.2 Using SOCKS Proxy in Various Applications
 
@@ -229,11 +230,11 @@ ssh -R 9999:localhost:22 user@remote_host
 
 This command allows you to connect to your local machine's SSH service through the remote host on port 9999.
 
-#### 2.5.2 Automating Reverse SSH Tunnel Creation
+#### 2
 
-The following Python script automates the creation of a reverse SSH tunnel
+.5.2 Automating Reverse SSH Tunnel Creation
 
-:
+The following Python script automates the creation of a reverse SSH tunnel:
 
 ```python
 import subprocess
@@ -249,7 +250,7 @@ while True:
 
 This script ensures that the reverse tunnel is maintained, recreating it every hour.
 
-```
+```plaintext
        [ Remote Host ]  <--- Reverse Tunnel --->  [ Local Machine ]
       +--------------+                           +----------------+
       | Port: 9999   |                           |  SSH Service    |
@@ -258,3 +259,4 @@ This script ensures that the reverse tunnel is maintained, recreating it every h
 ```
 
 This advanced SSH guide provides various techniques to manage connections, tunnel traffic, and enhance security, making it suitable for professional use while remaining easy to understand.
+
