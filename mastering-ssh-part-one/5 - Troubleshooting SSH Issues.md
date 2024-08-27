@@ -40,8 +40,11 @@ sudo tcpdump -i eth0 'tcp port 22' -w ssh_debug.pcap
 
 Then analyze the .pcap file using Wireshark.
 
-[Placeholder for Wireshark screenshot showing SSH packet analysis]
-*Wireshark analysis of SSH packets, highlighting key connection stages*
+**Screenshot Explanation:**
+The screenshot would show a Wireshark capture of an SSH connection, highlighting the different stages of the SSH protocol.
+
+**Use Case:**  
+Troubleshoot SSH connection issues by capturing and analyzing network traffic, identifying where delays or failures occur, and addressing the root cause.
 
 ## 5.2 🔐 Authentication Issues
 
@@ -139,6 +142,9 @@ def network_diagnostics(host, port=22):
 network_diagnostics('example.com')
 ```
 
+**Use Case:**  
+Quickly diagnose network connectivity issues by testing DNS resolution, ping, traceroute, and port connection, helping identify where communication is breaking down.
+
 ## 5.4 🔧 Configuration Issues
 
 ### 5.4.1 Checking Client Configuration
@@ -172,6 +178,9 @@ def compare_ssh_configs(host1, host2):
 
 compare_ssh_configs('prod_server', 'test_server')
 ```
+
+**Use Case:**  
+Compare SSH configurations between different servers to identify discrepancies that may cause unexpected behavior.
 
 ## 5.5 🚀 Performance Issues
 
@@ -215,6 +224,9 @@ def measure_ssh_performance(host, iterations=10):
 
 measure_ssh_performance('example.com')
 ```
+
+**Use Case:**  
+Assess SSH connection performance by measuring connection time and data throughput, identifying potential bottlenecks.
 
 ## 5.6 📊 Log Analysis
 
@@ -267,114 +279,50 @@ def analyze_ssh_logs(log_file):
                 ip_attempts[ip]['last_attempt'] = timestamp
 
     print("Top 5 IPs with failed attempts:")
-    for ip, data in sorted(ip_attempts.items(), key=lambda x: x[1]['fail'], reverse=True)[:5]:
-        print(f"{ip}: {data['fail']} failed, {data['success']} successful, last attempt: {data['last_attempt']}")
+    for ip, data in sorted(ip_attempts.items(), key=lambda x: x[1]['fail'],
 
-    print("\nTop 5 users with failed attempts:")
+ reverse=True)[:5]:
+        print(f"{ip}: {data['fail']} failed attempts (Last attempt: {data['last_attempt']})")
+
+    print("Top 5 users with failed attempts:")
     for user, data in sorted(user_attempts.items(), key=lambda x: x[1]['fail'], reverse=True)[:5]:
-        print(f"{user}: {data['fail']} failed, {data['success
-
-']} successful")
+        print(f"{user}: {data['fail']} failed attempts")
 
 analyze_ssh_logs('/var/log/auth.log')
 ```
 
-[Placeholder for chart showing SSH login statistics]
-*Chart showing statistics of successful and failed SSH login attempts over time*
+**Use Case:**  
+Perform a detailed analysis of SSH logs to identify suspicious activity, such as repeated failed login attempts from specific IPs or users.
 
 ## 5.7 🤖 Automation of Troubleshooting
 
-### 5.7.1 Script for Automatic Resolution of Common Issues
+### 5.7.1 Automating SSH Health Checks
 
-```python
-import os
-import subprocess
-import sys
-
-def check_and_fix_permissions():
-    key_files = [
-        ('~/.ssh/id_rsa', 0o600),
-        ('~/.ssh/id_rsa.pub', 0o644),
-        ('~/.ssh/authorized_keys', 0o600)
-    ]
-
-    for file_path, expected_perm in key_files:
-        full_path = os.path.expanduser(file_path)
-        if os.path.exists(full_path):
-            current_perm = os.stat(full_path).st_mode & 0o777
-            if current_perm != expected_perm:
-                print(f"Fixing permissions for {file_path}")
-                os.chmod(full_path, expected_perm)
-
-def restart_ssh_service():
-    print("Restarting SSH service")
-    subprocess.run(['sudo', 'systemctl', 'restart', 'ssh'], check=True)
-
-def clear_known_hosts(host):
-    print(f"Removing {host} from known_hosts")
-    subprocess.run(['ssh-keygen', '-R', host], check=True)
-
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python ssh_troubleshooter.py <host>")
-        sys.exit(1)
-
-    host = sys.argv[1]
-
-    print("Starting automatic SSH diagnostics")
-
-    check_and_fix_permissions()
-    
-    try:
-        subprocess.run(['ssh', '-o', 'ConnectTimeout=5', host, 'exit'], check=True)
-        print("SSH connection successful")
-    except subprocess.CalledProcessError:
-        print("SSH connection failed, attempting repair")
-        clear_known_hosts(host)
-        restart_ssh_service()
-        
-        try:
-            subprocess.run(['ssh', '-o', 'ConnectTimeout=5', host, 'exit'], check=True)
-            print("SSH connection successful after repair")
-        except subprocess.CalledProcessError:
-            print("Failed to automatically repair SSH connection")
-            print("Please check logs and configuration manually")
-
-if __name__ == "__main__":
-    main()
-```
-
-This script automates the process of resolving common SSH issues, such as incorrect key permissions, problems with `known_hosts`, or the need to restart the SSH service.
-
-### 5.7.2 Regular SSH Health Check
-
-Add to crontab:
+Create a cron job to run a health check script:
 
 ```bash
-0 * * * * /path/to/ssh_health_check.sh
+*/5 * * * * /usr/local/bin/ssh_health_check.sh >> /var/log/ssh_health.log 2>&1
 ```
 
-Content of `ssh_health_check.sh`:
+**ssh_health_check.sh** example:
 
 ```bash
 #!/bin/bash
-
-log_file="/var/log/ssh_health.log"
-test_host="example.com"
-
-echo "$(date): Starting SSH health check" >> $log_file
-
-if ! ssh -o ConnectTimeout=5 -o BatchMode=yes $test_host exit >/dev/null 2>&1
-then
-    echo "$(date): SSH connection problem to $test_host" >> $log_file
-    # Add code for notifications, e.g., sending an email
-else
-    echo "$(date): SSH connection to $test_host is working correctly" >> $log_file
+HOST="your-server-ip"
+if ! ssh -o ConnectTimeout=10 user@$HOST exit; then
+    echo "$(date): SSH connection to $HOST failed" >> /var/log/ssh_health.log
 fi
 ```
 
-This script regularly checks the SSH connection and logs the results, allowing for early detection of potential issues.
+### 5.7.2 Alerting on Anomalies
 
-Effective SSH troubleshooting requires not only knowledge of tools and techniques but also a systematic approach to problem-solving. Always start with the simplest solutions and gradually move to more advanced diagnostic techniques. 🔍🛠️
+Set up email alerts for critical SSH issues:
+
+```bash
+if grep "SSH connection to $HOST failed" /var/log/ssh_health.log | tail -1 | grep "$(date '+%b %d')"; then
+    echo "Critical: SSH connection to $HOST is down" | mail -s "SSH Alert" youremail@domain.com
+fi
 ```
 
+**Use Case:**  
+Automate the detection of SSH connection issues and receive alerts for immediate action.
