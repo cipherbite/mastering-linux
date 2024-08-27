@@ -101,6 +101,14 @@ ssh-add ~/.ssh/id_ed25519_github
 ssh-add -l
 ```
 
+```plaintext
+  +------------------------+          +-----------------+
+  |  Your Computer (Client)| ---->    |  SSH Agent       |
+  |    Private Keys Stored |          |  Manages Keys    |
+  +------------------------+          +-----------------+
+```
+*The SSH agent securely stores and manages your keys.*
+
 ## 4. 🚇 Port Forwarding
 
 SSH port forwarding creates secure tunnels for data transmission.
