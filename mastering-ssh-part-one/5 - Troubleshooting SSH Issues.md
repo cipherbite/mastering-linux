@@ -1,292 +1,380 @@
-# Part Five: Troubleshooting and Optimizing SSH
+```markdown
+# Part 5: Advanced SSH Troubleshooting 🔍🛠️
 
 ## Table of Contents
+- [5.1 🔬 Diagnostic Tools](#51--diagnostic-tools)
+- [5.2 🔐 Authentication Issues](#52--authentication-issues)
+- [5.3 🌐 Network Problems](#53--network-problems)
+- [5.4 🔧 Configuration Issues](#54--configuration-issues)
+- [5.5 🚀 Performance Issues](#55--performance-issues)
+- [5.6 📊 Log Analysis](#56--log-analysis)
+- [5.7 🤖 Automation of Troubleshooting](#57--automation-of-troubleshooting)
 
-- [5.1 Common SSH Errors and Solutions](#51-common-ssh-errors-and-solutions)
-- [5.2 Advanced Debugging Techniques](#52-advanced-debugging-techniques)
-- [5.3 Performance Optimization](#53-performance-optimization)
-- [5.4 Security Auditing](#54-security-auditing)
+## 5.1 🔬 Diagnostic Tools
 
-## 5.1 Common SSH Errors and Solutions
+### 5.1.1 SSH in Verbose Mode
 
-Encountering and resolving SSH-related issues is a crucial skill for system administrators, network engineers, and security professionals. This section covers some of the most common SSH errors and provides step-by-step solutions to address them.
-
-### Permission Denied (Publickey)
-
-**Symptoms:**
-- Error message: `Permission denied (publickey)` when attempting to log in.
-
-**Causes:**
-1. Improper SSH key setup on the server
-2. Incorrect permissions on key files
-3. SSH agent not running or key not added
-
-**Solutions:**
-
-1. Verify public key in `authorized_keys`:
-   ```bash
-   cat ~/.ssh/id_rsa.pub | ssh user@host "cat >> ~/.ssh/authorized_keys"
-   ```
-
-   ![Adding public key to `authorized_keys`](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Check and correct file permissions:
-   ```bash
-   chmod 700 ~/.ssh
-   chmod 600 ~/.ssh/authorized_keys
-   ```
-
-   ![Setting correct permissions on `.ssh` directory](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-3. Ensure SSH agent is running and key is added:
-   ```bash
-   eval $(ssh-agent)
-   ssh-add ~/.ssh/id_rsa
-   ```
-
-   ![Starting SSH agent and adding key](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-### Connection Refused
-
-**Symptoms:**
-- SSH connection attempts fail with `Connection refused` error.
-
-**Causes:**
-1. SSH service not running
-2. Firewall blocking SSH port
-3. Incorrect SSH port configuration
-
-**Solutions:**
-
-1. Check and restart SSH service:
-   ```bash
-   sudo systemctl status sshd
-   sudo systemctl restart sshd
-   ```
-
-   ![Checking and restarting SSH service](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Verify firewall settings:
-   ```bash
-   sudo ufw status
-   sudo ufw allow ssh
-   ```
-
-   ![Checking and modifying firewall settings](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-3. Confirm SSH port in `/etc/ssh/sshd_config`:
-   ```bash
-   grep Port /etc/ssh/sshd_config
-   ```
-
-   ![Checking SSH port configuration](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-### Host Key Verification Failed
-
-**Symptoms:**
-- Warning that the remote host identification has changed.
-
-**Causes:**
-1. Server's SSH key has changed (reinstallation or potential security breach)
-2. Man-in-the-middle attack attempt
-
-**Solutions:**
-
-1. Remove old key from `known_hosts`:
-   ```bash
-   ssh-keygen -R hostname
-   ```
-
-   ![Removing old host key from `known_hosts`](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Verify server's new key fingerprint:
-   ```bash
-   ssh-keyscan -H hostname | ssh-keygen -lf -
-   ```
-
-   ![Verifying new server key fingerprint](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-## 5.2 Advanced Debugging Techniques
-
-When dealing with more complex SSH issues, the following advanced debugging techniques can provide valuable insights:
-
-### SSH Verbose Logging
-
-Increase the verbosity of SSH commands to obtain more detailed connection information:
+Run SSH with various levels of verbosity:
 
 ```bash
-ssh -v username@remote_host    # Basic verbosity
-ssh -vv username@remote_host   # More detailed
-ssh -vvv username@remote_host  # Maximum detail
+ssh -v user@host    # Single -v
+ssh -vv user@host   # Double -v for more detail
+ssh -vvv user@host  # Triple -v for maximum detail
 ```
 
-![SSH command with verbose logging](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+### 5.1.2 Debugging the SSH Server
 
-### Analyzing Server Logs
-
-Closely examine the SSH-related logs on the server to identify the root cause of issues:
-
-1. Real-time log monitoring:
-   ```bash
-   sudo tail -f /var/log/auth.log
-   ```
-
-   ![Real-time log monitoring in terminal](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Grep for specific SSH events:
-   ```bash
-   grep "sshd" /var/log/auth.log | grep "Failed"
-   ```
-
-   ![Searching for failed SSH events in logs](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-### Network Connectivity Testing
-
-Verify the network connectivity to the SSH server using tools like `nc` (netcat) and `traceroute`:
-
-1. Test SSH port accessibility:
-   ```bash
-   nc -zv remote_host 22
-   ```
-
-   ![Testing port accessibility with `nc`](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Traceroute to identify network issues:
-   ```bash
-   traceroute remote_host
-   ```
-
-   ![Running traceroute command](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-### SSH Config Debugging
-
-Test SSH connections with a default configuration to rule out any issues with your custom SSH settings:
-
-1. Test SSH with default config:
-   ```bash
-   ssh -F /dev/null username@remote_host
-   ```
-
-   ![Testing SSH with default configuration](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Use `ssh-audit` tool for configuration analysis:
-   ```bash
-   ssh-audit hostname
-   ```
-
-   ![Running `ssh-audit` for configuration analysis](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-## 5.3 Performance Optimization
-
-Improving the performance of your SSH connections can be beneficial in various scenarios, such as slow network links or frequent remote access requirements.
-
-### Compression
-
-Enable compression for slow connections to reduce the amount of data transmitted:
+Run the SSH server in debug mode:
 
 ```bash
-ssh -C username@remote_host
+sudo /usr/sbin/sshd -d
 ```
 
-![SSH command with compression enabled](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+### 5.1.3 Network Packet Analysis
 
-### Multiplexing
-
-Use SSH multiplexing (ControlMaster) to maintain persistent connections, speeding up subsequent logins:
-
-In `~/.ssh/config`:
-
-```plaintext
-Host *
-    ControlMaster auto
-    ControlPath ~/.ssh/controlmasters/%r@%h:%p
-    ControlPersist 10m
-```
-
-![SSH multiplexing configuration](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-### Key Type Selection
-
-Utilize the more efficient ED25519 key type for improved performance:
+Use tcpdump to capture SSH traffic:
 
 ```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
+sudo tcpdump -i eth0 'tcp port 22' -w ssh_debug.pcap
 ```
 
-![Generating ED25519 key pair](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+Then analyze the .pcap file using Wireshark.
 
-## 5.4 Security Auditing
+[Placeholder for Wireshark screenshot showing SSH packet analysis]
+*Wireshark analysis of SSH packets, highlighting key connection stages*
 
-Regularly auditing your SSH infrastructure is crucial for maintaining a secure and robust environment. This section covers key aspects of SSH security auditing.
+## 5.2 🔐 Authentication Issues
 
-### Key Management
-
-Regularly review and manage your SSH keys to ensure they are up-to-date and secure:
-
-1. List and review SSH keys:
-   ```bash
-   for key in ~/.ssh/id_*; do ssh-keygen -l -f "${key}"; done | uniq
-   ```
-
-   ![Listing and reviewing SSH keys](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-2. Rotate old or compromised keys:
-   ```bash
-   ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_new
-   ```
-
-   ![Rotating old SSH keys](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
-
-### Failed Login Attempts
-
-Monitor the SSH server logs for failed login attempts, which can indicate potential brute-force attacks:
+### 5.2.1 Checking Key Permissions
 
 ```bash
-grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr
+ls -l ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
+sudo ls -l /etc/ssh/ssh_host_*_key /etc/ssh/ssh_host_*_key.pub
 ```
 
-![Monitoring failed login attempts](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+Ensure permissions are correct (600 for private keys, 644 for public keys).
 
-### SSH Configuration Audit
+### 5.2.2 Verifying Keys
 
-Use the `ssh-audit` tool to thoroughly analyze your SSH server configuration and identify any security vulnerabilities or misconfigurations:
+Check if the public key is correctly added to `authorized_keys`:
 
 ```bash
-ssh-audit hostname
+ssh-keygen -l -f ~/.ssh/id_rsa.pub
+ssh-keygen -l -f ~/.ssh/authorized_keys
 ```
 
-![Running `ssh-audit` for security audit](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+### 5.2.3 Key Diagnostics Script
 
-### Intrusion Detection
+```python
+import os
+import stat
 
-Implement fail2ban, an automated intrusion prevention system, to detect and block SSH-based attacks:
+def check_key_permissions():
+    key_files = [
+        ('~/.ssh/id_rsa', 0o600),
+        ('~/.ssh/id_rsa.pub', 0o644),
+        ('~/.ssh/authorized_keys', 0o600)
+    ]
+
+    for file_path, expected_perm in key_files:
+        full_path = os.path.expanduser(file_path)
+        if os.path.exists(full_path):
+            current_perm = stat.S_IMODE(os.stat(full_path).st_mode)
+            if current_perm != expected_perm:
+                print(f"Incorrect permissions for {file_path}: {oct(current_perm)} (should be {oct(expected_perm)})")
+        else:
+            print(f"File {file_path} does not exist")
+
+check_key_permissions()
+```
+
+## 5.3 🌐 Network Problems
+
+### 5.3.1 Testing Connection
+
+Use netcat to test SSH connection:
 
 ```bash
-sudo apt-get install fail2ban
-sudo systemctl enable fail2ban
-sudo systemctl start fail2ban
+nc -vz host 22
 ```
 
-![Installing and configuring fail2ban](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+### 5.3.2 Traceroute to SSH Server
 
-By mastering these troubleshooting techniques, performance optimization strategies, and security auditing practices, you can ensure the reliability, efficiency, and overall security of your SSH-based infrastructure.
+```bash
+traceroute -T -p 22 host
+```
 
-## Best Practices Summary
+### 5.3.3 Comprehensive Network Diagnostics Script
 
-1. Regularly update SSH software and configurations to address vulnerabilities.
-2. Implement key-based authentication and disable password login for enhanced security.
-3. Use strong encryption algorithms and key types (e.g., ED25519) for better performance.
-4. Monitor logs and set up automated alerts for suspicious SSH activities.
-5. Conduct regular security audits and penetration testing to identify and mitigate risks.
-6. Keep backups of your SSH configurations and keys to facilitate recovery.
-7. Educate users on SSH best practices and security awareness to promote a culture of secure remote access.
+```python
+import subprocess
+import socket
 
-![Summary of best practices](https://github.com/user-attachments/assets/0000000-0000-0000-0000-000000000000)
+def network_diagnostics(host, port=22):
+    print(f"Network diagnostics for {host}:{port}")
 
-## Further Reading
+    # Check DNS
+    try:
+        ip = socket.gethostbyname(host)
+        print(f"DNS resolution: {host} -> {ip}")
+    except socket.gaierror:
+        print(f"Unable to resolve hostname: {host}")
+        return
 
-For a deeper understanding of SSH troubleshooting, optimization, and security, we recommend exploring the following resources:
+    # Ping
+    ping = subprocess.run(['ping', '-c', '4', ip], capture_output=True, text=True)
+    print(f"Ping result:\n{ping.stdout}")
 
-- [OpenSSH Manual](https://www.openssh.com/manual.html)
-- [SSH.com Security Best Practices](https://www.ssh.com/ssh/security/)
-- [NIST Guidelines for Secure Shell (SSH)](https://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.7966.pdf)
+    # Traceroute
+    traceroute = subprocess.run(['traceroute', '-T', '-p', str(port), ip], capture_output=True, text=True)
+    print(f"Traceroute:\n{traceroute.stdout}")
+
+    # Check port
+    try:
+        with socket.create_connection((ip, port), timeout=10) as sock:
+            print(f"Connection to port {port} successful")
+    except (socket.timeout, ConnectionRefusedError):
+        print(f"Cannot connect to port {port}")
+
+network_diagnostics('example.com')
+```
+
+## 5.4 🔧 Configuration Issues
+
+### 5.4.1 Checking Client Configuration
+
+```bash
+ssh -G host | grep -v '^#'
+```
+
+This command shows the effective SSH configuration for a given host.
+
+### 5.4.2 Verifying Server Configuration
+
+```bash
+sudo sshd -T
+```
+
+This command displays the complete SSH server configuration, including all files and default values.
+
+### 5.4.3 Configuration Comparison Script
+
+```python
+import difflib
+import subprocess
+
+def compare_ssh_configs(host1, host2):
+    config1 = subprocess.run(['ssh', '-G', host1], capture_output=True, text=True).stdout.splitlines()
+    config2 = subprocess.run(['ssh', '-G', host2], capture_output=True, text=True).stdout.splitlines()
+
+    diff = difflib.unified_diff(config1, config2, fromfile=host1, tofile=host2, lineterm='')
+    print('\n'.join(diff))
+
+compare_ssh_configs('prod_server', 'test_server')
+```
+
+## 5.5 🚀 Performance Issues
+
+### 5.5.1 Measuring Connection Time
+
+```bash
+time ssh user@host 'exit'
+```
+
+### 5.5.2 Testing Throughput
+
+```bash
+yes | pv | ssh user@host "cat > /dev/null"
+```
+
+### 5.5.3 SSH Performance Monitoring Script
+
+```python
+import time
+import subprocess
+
+def measure_ssh_performance(host, iterations=10):
+    connection_times = []
+    throughputs = []
+
+    for _ in range(iterations):
+        # Measure connection time
+        start = time.time()
+        subprocess.run(['ssh', host, 'exit'], capture_output=True)
+        end = time.time()
+        connection_times.append(end - start)
+
+        # Measure throughput
+        result = subprocess.run(['dd', 'if=/dev/zero', 'bs=1M', 'count=100', '|', 'ssh', host, 'cat > /dev/null'],
+                                capture_output=True, text=True, shell=True)
+        throughput = float(result.stderr.split(',')[-1].split()[0])
+        throughputs.append(throughput)
+
+    print(f"Average connection time: {sum(connection_times)/len(connection_times):.2f}s")
+    print(f"Average throughput: {sum(throughputs)/len(throughputs):.2f} MB/s")
+
+measure_ssh_performance('example.com')
+```
+
+## 5.6 📊 Log Analysis
+
+### 5.6.1 Filtering SSH Logs
+
+```bash
+grep sshd /var/log/auth.log | grep -E "Failed|Accepted"
+```
+
+### 5.6.2 Analyzing Failed Login Attempts
+
+```bash
+grep "Failed password" /var/log/auth.log | awk '{print $9}' | sort | uniq -c | sort -nr
+```
+
+### 5.6.3 Advanced Log Analysis with Python
+
+```python
+import re
+from collections import defaultdict
+from datetime import datetime
+
+def analyze_ssh_logs(log_file):
+    ip_attempts = defaultdict(lambda: {'success': 0, 'fail': 0, 'last_attempt': None})
+    user_attempts = defaultdict(lambda: {'success': 0, 'fail': 0})
+
+    with open(log_file, 'r') as f:
+        for line in f:
+            if 'sshd' not in line:
+                continue
+
+            timestamp = re.search(r'\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}', line)
+            if timestamp:
+                timestamp = datetime.strptime(timestamp.group(), '%b %d %H:%M:%S')
+
+            ip = re.search(r'\d+\.\d+\.\d+\.\d+', line)
+            user = re.search(r'for (invalid user )?(\w+)', line)
+
+            if ip and user:
+                ip = ip.group()
+                user = user.group(2)
+
+                if 'Accepted' in line:
+                    ip_attempts[ip]['success'] += 1
+                    user_attempts[user]['success'] += 1
+                elif 'Failed' in line:
+                    ip_attempts[ip]['fail'] += 1
+                    user_attempts[user]['fail'] += 1
+
+                ip_attempts[ip]['last_attempt'] = timestamp
+
+    print("Top 5 IPs with failed attempts:")
+    for ip, data in sorted(ip_attempts.items(), key=lambda x: x[1]['fail'], reverse=True)[:5]:
+        print(f"{ip}: {data['fail']} failed, {data['success']} successful, last attempt: {data['last_attempt']}")
+
+    print("\nTop 5 users with failed attempts:")
+    for user, data in sorted(user_attempts.items(), key=lambda x: x[1]['fail'], reverse=True)[:5]:
+        print(f"{user}: {data['fail']} failed, {data['success
+
+']} successful")
+
+analyze_ssh_logs('/var/log/auth.log')
+```
+
+[Placeholder for chart showing SSH login statistics]
+*Chart showing statistics of successful and failed SSH login attempts over time*
+
+## 5.7 🤖 Automation of Troubleshooting
+
+### 5.7.1 Script for Automatic Resolution of Common Issues
+
+```python
+import os
+import subprocess
+import sys
+
+def check_and_fix_permissions():
+    key_files = [
+        ('~/.ssh/id_rsa', 0o600),
+        ('~/.ssh/id_rsa.pub', 0o644),
+        ('~/.ssh/authorized_keys', 0o600)
+    ]
+
+    for file_path, expected_perm in key_files:
+        full_path = os.path.expanduser(file_path)
+        if os.path.exists(full_path):
+            current_perm = os.stat(full_path).st_mode & 0o777
+            if current_perm != expected_perm:
+                print(f"Fixing permissions for {file_path}")
+                os.chmod(full_path, expected_perm)
+
+def restart_ssh_service():
+    print("Restarting SSH service")
+    subprocess.run(['sudo', 'systemctl', 'restart', 'ssh'], check=True)
+
+def clear_known_hosts(host):
+    print(f"Removing {host} from known_hosts")
+    subprocess.run(['ssh-keygen', '-R', host], check=True)
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python ssh_troubleshooter.py <host>")
+        sys.exit(1)
+
+    host = sys.argv[1]
+
+    print("Starting automatic SSH diagnostics")
+
+    check_and_fix_permissions()
+    
+    try:
+        subprocess.run(['ssh', '-o', 'ConnectTimeout=5', host, 'exit'], check=True)
+        print("SSH connection successful")
+    except subprocess.CalledProcessError:
+        print("SSH connection failed, attempting repair")
+        clear_known_hosts(host)
+        restart_ssh_service()
+        
+        try:
+            subprocess.run(['ssh', '-o', 'ConnectTimeout=5', host, 'exit'], check=True)
+            print("SSH connection successful after repair")
+        except subprocess.CalledProcessError:
+            print("Failed to automatically repair SSH connection")
+            print("Please check logs and configuration manually")
+
+if __name__ == "__main__":
+    main()
+```
+
+This script automates the process of resolving common SSH issues, such as incorrect key permissions, problems with `known_hosts`, or the need to restart the SSH service.
+
+### 5.7.2 Regular SSH Health Check
+
+Add to crontab:
+
+```bash
+0 * * * * /path/to/ssh_health_check.sh
+```
+
+Content of `ssh_health_check.sh`:
+
+```bash
+#!/bin/bash
+
+log_file="/var/log/ssh_health.log"
+test_host="example.com"
+
+echo "$(date): Starting SSH health check" >> $log_file
+
+if ! ssh -o ConnectTimeout=5 -o BatchMode=yes $test_host exit >/dev/null 2>&1
+then
+    echo "$(date): SSH connection problem to $test_host" >> $log_file
+    # Add code for notifications, e.g., sending an email
+else
+    echo "$(date): SSH connection to $test_host is working correctly" >> $log_file
+fi
+```
+
+This script regularly checks the SSH connection and logs the results, allowing for early detection of potential issues.
+
+Effective SSH troubleshooting requires not only knowledge of tools and techniques but also a systematic approach to problem-solving. Always start with the simplest solutions and gradually move to more advanced diagnostic techniques. 🔍🛠️
+```
+
