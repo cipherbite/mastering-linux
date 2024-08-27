@@ -359,4 +359,3 @@ if __name__ == "__main__":
 This script creates a persistent reverse SSH tunnel, ensuring you always have access to your local machine from the remote server.
 
 [Screenshot placeholder: Diagram illustrating the flow of a reverse SSH tunnel, showing how the local machine initiates the connection and how traffic flows back through the tunnel.]
-
