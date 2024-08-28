@@ -1,10 +1,10 @@
 # 🚀 SSH Mastery: Extreme Techniques and Applications 🌟
 
 ## Table of Contents
-1. [🏠 SSH in IoT and Smart Home Automation](#-ssh-in-iot-and-smart-home-automation)
-2. [🛡️ Advanced SSH Penetration Testing Techniques](#️-advanced-ssh-penetration-testing-techniques)
-3. [🎭 SSH Honeypots for Threat Intelligence](#-ssh-honeypots-for-threat-intelligence)
-4. [🌟 Conclusion: The Future of SSH in Cybersecurity and IoT](#-conclusion-the-future-of-ssh-in-cybersecurity-and-iot)
+15. [🏠 SSH in IoT and Smart Home Automation](#-ssh-in-iot-and-smart-home-automation)
+16. [🛡️ Advanced SSH Penetration Testing Techniques](#️-advanced-ssh-penetration-testing-techniques)
+17. [🎭 SSH Honeypots for Threat Intelligence](#-ssh-honeypots-for-threat-intelligence)
+18. [🌟 Conclusion: The Future of SSH in Cybersecurity and IoT](#-conclusion-the-future-of-ssh-in-cybersecurity-and-iot)
 
 ## 🏠 SSH in IoT and Smart Home Automation
 
@@ -66,6 +66,9 @@ This tunnel allows you to access a service (like InfluxDB) running on the IoT hu
 
 ### 19.4 Securing Smart Home Communications with SSH
 
+<details>
+<summary><strong>Click to view Python script</strong></summary>
+
 ```python
 import paramiko
 import json
@@ -85,6 +88,8 @@ def send_command_to_device(device_ip, command):
 status = send_command_to_device('192.168.1.100', 'get_device_status')
 print(f"Device Status: {status}")
 ```
+
+</details>
 
 This Python script demonstrates how to securely send commands to smart home devices using SSH. Here's how it works:
 1. It uses the Paramiko library to create an SSH client
@@ -154,6 +159,9 @@ If not properly sanitized, this could execute the destructive command on the tar
 
 ### 20.3 SSH Key Harvesting
 
+<details>
+<summary><strong>Click to view Python script</strong></summary>
+
 ```python
 import paramiko
 import os
@@ -176,6 +184,8 @@ def harvest_keys(target, username, password):
 harvest_keys('target.com', 'user', 'password123')
 ```
 
+</details>
+
 This Python script demonstrates a technique for harvesting SSH private keys from a compromised system. Here's how it works:
 1. Establishes an SSH connection using provided credentials
 2. Executes a command to read the contents of the private key file
@@ -188,6 +198,9 @@ This technique could be used by attackers to gain unauthorized access to other s
 **Screenshot description:** The image shows a terminal window with the output of the Python script. It displays a message indicating successful key harvesting, along with the name of the file where the harvested key was saved.
 
 ## 🎭 SSH Honeypots for Threat Intelligence
+
+<details>
+<summary><strong>Click to view Python script</strong></summary>
 
 ```python
 import socket
@@ -220,6 +233,8 @@ def start_server():
 
 start_server()
 ```
+
+</details>
 
 This Python script creates a simple SSH honeypot for gathering threat intelligence. Here's how it works:
 1. It sets up a fake SSH server listening on port 2222
