@@ -1,4 +1,4 @@
-# 🚀 `SSH Mastery: The Ultimate Hacker's Guide` 🖥️
+# 🚀 `SSH Mastery: The Ultimate Guide` 🖥️
 
 <div align="center">
 
@@ -19,8 +19,8 @@ ____) |____) | |  | | | |  | | (_| \__ \ ||  __/ |
 
 1. [🔑 SSH: Your Digital Skeleton Key](#1--ssh-your-digital-skeleton-key)
 2. [🔌 Establishing Your First SSH Connection](#2--establishing-your-first-ssh-connection)
-3. [⚡ Essential SSH Commands for l33t Hackers](#3--essential-ssh-commands-for-l33t-hackers)
-4. [🛡️ SSH Key Pairs: Level Up Your Security](#4-️-ssh-key-pairs-level-up-your-security)
+3. [⚡ Essential SSH Commands for Advanced Users](#3--essential-ssh-commands-for-advanced-users)
+4. [🛡️ SSH Key Pairs: Elevate Your Security](#4-️-ssh-key-pairs-elevate-your-security)
 5. [🎛️ SSH Config Files: Your Personal Command Center](#5-️-ssh-config-files-your-personal-command-center)
 6. [🔥 Advanced SSH Techniques](#6--advanced-ssh-techniques)
 7. [🔒 SSH Hardening: Fortifying Your Digital Fortress](#7--ssh-hardening-fortifying-your-digital-fortress)
@@ -30,344 +30,273 @@ ____) |____) | |  | | | |  | | (_| \__ \ ||  __/ |
 
 ## 1. 🔑 `SSH: Your Digital Skeleton Key`
 
-> SSH (Secure Shell) = 🔐 cryptographic network protocol
-> 
-> Purpose: Enable secure comms between systems over unsecured networks
-> 
-> Think: Encrypted 🌪️ tunnel for your data through the chaotic internet
+SSH (Secure Shell) is a cryptographic network protocol that enables secure communication between systems over unsecured networks. It serves as an encrypted tunnel for your data through the often chaotic internet landscape.
+
+Key features of SSH:
+- Provides strong encryption for data in transit
+- Supports various authentication methods
+- Enables secure file transfers and remote command execution
+- Allows for port forwarding and tunneling
 
 <details>
 <summary><strong>🖼️ Click to view SSH Connection Diagram</strong></summary>
 
-```
-[Screenshot placeholder: SSH connection diagram]
-```
+![SSH-Diagram](https://github.com/user-attachments/assets/d09ddcda-7afa-4304-ad0a-cfde8f8c8a03)
 
 ### 📸 Screenshot Description:
-This diagram illustrates the fundamental concept of an SSH connection. You'll see two systems represented: a client (typically your local machine) on the left, and a server (the remote system you're connecting to) on the right. Between them, there's a visual representation of the internet, depicted as a chaotic cloud to symbolize the potential security risks of unencrypted communication.
+This diagram illustrates the fundamental concept of an SSH connection. You'll see two systems represented: a client (typically your local machine) on the left, and a server (the remote system you're connecting to) on the right. The connection between them is encrypted, ensuring secure communication.
 
-The key element is a bold, green arrow running from the client to the server, representing the SSH tunnel. This arrow passes through the internet cloud unaffected, demonstrating how SSH creates a secure channel through potentially unsafe networks. Small lock icons at each end of the arrow emphasize the encrypted nature of the connection.
-
-Alongside the diagram, you'll find brief annotations explaining:
-1. Client-side encryption
-2. Secure transmission through the internet
-3. Server-side decryption
-
-This visual aid helps to conceptualize how SSH provides a safe passage for your data, even when traversing unsecured networks.
 </details>
 
 ---
 
 ## 2. 🔌 `Establishing Your First SSH Connection`
 
-> Knock on the door of a remote computer:
+To initiate an SSH connection, you use the `ssh` command followed by the username and hostname (or IP address) of the remote system. Here are some common connection scenarios:
 
 ```bash
-# Basic incantation
+# Basic connection
 ssh username@hostname
 
-# Example for the chosen one:
+# Example connection
 ssh neo@matrix.com
 
-# Sneaking through a different port (default: 22)
+# Connecting through a non-standard port (default is 22)
 ssh -p 2222 username@hostname
 ```
+
+When connecting to a new server for the first time, you'll be presented with the server's fingerprint. This is a security measure to verify the server's identity. Always verify this fingerprint if possible to ensure you're connecting to the intended server.
 
 <details>
 <summary><strong>🖼️ Click to view SSH Connection Process</strong></summary>
 
-```
-[Screenshot placeholder: SSH connection process]
-```
+![ssh-first-connection](https://github.com/user-attachments/assets/46170a12-f5f8-4a85-b17f-3c16b5330d09)
 
 ### 📸 Screenshot Description:
-This screenshot provides a step-by-step visual guide to establishing an SSH connection. The image displays a terminal or command prompt window, showcasing the entire connection process from start to finish.
+This screenshot provides a step-by-step visual guide to establishing an SSH connection. The image displays a terminal window, showcasing the entire connection process from start to finish.
 
-Key elements you'll observe:
+Key elements:
+1. SSH command entry
+2. Server fingerprint verification prompt
+3. Password authentication prompt
+4. Successful connection and welcome message
 
-1. **Command Entry**: At the top, you'll see the SSH command being entered: `ssh username@hostname`.
+This process demonstrates the security measures in place and the typical flow of establishing an SSH connection.
 
-2. **Fingerprint Prompt**: Following the command, there's a message about the server's fingerprint. This is a security feature to verify the server's identity. It typically appears only on the first connection to a new server.
-
-3. **Password Prompt**: Next, you'll see a prompt asking for the user's password. For security reasons, the password characters are not displayed as they're typed.
-
-4. **Welcome Message**: Upon successful authentication, you'll see a welcome message or MOTD (Message of the Day) from the server.
-
-5. **New Command Prompt**: Finally, you'll observe a new command prompt, typically ending with a `$` or `#` symbol, indicating you're now connected to the remote system.
-
-Each step is clearly labeled, and important security notices or prompts are highlighted for emphasis. This screenshot provides a clear, visual reference for users to understand what to expect when initiating an SSH connection, enhancing their confidence in using the protocol.
 </details>
 
 ---
 
-## 3. ⚡ `Essential SSH Commands for l33t Hackers`
+## 3. ⚡ `Essential SSH Commands for Advanced Users`
 
-> You're in the Matrix. Navigate like a pro:
+Once connected to a remote system via SSH, you have access to a wide range of commands. Here are some essential commands that every advanced user should be familiar with:
 
-| Command | Description |
-|---------|-------------|
-| `ls`    | 👀 Reveal hidden files |
-| `cd`    | 🚶‍♂️ Traverse the digital landscape |
-| `pwd`   | 🗺️ Locate yourself in the matrix |
-| `mkdir` | 🏗️ Construct new data structures |
-| `rm`    | 💣 Obliterate files |
-| `cp`    | 🐑 Clone files |
-| `mv`    | 🕴️ Relocate or rebrand files |
-| `cat`   | 🐱 Unveil file contents |
-| `nano`  | 🖊️ Manipulate the fabric of files |
-| `scp`   | 🚚 Transport files across the void |
+| Command | Description | Advanced Usage |
+|---------|-------------|----------------|
+| `ls`    | List files and directories | Use with `-la` for detailed, hidden file view |
+| `cd`    | Change directory | `cd -` to return to the previous directory |
+| `pwd`   | Print working directory | Combine with `grep` for specific path searches |
+| `mkdir` | Create new directories | Use `-p` to create nested directories |
+| `rm`    | Remove files or directories | Use `-rf` cautiously for recursive forced deletion |
+| `cp`    | Copy files or directories | Use `-R` for recursive directory copying |
+| `mv`    | Move or rename files | Can be used for bulk file operations with wildcards |
+| `cat`   | Display file contents | Use with `less` for paginated output |
+| `nano`  | Text editor for file manipulation | Consider learning `vim` for advanced editing |
+| `scp`   | Securely copy files between systems | Use `-r` for recursive directory copying |
 
 <details>
 <summary><strong>🖼️ Click to view SSH Commands in Action</strong></summary>
 
-```
-[Screenshot placeholder: SSH commands in action]
-```
+![ssh-remote-code-execute](https://github.com/user-attachments/assets/1b64abfb-ce21-4963-a869-f849f057ac5b)
 
 ### 📸 Screenshot Description:
-This comprehensive screenshot showcases the execution and output of various essential SSH commands in a terminal environment. The image is designed to give you a clear understanding of how these commands work in practice.
+This comprehensive screenshot showcases the execution and output of various essential SSH commands in a terminal environment. Each command is demonstrated with its typical usage and output, providing a practical reference for users.
 
-Key features of the screenshot:
+Key features:
+1. Actual command execution
+2. Command outputs demonstrating expected results
+3. Examples of file manipulation and system navigation
 
-1. **Command Prompt**: Each command is preceded by a command prompt (e.g., `user@host:~$`), clearly separating different commands.
+This visual guide serves as a quick reference for users to understand how these commands behave in a real SSH session.
 
-2. **Command Execution**: You'll see each command being typed out, exactly as you would enter it.
-
-3. **Command Output**: Below each command, you'll find its corresponding output, demonstrating what to expect when you use these commands.
-
-4. **File and Directory Structure**: The outputs of `ls` and `pwd` commands show a typical file and directory structure, giving you a sense of how information is organized on a Unix-like system.
-
-5. **File Manipulation**: The effects of commands like `mkdir`, `cp`, `mv`, and `rm` are clearly demonstrated, showing before and after states of the file system.
-
-6. **File Content**: The `cat` command output shows the content of a text file, while the `nano` command opens a text editor interface.
-
-7. **Remote File Transfer**: The `scp` command demonstrates both uploading and downloading files, with progress indicators.
-
-Each command and its output are clearly labeled and, where necessary, accompanied by brief explanations. This screenshot serves as a visual cheat sheet, helping you understand how these essential commands behave in a real SSH session.
 </details>
 
 ---
 
-## 4. 🛡️ `SSH Key Pairs: Level Up Your Security`
+## 4. 🛡️ `SSH Key Pairs: Elevate Your Security`
 
-> SSH keys = High-tech key card system for your digital fortress
-> 
-> Components:
-> - Public key 🔒 (the lock)
-> - Private key 🗝️ (your secret weapon)
+SSH key pairs provide a more secure alternative to password-based authentication. They consist of two parts:
+
+1. Public key 🔒: Stored on the server, acts like a lock.
+2. Private key 🗝️: Kept securely on the client, acts as your unique key.
+
+To generate an SSH key pair, use the following command:
+
+```bash
+ssh-keygen -t rsa -b 4096
+```
+
+This creates a 4096-bit RSA key pair. The `-t` flag specifies the type of key, while `-b` sets the key size.
 
 <details>
 <summary><strong>🖼️ Click to view SSH Key Generation Process</strong></summary>
 
-```
-[Screenshot placeholder: SSH key generation process]
-```
+![SSH-Key-Generation](https://github.com/user-attachments/assets/fdcdc8a5-ae33-43f6-bf77-3a05a439c027)
 
 ### 📸 Screenshot Description:
-This screenshot guides you through the process of generating an SSH key pair, a crucial step in enhancing your SSH security. The image captures a terminal window showing the entire key generation process.
+This screenshot guides you through the process of generating an SSH key pair. The image captures a terminal window showing the entire key generation process.
 
-Key elements in the screenshot:
+Key elements:
+1. Command to initiate key generation
+2. Prompt for key file location
+3. Optional passphrase entry for added security
+4. Key generation visualization (randomart image)
+5. Confirmation of key pair creation
 
-1. **Command Initiation**: At the top, you'll see the command to start the key generation process: `ssh-keygen -t rsa -b 4096`.
+This visual guide helps demystify the key generation process, making it easier for users to implement this crucial security measure.
 
-2. **Key File Location Prompt**: The system asks where to save the key pair. The default location (`/home/username/.ssh/id_rsa`) is shown, demonstrating the standard file naming convention.
-
-3. **Passphrase Entry**: You'll observe prompts to enter and confirm a passphrase. This additional security layer is optional but recommended.
-
-4. **Key Generation Visualization**: A unique aspect of SSH key generation is the randomart image. This is displayed in ASCII art format, providing a visual fingerprint of your key.
-
-5. **Confirmation Message**: At the bottom, you'll see messages confirming the successful generation of both the private and public keys, along with their save locations.
-
-6. **File Permissions**: The screenshot may include a command and output showing how to set correct permissions for the key files (`chmod 600 ~/.ssh/id_rsa`).
-
-Each step is clearly labeled, with important security notices or options highlighted. This visual guide helps demystify the key generation process, making it easier for users to implement this crucial security measure.
 </details>
 
 ---
 
 ## 5. 🎛️ `SSH Config Files: Your Personal Command Center`
 
-> SSH config = Shortcuts and default options for your connections
-> 
-> It's like programming your own mission control center 🎮
+SSH configuration files allow you to set up shortcuts and default options for your connections. The main user-specific config file is located at `~/.ssh/config`. This file can significantly simplify your SSH workflow, especially when managing multiple connections.
+
+Example SSH config file structure:
+
+```
+Host alias
+    HostName example.com
+    User username
+    Port 2222
+    IdentityFile ~/.ssh/id_rsa_example
+```
+
+With this configuration, you can simply use `ssh alias` to connect, instead of typing out the full command.
 
 <details>
 <summary><strong>🖼️ Click to view SSH Config File Example</strong></summary>
 
-```
-[Screenshot placeholder: SSH config file]
-```
+![SSH-config-file](https://github.com/user-attachments/assets/569af994-dc01-434f-9f08-e21613403665)
 
 ### 📸 Screenshot Description:
-This screenshot provides an in-depth look at a typical SSH config file, showcasing how to set up and customize your SSH connections. The image displays the content of the `~/.ssh/config` file opened in a text editor.
+This screenshot provides an in-depth look at a typical SSH config file. The image displays the content of the `~/.ssh/config` file opened in a text editor.
 
-Key features of the screenshot:
+Key features:
+1. Multiple host definitions
+2. Common configuration options (HostName, User, Port, IdentityFile)
+3. Use of wildcards for group configurations
+4. Commented explanations for each option
 
-1. **File Location**: The top of the image clearly shows the file path: `~/.ssh/config`.
+This visual reference helps users understand how to structure their own SSH config files, enabling them to streamline their SSH workflow and manage multiple connections efficiently.
 
-2. **Host Definitions**: You'll see multiple `Host` blocks, each defining settings for different remote servers.
-
-3. **Common Options**: The screenshot demonstrates various configuration options such as:
-   - `HostName`: The actual server address
-   - `User`: Default username for the connection
-   - `Port`: Custom SSH port, if not using the default 22
-   - `IdentityFile`: Path to the SSH key for this connection
-   - `ForwardAgent`: Option for SSH agent forwarding
-
-4. **Wildcards**: An example of using wildcards in host definitions (e.g., `Host *.example.com`) to apply settings to multiple hosts.
-
-5. **Commenting**: Proper use of comments (lines starting with `#`) to explain each configuration option.
-
-6. **Advanced Options**: Examples of more advanced configurations like ProxyJump for connecting through a bastion host.
-
-Each section of the config file is clearly labeled, with brief explanations of what each option does. This visual reference helps users understand how to structure their own SSH config files, enabling them to streamline their SSH workflow and manage multiple connections efficiently.
 </details>
 
 ---
 
 ## 6. 🔥 `Advanced SSH Techniques`
 
-> For the elite hackers, unlock these power moves:
+For advanced users, SSH offers powerful features beyond simple remote access:
+
+1. **Port Forwarding**: Create secure tunnels to access services on remote networks.
+2. **X11 Forwarding**: Run graphical applications on a remote server and display them locally.
+3. **SSH Agent Forwarding**: Use your local SSH keys on a remote system without copying them.
+4. **ProxyJump**: Easily connect to a server through one or more intermediate hosts.
+
+Example of an advanced SSH command combining multiple features:
+
+```bash
+ssh -L 8080:remote-server:80 -i /path/to/private_key -p 2222 user@remote_host 'bash -s' < local_script.sh
+```
+
+This command sets up local port forwarding, uses a specific private key, connects on a non-standard port, and executes a local script on the remote host.
 
 <details>
 <summary><strong>🖼️ Click to view Advanced SSH Techniques</strong></summary>
 
-```
-[Screenshot placeholder: Advanced SSH techniques]
-```
+![SSH-Advance-Command](https://github.com/user-attachments/assets/7fcb7303-f795-4d93-a5b7-eba03cb88b84)
 
 ### 📸 Screenshot Description:
-This advanced techniques screenshot showcases a command that combine multiple options and commads to perform complex tasks. Let's go through an example of using SSH with port forwarding and executing remote commands.
--L 8080:remote-server:80 Set up local port forwarding
--i /path/to/private_key: Specifies the path to the SSH private key for authentication.
--p 2222: Connect to remoe_host
-- user@remote_host: The username and hostname(or IP) of the remote machine.
-- 'bash -s' < local_script,sh: This executes the local script on the remote server. 
+This advanced techniques screenshot showcases a complex SSH command that combines multiple options to perform sophisticated tasks. 
 
-Key elements in the screenshot:
+Key elements:
+1. Port forwarding setup
+2. Custom private key specification
+3. Non-standard port usage
+4. Remote command execution
 
-1. **Port Forwarding**:
-   - Local forwarding: `ssh -L 8080:localhost:80 user@remotehost`
-   - Remote forwarding: `ssh -R 8080:localhost:80 user@remotehost`
-   The output shows successful tunnel establishment and any relevant system messages.
+This visual guide serves as a reference for advanced users looking to leverage SSH's full potential, demonstrating how these powerful features can be implemented in real-world scenarios.
 
-2. **SOCKS Proxy**:
-   Command: `ssh -D 9090 user@remotehost`
-   You'll see confirmation of the SOCKS proxy being set up, potentially with a message about how to configure your applications to use this proxy.
-
-3. **X11 Forwarding**:
-   Command: `ssh -X user@remotehost`
-   The screenshot shows a successful X11 connection, possibly with a simple graphical application being launched to demonstrate functionality.
-
-4. **Jump Hosts**:
-   Command: `ssh -J jumphost user@destinationhost`
-   Output demonstrates successful connection through an intermediate server.
-
-5. **Running Remote Commands**:
-   Example: `ssh user@remotehost 'ls -l /var/log'`
-   The screenshot shows the command execution and its output directly in the local terminal.
-
-6. **SSH Multiplexing**:
-   Configuration in `~/.ssh/config` and a command to check active connections.
-
-Each technique is clearly labeled with a brief explanation of its purpose and potential use cases. The screenshot may also include snippets of relevant configuration files where applicable.
-
-This visual guide serves as a reference for advanced users looking to leverage SSH's full potential, showcasing how these powerful features can be implemented in real-world scenarios.
 </details>
 
 ---
 
 ## 7. 🔒 `SSH Hardening: Fortifying Your Digital Fortress`
 
-> Enhance your SSH security with these pro tips:
+Enhancing SSH security is crucial for protecting your systems. Here are some best practices:
 
-1. Use strong, unique passwords
+1. Use strong, unique passwords for each account
 2. Implement two-factor authentication (2FA)
-3. Disable root login
-4. Use key-based authentication instead of passwords
-5. Limit user access with AllowUsers or AllowGroups
-6. Change the default SSH port
-7. Use SSH protocol 2
+3. Disable root login and use sudo for privileged operations
+4. Employ key-based authentication instead of passwords
+5. Limit user access with AllowUsers or AllowGroups directives
+6. Change the default SSH port to reduce automated scanning attempts
+7. Use SSH protocol 2 exclusively for improved security
 8. Implement fail2ban to prevent brute-force attacks
 9. Keep your SSH client and server software updated
-10. Use SSH agent forwarding cautiously
+10. Use SSH agent forwarding cautiously to prevent key misuse
 
 <details>
 <summary><strong>🖼️ Click to view SSH Hardening Configuration</strong></summary>
 
-```
-[Screenshot placeholder: SSH hardening configuration]
-```
+![SSH-hardening-config](https://github.com/user-attachments/assets/cda38785-90c0-4dfc-87fb-1c983654b109)
 
 ### 📸 Screenshot Description:
 This screenshot provides a visual guide to hardening your SSH configuration. The image displays the `/etc/ssh/sshd_config` file open in a text editor, with various security-enhancing settings highlighted and explained.
 
-Key features of the screenshot:
+Key features:
+1. Protocol version specification
+2. Non-standard port configuration
+3. Root login restriction
+4. Password authentication disabling
+5. User access limitations
+6. Session timeout settings
+7. Failed login attempt restrictions
+8. Two-factor authentication setup
 
-1. **Protocol Version**: A line specifying `Protocol 2` to use only the more secure SSH protocol version.
+This visual guide helps system administrators and security-conscious users understand and implement best practices for SSH security.
 
-2. **Port Configuration**: The `Port` directive set to a non-standard port number to avoid automated scanning attempts.
-
-3. **Root Login**: The `PermitRootLogin` option set to `no` to prevent direct root access.
-
-4. **Password Authentication**: `PasswordAuthentication` set to `no` to enforce key-based authentication.
-
-5. **User Restrictions**: Examples of `AllowUsers` or `AllowGroups` directives to limit SSH access to specific users or groups.
-
-6. **Idle Timeout**: `ClientAliveInterval` and `ClientAliveCountMax` settings to automatically disconnect inactive sessions.
-
-7. **Failed Login Attempts**: `MaxAuthTries` set to a low number to limit brute-force attempts.
-
-8. **Two-Factor Authentication**: Configuration lines for enabling and setting up 2FA.
-
-Each security setting is clearly labeled and accompanied by a brief explanation of its purpose and impact. This visual guide helps system administrators and security-conscious users understand and implement best practices for SSH security.
 </details>
 
 ---
 
-
 ## 8. 🌐 `SSH Tunneling: Creating Secure Pathways`
 
-> SSH tunneling = Creating encrypted pathways through firewalls
+SSH tunneling allows you to create encrypted pathways through firewalls, enabling secure access to services that may otherwise be blocked or insecure. There are three main types of SSH tunnels:
 
-Types of SSH tunnels:
-1. Local Port Forwarding
-2. Remote Port Forwarding
-3. Dynamic Port Forwarding (SOCKS Proxy)
+1. **Local Port Forwarding**: Access a remote service as if it were local.
+2. **Remote Port Forwarding**: Expose a local service to a remote server.
+3. **Dynamic Port Forwarding (SOCKS Proxy)**: Create a versatile proxy for multiple applications.
 
 <details>
 <summary><strong>🖼️ Click to view SSH Tunneling Diagram</strong></summary>
 
-```
-[Screenshot placeholder: SSH tunneling diagram]
-```
+![SSH-tunneling-diagram](https://github.com/user-attachments/assets/03210d8b-50d6-47d8-826b-3b21dccd480c)
 
 ### 📸 Screenshot Description:
 This diagram illustrates the concept and types of SSH tunneling. The image is divided into three sections, each representing a different type of SSH tunnel.
 
-Key elements in the diagram:
-
-1. **Local Port Forwarding**:
-   - Shows a client machine connecting to a remote SSH server.
-   - An arrow from a local port on the client machine points to a destination server through the SSH server.
-   - Demonstrates how local port forwarding allows accessing a remote service as if it were local.
-
-2. **Remote Port Forwarding**:
-   - Displays a remote SSH server connecting back to the client machine.
-   - An arrow from a port on the SSH server points to a local service on the client machine.
-   - Illustrates how remote port forwarding enables exposing a local service to the remote server.
-
-3. **Dynamic Port Forwarding (SOCKS Proxy)**:
-   - Shows multiple arrows from various applications on the client machine, all converging to a single local port.
-   - This local port is then connected to the SSH server, which fans out to multiple destination servers.
-   - Demonstrates how dynamic port forwarding creates a versatile SOCKS proxy for multiple applications.
+Key elements:
+1. Local Port Forwarding illustration
+2. Remote Port Forwarding demonstration
+3. Dynamic Port Forwarding (SOCKS Proxy) visualization
 
 Each type of tunnel is clearly labeled and color-coded for easy differentiation. Arrows indicate the direction of data flow, and brief annotations explain the purpose and use case for each tunneling method.
 
-This visual guide helps users understand the different types of SSH tunnels and how they can be used to securely access or expose services across networks.
 </details>
 
-### Examples of SSH Tunneling Commands:
+Examples of SSH Tunneling Commands:
 
 1. Local Port Forwarding:
    ```bash
@@ -391,7 +320,7 @@ This visual guide helps users understand the different types of SSH tunnels and 
 
 <div align="center">
 
-> Remember: With great power comes great responsibility. Use your SSH skills wisely, and may your connections always be secure! 🔐
+> Remember: With advanced SSH knowledge comes great responsibility. Use your skills ethically and always comply with relevant laws and regulations.
 
 ```ascii
   _____                 _          _ 
@@ -403,5 +332,3 @@ This visual guide helps users understand the different types of SSH tunnels and 
 ```
 
 </div>
-
-
