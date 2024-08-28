@@ -237,7 +237,12 @@ Each section of the config file is clearly labeled, with brief explanations of w
 ```
 
 ### 📸 Screenshot Description:
-This advanced techniques screenshot showcasesSFTP Tunneling, demonstrating powerful features that go beyond basic remote access. The image captures a terminal window executing and displaying the results of several advanced SSH commands.
+This advanced techniques screenshot showcases a command that combine multiple options and commads to perform complex tasks. Let's go through an example of using SSH with port forwarding and executing remote commands.
+-L 8080:remote-server:80 Set up local port forwarding
+-i /path/to/private_key: Specifies the path to the SSH private key for authentication.
+-p 2222: Connect to remoe_host
+- user@remote_host: The username and hostname(or IP) of the remote machine.
+- 'bash -s' < local_script,sh: This executes the local script on the remote server. 
 
 Key elements in the screenshot:
 
