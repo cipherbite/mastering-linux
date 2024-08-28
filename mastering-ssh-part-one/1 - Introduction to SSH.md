@@ -237,7 +237,7 @@ Each section of the config file is clearly labeled, with brief explanations of w
 ```
 
 ### 📸 Screenshot Description:
-This advanced techniques screenshot showcases sophisticated SSH usage, demonstrating powerful features that go beyond basic remote access. The image captures a terminal window executing and displaying the results of several advanced SSH commands.
+This advanced techniques screenshot showcasesSFTP Tunneling, demonstrating powerful features that go beyond basic remote access. The image captures a terminal window executing and displaying the results of several advanced SSH commands.
 
 Key elements in the screenshot:
 
