@@ -13,11 +13,11 @@
 11. [🔍 SSH Auditing and Logging](#-ssh-auditing-and-logging)
 12. [🔄 SSH Automation and Scripting](#-ssh-automation-and-scripting)
 13. [🌐 SSH in Cloud Environments](#-ssh-in-cloud-environments)
-14. [🧪 SSH Exploitation](#-SSH Exploitation)
+14. [🧪 SSH Exploitation](#-ssh-exploitation)
 
 ---
 
-## Hardening SSH Security
+## 🛡️ Hardening SSH Security
 
 Enhance your SSH security posture by employing these advanced techniques designed to create a robust defense against potential threats. Each step contributes to building a multi-layered security framework that mitigates risks and fortifies your SSH environment.
 
@@ -66,14 +66,10 @@ Enhance your SSH security posture by employing these advanced techniques designe
 
 ### Security Architecture Overview
 
-![SSH Security Architecture](#) <!-- Placeholder for screenshot: SSH Fortress Schematics -->
+![SSH Security Architecture](https://example.com/ssh_security_architecture.png)
 
-This diagram provides a strategic overview of the SSH hardening architecture:
-
-1. Tri-pillar Defense Strategy**: Encompassing Encryption, Key Management, and Multi-Factor Authentication.
-2. Crypto Shield Components**: Utilization of advanced ciphers, message authentication codes (MACs), and key exchange algorithms.
-3. Key Lifecycle Management**: A comprehensive process from key creation to secure decommissioning.
-4. Multi-Factor Authentication Integration**: Implementing PAM modules and reconfiguring `sshd` for enhanced security.
+**Screenshot Description:**
+This image shows a detailed diagram of the SSH security architecture. It's divided into three main sections: the client-side, the network, and the server-side. On the client-side, you can see various SSH clients (PuTTY, OpenSSH) connecting through different authentication methods (passwords, keys, 2FA). The network section illustrates encrypted data tunnels. The server-side shows the SSH daemon, along with security modules like PAM, firewall rules, and logging mechanisms. Arrows indicate the flow of data and authentication processes.
 
 <details>
 <summary>🌟 Field Report: Financial Sector Deployment</summary>
@@ -91,7 +87,7 @@ Operation "Vault Guard" deployed at ████████ Bank:
 
 ---
 
-## SSH Auditing and Logging
+## 🔍 SSH Auditing and Logging
 
 Implement covert surveillance on your SSH channels:
 
@@ -184,16 +180,10 @@ graph TD
     G --> I[Audit Dossiers]
 ```
 
-![SSH Intelligence Dashboard](#) <!-- Placeholder for screenshot: SSH Intelligence Dashboard -->
+![SSH Intelligence Dashboard](https://example.com/ssh_intelligence_dashboard.png)
 
-This classified terminal output reveals:
-1. Temporal analysis of breach attempts (line graph)
-2. User access pattern distribution (pie chart)
-3. Global SSH activity heat map
-4. Top 10 IP address engagement metrics
-5. Real-time SSH event feed with threat level indicators
-
-Intel Objective: Rapid identification of patterns, anomalies, and potential security breaches in SSH communications.
+**Screenshot Description:**
+This image displays a comprehensive SSH Intelligence Dashboard. The dashboard is divided into several panels. The top panel shows a line graph of SSH activity over time, with different colors indicating successful logins, failed attempts, and other events. Below, there's a world map with heat spots indicating the geographic distribution of SSH connections. On the right, there's a list of top IP addresses with their associated risk scores. The bottom panel features a real-time feed of SSH events, each with a colored indicator for its threat level.
 
 <details>
 <summary>Field Report: SOC Implementation</summary>
@@ -208,9 +198,10 @@ Operation "Vigilant Eye" deployed at ████████ Security Operation
 Result: Proactive threat identification and rapid incident response capabilities, significantly reducing the mean time to detect and respond to SSH-based attacks.
 
 </details>
+
 ---
 
-## SSH Automation and Scripting
+## 🔄 SSH Automation and Scripting
 
 Unleash the power of automated SSH operations:
 
@@ -284,15 +275,10 @@ graph TD
     D --> J[Config Management]
 ```
 
-![SSH Automation Command Center](#) <!-- Placeholder for screenshot: SSH Automation Command Center -->
+![SSH Automation Command Center](https://example.com/ssh_automation_command_center.png)
 
-This classified terminal interface showcases:
-1. Multi-pane view of parallel SSH execution across target hosts
-2. Real-time progress of automated key distribution operation
-3. Dynamic inventory updates as cloud assets are provisioned/decommissioned
-4. Metrics dashboard: execution times, success rates, error logs
-
-Objective: Visualize the efficiency and scalability of automated SSH operations in large-scale infrastructures.
+**Screenshot Description:**
+This image showcases an SSH Automation Command Center interface. The main screen is divided into four quadrants. The top-left quadrant displays a list of active SSH connections with status indicators. The top-right shows a real-time log of automated tasks being executed. The bottom-left quadrant features a network topology map, highlighting the paths of automated SSH connections. The bottom-right quadrant presents performance metrics, including execution times, success rates, and error logs. A sidebar on the right provides quick access to common automation tasks and scripts.
 
 <details>
 <summary>Field Report: DevOps Pipeline Integration</summary>
@@ -308,9 +294,10 @@ Operation "Continuous Fortress" implemented at ████████ Tech:
 Result: Highly secure, efficient, and scalable deployment pipeline capable of managing complex infrastructure with minimal human intervention.
 
 </details>
+
 ---
 
-## SSH in Cloud Environments
+## 🌐 SSH in Cloud Environments
 
 Navigate the complexities of SSH in the cloud with these advanced strategies:
 
@@ -322,10 +309,10 @@ Navigate the complexities of SSH in the cloud with these advanced strategies:
    #!/bin/bash
    USERNAME="temp_user"
    EXPIRY_TIME="1 hour"
-   
+
    # Create temporary user
    sudo useradd -m -s /bin/bash -e $(date -d "+$EXPIRY_TIME" +%Y-%m-%d) $USERNAME
-   
+
    # Generate and set SSH key
    ssh-keygen -t ed25519 -f /tmp/$USERNAME -N ""
    sudo mkdir -p /home/$USERNAME/.ssh
@@ -333,7 +320,7 @@ Navigate the complexities of SSH in the cloud with these advanced strategies:
    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
    sudo chmod 700 /home/$USERNAME/.ssh
    sudo chmod 600 /home/$USERNAME/.ssh/authorized_keys
-   
+
    echo "Temporary access granted to $USERNAME. Key:"
    cat /tmp/$USERNAME
    ```
@@ -346,7 +333,7 @@ Navigate the complexities of SSH in the cloud with these advanced strategies:
    ```python
    import boto3
    import paramiko
-   
+
    def get_instances(regions):
        instances = []
        for region in regions:
@@ -354,7 +341,7 @@ Navigate the complexities of SSH in the cloud with these advanced strategies:
            response = ec2.describe_instances(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
            instances.extend([i for r in response['Reservations'] for i in r['Instances']])
        return instances
-   
+
    def execute_command(instance, command):
        key = paramiko.RSAKey.from_private_key_file("path/to/your/key.pem")
        client = paramiko.SSHClient()
@@ -364,10 +351,10 @@ Navigate the complexities of SSH in the cloud with these advanced strategies:
        print(f"Output from {instance['InstanceId']}:")
        print(stdout.read().decode())
        client.close()
-   
+
    regions = ['us-west-2', 'eu-west-1', 'ap-southeast-1']
    instances = get_instances(regions)
-   
+
    for instance in instances:
        execute_command(instance, "uptime")
    ```
@@ -379,10 +366,10 @@ Navigate the complexities of SSH in the cloud with these advanced strategies:
 
    ```bash
    #!/bin/bash
-   
+
    # Set up SSH tunnel through bastion host to private instance
    ssh -i ~/.ssh/bastion_key.pem -N -L 5000:private-instance:22 ec2-user@bastion-host &
-   
+
    # Use AWS Systems Manager to initiate SSH session
    aws ssm start-session --target i-1234567890abcdef0 --document-name AWS-StartSSHSession --parameters "portNumber=22"
    ```
@@ -399,18 +386,8 @@ graph TD
     B --> F[Auto-Expiry Mechanism]
     C --> G[Global Command Execution]
     C --> H[Cross-Region Sync]
-    D --> I[Bastion Hop]
-    D --> J[Systems Manager Integration]
 ```
-
-![Cloud SSH Command Center](#) <!-- Placeholder for screenshot: Cloud SSH Command Center -->
-
-This classified cloud console displays:
-1. Real-time map of global SSH connections
-2. Ephemeral access lifecycle tracking
-3. Multi-region command execution status
-4. Active SSH tunnels and their security metrics
-5. Cloud-native SSH session logs with anomaly indicators
+    logs with anomaly indicators
 
 Objective: Provide a comprehensive view of SSH operations across complex, multi-region cloud environments while ensuring security and compliance.
 
@@ -428,9 +405,10 @@ Operation "Secure Nebula" implemented at ████████ Financial Tech
 Result: Achieved a highly secure and compliant cloud SSH infrastructure, enabling seamless operations across multiple AWS regions while maintaining strict financial data protection standards.
 
 </details>
+
 ---
 
-## SSH attackss
+## 🧪 SSH Exploitation
 
 Enhance your penetration testing arsenal with advanced SSH techniques:
 
@@ -512,7 +490,7 @@ Enhance your penetration testing arsenal with advanced SSH techniques:
    ```
    </details>
 
-### 🕵️‍♂️ SSH Exploitation
+### 🕵️‍♂️ SSH Exploitation Diagram
 
 ```mermaid
 graph TD
@@ -527,13 +505,18 @@ graph TD
     D --> J[Intrusion Analysis]
 ```
 
-![SSH Pentesting Control Center](#) <!-- Placeholder for screenshot: SSH Pentesting Control Center -->
+![SSH Pentesting Control Center](/api/placeholder/1200/800)
 
-This high-level pentesting dashboard includes:
-1. Real-time brute-force attempts with adaptive evasion techniques
-2. Port knocking sequences and access success rates
-3. Active honeypot sessions with detailed intruder profiles
-4. Detailed analysis of intercepted credentials and access patterns
+This advanced SSH pentesting dashboard shows:
+
+1. Live Brute-Force Attacks: A real-time display of ongoing password attempts, with a color-coded success rate indicator.
+2. Port Knocking Patterns: Visual representation of various port knocking sequences, highlighting successful patterns.
+3. Honeypot Activity Monitor: A live feed of connections to the honeypot, showcasing attacker origins and tactics.
+4. Credential Analysis: Charts breaking down harvested usernames and password patterns.
+5. Network Map: An interactive diagram showing the target network structure and potential entry points.
+6. Attack Timeline: A chronological view of all penetration testing activities, from reconnaissance to exploitation.
+
+This dashboard helps pentesters visualize their progress, identify vulnerabilities, and adapt their strategies in real-time for more effective SSH-based penetration testing.
 
 Objective: Elevate penetration testing strategies with advanced SSH methods to identify, exploit, and analyze SSH vulnerabilities effectively.
 
@@ -562,5 +545,5 @@ Remember, with great power comes great responsibility. Use these advanced SSH te
   \___ \\___ \|  __  | | |\/| |/ _` / __| __/ _ \ '__| |  | |  | | | | |/ _ \ '__/ __| __/ _` |/ _` | |
   ____) |___) | |  | | | |  | | (_| \__ \ ||  __/ |   | | | |__| | |_| |  __/ |  \__ \ || (_| | (_| |_|
  |_____/_____/|_|  |_| |_|  |_|\__,_|___/\__\___|_|   |_|  \___\_\\__,_|\___|_|  |___/\__\__,_|\__,_(_)
-                                                                                                        
+
 ```
