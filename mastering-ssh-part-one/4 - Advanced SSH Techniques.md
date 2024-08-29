@@ -9,18 +9,19 @@
 ```
 
 ## Table of Contents
-15. [SSH Multiplexing and Connection Sharing](#ssh-multiplexing-and-connection-sharing)
+15. SSH Nexus and Connection Sharing
 16. [Hardware Security Modules (HSMs) for SSH](#hardware-security-modules-hsms-for-ssh)
 17. [SSH over Non-Standard Protocols](#ssh-over-non-standard-protocols)
 18. [Kernel-Level SSH Hardening](#kernel-level-ssh-hardening)
 19. [SSH in IoT and Embedded Systems](#ssh-in-iot-and-embedded-systems)
 20. [SSH Honeypots for Pentesters](#ssh-honeypots-for-pentesters)
 
+
 ---
 
-## SSH Multiplexing and Connection Sharing
+## SSH Nexus and Connection Sharing
 
-Optimize SSH performance with advanced multiplexing techniques:
+Optimize SSH performance with advanced nexus techniques:
 
 1. **ControlMaster Configuration**
    ```bash
@@ -43,7 +44,7 @@ Optimize SSH performance with advanced multiplexing techniques:
    ssh -R 8080:localhost:80 user@remote_host
    ```
 
-### Multiplexing Performance Matrix
+### Nexus Performance Matrix
 
 ```mermaid
 graph TD
@@ -58,22 +59,9 @@ graph TD
     D --> J[Keep-Alive Strategies]
 ```
 
-<img src="/api/placeholder/800/600" alt="SSH Multiplexing Dashboard" />
+---
 
-**Screenshot Description:** This image showcases an SSH Multiplexing Dashboard, displaying real-time connection sharing statistics, active tunnel visualizations with bandwidth metrics, latency reduction graphs comparing standard vs. multiplexed connections, session reuse efficiency scores, and dynamic routing path optimizations. The dashboard provides a comprehensive view of the performance gains achieved through advanced SSH multiplexing techniques.
-
-### Field Report: High-Frequency Trading Implementation
-
-Operation "Nano Latency" deployed at a leading trading firm:
-
-1. Custom kernel module for TCP optimizations specific to SSH
-2. FPGA-accelerated SSH packet processing
-3. Ultra-low latency tunneling between trading servers and exchanges
-4. Adaptive compression based on real-time network conditions
-5. Multiplexed connections with priority queuing for order execution packets
-
-Result: Achieved sub-millisecond latency for SSH-based trading operations, gaining a significant edge in high-frequency trading scenarios.
-
+The term "Nexus" creates a sense of interconnectedness and centralization, which makes the concept more engaging and emphasizes the role of this technique in enhancing SSH performance.
 ---
 
 ## Hardware Security Modules (HSMs) for SSH
