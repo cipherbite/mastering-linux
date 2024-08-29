@@ -66,7 +66,7 @@ Enhance your SSH security posture by employing these advanced techniques designe
 
 ### Security Architecture Overview
 
-![SSH Security Architecture](https://example.com/ssh_security_architecture.png)
+![SSH Srcurity Diagram](https://github.com/user-attachments/assets/9c536b0c-1e0e-47f8-9c71-c9936e3de40c)
 
 **Screenshot Description:**
 This image shows a detailed diagram of the SSH security architecture. It's divided into three main sections: the client-side, the network, and the server-side. On the client-side, you can see various SSH clients (PuTTY, OpenSSH) connecting through different authentication methods (passwords, keys, 2FA). The network section illustrates encrypted data tunnels. The server-side shows the SSH daemon, along with security modules like PAM, firewall rules, and logging mechanisms. Arrows indicate the flow of data and authentication processes.
@@ -180,7 +180,8 @@ graph TD
     G --> I[Audit Dossiers]
 ```
 
-![SSH Intelligence Dashboard](https://example.com/ssh_intelligence_dashboard.png)
+![SSH Intel Dashboard](https://github.com/user-attachments/assets/309936bf-2b1e-4aa3-b362-8c46e66283a2)
+![SSH intel dashboard Two](https://github.com/user-attachments/assets/0b6e4cbf-3a9f-4414-a554-f24687f535d8)
 
 **Screenshot Description:**
 This image displays a comprehensive SSH Intelligence Dashboard. The dashboard is divided into several panels. The top panel shows a line graph of SSH activity over time, with different colors indicating successful logins, failed attempts, and other events. Below, there's a world map with heat spots indicating the geographic distribution of SSH connections. On the right, there's a list of top IP addresses with their associated risk scores. The bottom panel features a real-time feed of SSH events, each with a colored indicator for its threat level.
@@ -275,7 +276,7 @@ graph TD
     D --> J[Config Management]
 ```
 
-![SSH Automation Command Center](https://example.com/ssh_automation_command_center.png)
+![SSH Automation Dasboard](https://github.com/user-attachments/assets/d9d894ab-c8a8-4de7-943b-e988276aa2b6)
 
 **Screenshot Description:**
 This image showcases an SSH Automation Command Center interface. The main screen is divided into four quadrants. The top-left quadrant displays a list of active SSH connections with status indicators. The top-right shows a real-time log of automated tasks being executed. The bottom-left quadrant features a network topology map, highlighting the paths of automated SSH connections. The bottom-right quadrant presents performance metrics, including execution times, success rates, and error logs. A sidebar on the right provides quick access to common automation tasks and scripts.
@@ -505,7 +506,7 @@ graph TD
     D --> J[Intrusion Analysis]
 ```
 
-![SSH Pentesting Control Center](/api/placeholder/1200/800)
+![Pentest Dashboard](https://github.com/user-attachments/assets/9c50e92e-44d3-494a-b918-98190b45d5b8)
 
 This advanced SSH pentesting dashboard shows:
 
