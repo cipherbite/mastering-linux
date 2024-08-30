@@ -218,48 +218,112 @@ Enhance SSH security at the operating system core with these advanced kernel-lev
 
 ### 2.1 Implementation Examples
 
-1. **Custom Kernel Module for SSH Integrity**
-   
-   This module monitors access to SSH configuration files for real-time tampering detection.
+#### 1. Custom Kernel Module for SSH Integrity
 
-   ```c
-   #include <linux/module.h>
-   #include <linux/kernel.h>
-   #include <linux/init.h>
-   #include <linux/syscalls.h>
-   #include <linux/file.h>
-   #include <linux/fs.h>
+This module monitors access to SSH configuration files for real-time tampering detection.
 
-   // ... (rest of the code)
-   ```
+<details>
+<summary>Click to expand/collapse</summary>
 
-2. **Secure Memory Allocation for SSH**
-   
-   Ensures sensitive SSH data is stored in protected memory areas.
+```c
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/syscalls.h>
+#include <linux/file.h>
+#include <linux/fs.h>
 
-   ```c
-   #include <sys/mman.h>
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Your Name");
+MODULE_DESCRIPTION("SSH Integrity Monitor");
 
-   void *secure_alloc(size_t size) {
-       // ... (implementation details)
-   }
+static int __init ssh_integrity_init(void) {
+    printk(KERN_INFO "SSH Integrity Monitor: Initialized\n");
+    // Implementation details here
+    return 0;
+}
 
-   void secure_free(void *ptr, size_t size) {
-       // ... (implementation details)
-   }
-   ```
+static void __exit ssh_integrity_exit(void) {
+    printk(KERN_INFO "SSH Integrity Monitor: Unloaded\n");
+}
 
-3. **SSH-Specific Syscall Filtering**
-   
-   Restricts system calls available to SSH processes, reducing the attack surface.
+module_init(ssh_integrity_init);
+module_exit(ssh_integrity_exit);
+```
 
-   ```c
-   #include <linux/filter.h>
-   #include <linux/seccomp.h>
-   #include <sys/prctl.h>
+</details>
 
-   // ... (rest of the code)
-   ```
+#### 2. Secure Memory Allocation for SSH
+
+Ensures sensitive SSH data is stored in protected memory areas.
+
+<details>
+<summary>Click to expand/collapse</summary>
+
+```c
+#include <sys/mman.h>
+#include <string.h>
+
+void *secure_alloc(size_t size) {
+    void *ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (ptr == MAP_FAILED) {
+        return NULL;
+    }
+    mlock(ptr, size);
+    return ptr;
+}
+
+void secure_free(void *ptr, size_t size) {
+    if (ptr) {
+        memset(ptr, 0, size);
+        munlock(ptr, size);
+        munmap(ptr, size);
+    }
+}
+```
+
+</details>
+
+#### 3. SSH-Specific Syscall Filtering
+
+Restricts system calls available to SSH processes, reducing the attack surface.
+
+<details>
+<summary>Click to expand/collapse</summary>
+
+```c
+#include <linux/filter.h>
+#include <linux/seccomp.h>
+#include <sys/prctl.h>
+#include <unistd.h>
+
+int enable_ssh_syscall_filter(void) {
+    struct sock_filter filter[] = {
+        // Allow only specific syscalls
+        BPF_STMT(BPF_LD | BPF_W | BPF_ABS, (offsetof(struct seccomp_data, nr))),
+        BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, __NR_read, 0, 1),
+        BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_ALLOW),
+        // Add more allowed syscalls here
+        BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_KILL),
+    };
+    struct sock_fprog prog = {
+        .len = (unsigned short)(sizeof(filter) / sizeof(filter[0])),
+        .filter = filter,
+    };
+
+    if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
+        return -1;
+    }
+
+    if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog)) {
+        return -1;
+    }
+
+    return 0;
+}
+```
+
+</details>
 
 ### 2.2 Kernel Hardening Concepts
 
@@ -267,7 +331,7 @@ Enhance SSH security at the operating system core with these advanced kernel-lev
 - Syscall Filtering: Restricts available system calls and provides auditing
 - Integrity Monitoring: Ensures kernel module integrity and performs runtime checks
 
-![Kernel Level SSH Hardening](https://github.com/user-attachments/assets/23c06798-41f4-46f0-acad-c9b79ec21c93)
+![Kernel Level SSH Hardening](https://via.placeholder.com/800x600.png?text=Kernel+Level+SSH+Hardening+Diagram)
 
 This diagram illustrates the key components of kernel-level SSH hardening, showing how Memory Protection, Syscall Filtering, and Integrity Monitoring work together to create a robust security framework at the kernel level.
 
@@ -279,152 +343,167 @@ Implement robust SSH solutions for resource-constrained IoT devices:
 
 ### 3.1 Key Implementation Strategies
 
-1. **Lightweight SSH Implementation**
+#### 1. Lightweight SSH Implementation
 
-   ```c
-   #include <stdio.h>
-   #include <stdlib.h>
-   #include <libssh/libssh.h>
+<details>
+<summary>Click to expand/collapse</summary>
 
-   int main() {
-       ssh_session session;
-       int rc;
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <libssh/libssh.h>
 
-       session = ssh_new();
-       if (session == NULL) {
-           fprintf(stderr, "Failed to create SSH session\n");
-           return 1;
-       }
+int main() {
+    ssh_session session;
+    int rc;
 
-       ssh_options_set(session, SSH_OPTIONS_HOST, "localhost");
-       ssh_options_set(session, SSH_OPTIONS_USER, "username");
+    session = ssh_new();
+    if (session == NULL) {
+        fprintf(stderr, "Failed to create SSH session\n");
+        return 1;
+    }
 
-       rc = ssh_connect(session);
-       if (rc != SSH_OK) {
-           fprintf(stderr, "Connection error: %s\n", ssh_get_error(session));
-           ssh_free(session);
-           return 1;
-       }
+    ssh_options_set(session, SSH_OPTIONS_HOST, "localhost");
+    ssh_options_set(session, SSH_OPTIONS_USER, "username");
 
-       rc = ssh_userauth_password(session, NULL, "password");
-       if (rc != SSH_AUTH_SUCCESS) {
-           fprintf(stderr, "Authentication error: %s\n", ssh_get_error(session));
-           ssh_disconnect(session);
-           ssh_free(session);
-           return 1;
-       }
+    rc = ssh_connect(session);
+    if (rc != SSH_OK) {
+        fprintf(stderr, "Connection error: %s\n", ssh_get_error(session));
+        ssh_free(session);
+        return 1;
+    }
 
-       printf("Successfully connected and authenticated!\n");
+    rc = ssh_userauth_password(session, NULL, "password");
+    if (rc != SSH_AUTH_SUCCESS) {
+        fprintf(stderr, "Authentication error: %s\n", ssh_get_error(session));
+        ssh_disconnect(session);
+        ssh_free(session);
+        return 1;
+    }
 
-       // Perform SSH operations here...
+    printf("Successfully connected and authenticated!\n");
 
-       ssh_disconnect(session);
-       ssh_free(session);
-       return 0;
-   }
-   ```
+    // Perform SSH operations here...
 
-2. **SSH Key Management for IoT Fleets**
+    ssh_disconnect(session);
+    ssh_free(session);
+    return 0;
+}
+```
 
-   ```python
-   import paramiko
-   import os
-   from cryptography.hazmat.primitives import serialization
-   from cryptography.hazmat.primitives.asymmetric import rsa
+</details>
 
-   def generate_key_pair():
-       key = rsa.generate_private_key(
-           public_exponent=65537,
-           key_size=2048
-       )
-       private_key = key.private_bytes(
-           encoding=serialization.Encoding.PEM,
-           format=serialization.PrivateFormat.PKCS8,
-           encryption_algorithm=serialization.NoEncryption()
-       )
-       public_key = key.public_key().public_bytes(
-           encoding=serialization.Encoding.OpenSSH,
-           format=serialization.PublicFormat.OpenSSH
-       )
-       return private_key, public_key
+#### 2. SSH Key Management for IoT Fleets
 
-   def update_device_key(hostname, username, current_key_file, new_public_key):
-       client = paramiko.SSHClient()
-       client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+<details>
+<summary>Click to expand/collapse</summary>
 
-       try:
-           client.connect(hostname, username=username, key_filename=current_key_file)
+```python
+import paramiko
+import os
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 
-           # Add the new public key to authorized_keys
-           client.exec_command(f'echo "{new_public_key.decode()}" >> ~/.ssh/authorized_keys')
+def generate_key_pair():
+    key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048
+    )
+    private_key = key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    public_key = key.public_key().public_bytes(
+        encoding=serialization.Encoding.OpenSSH,
+        format=serialization.PublicFormat.OpenSSH
+    )
+    return private_key, public_key
 
-           print(f"Successfully updated key on {hostname}")
-       except Exception as e:
-           print(f"Error updating key on {hostname}: {str(e)}")
-       finally:
-           client.close()
+def update_device_key(hostname, username, current_key_file, new_public_key):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-   # Example usage
-   if __name__ == "__main__":
-       private_key, public_key = generate_key_pair()
+    try:
+        client.connect(hostname, username=username, key_filename=current_key_file)
 
-       # Save the new private key (in a secure location)
-       with open("new_private_key.pem", "wb") as f:
-           f.write(private_key)
+        # Add the new public key to authorized_keys
+        client.exec_command(f'echo "{new_public_key.decode()}" >> ~/.ssh/authorized_keys')
 
-       # Update the key on a device
-       update_device_key("device_hostname", "device_username", "current_key.pem", public_key)
-   ```
+        print(f"Successfully updated key on {hostname}")
+    except Exception as e:
+        print(f"Error updating key on {hostname}: {str(e)}")
+    finally:
+        client.close()
 
-3. **Secure Firmware Updates over SSH**
+# Example usage
+if __name__ == "__main__":
+    private_key, public_key = generate_key_pair()
 
-   ```python
-   import paramiko
-   import hashlib
+    # Save the new private key (in a secure location)
+    with open("new_private_key.pem", "wb") as f:
+        f.write(private_key)
 
-   def secure_firmware_update(hostname, username, key_filename, firmware_file):
-       # Calculate firmware hash
-       with open(firmware_file, "rb") as f:
-           firmware_data = f.read()
-           firmware_hash = hashlib.sha256(firmware_data).hexdigest()
+    # Update the key on a device
+    update_device_key("device_hostname", "device_username", "current_key.pem", public_key)
+```
 
-       client = paramiko.SSHClient()
-       client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+</details>
 
-       try:
-           # Connect to the device
-           client.connect(hostname, username=username, key_filename=key_filename)
+#### 3. Secure Firmware Updates over SSH
 
-           # Transfer firmware file
-           sftp = client.open_sftp()
-           sftp.put(firmware_file, "/tmp/new_firmware.bin")
-           sftp.close()
+<details>
+<summary>Click to expand/collapse</summary>
 
-           # Verify firmware integrity
-           stdin, stdout, stderr = client.exec_command(f"sha256sum /tmp/new_firmware.bin")
-           remote_hash = stdout.read().decode().split()[0]
+```python
+import paramiko
+import hashlib
 
-           if remote_hash != firmware_hash:
-               print("Firmware integrity check failed!")
-               client.exec_command("rm /tmp/new_firmware.bin")
-               return
+def secure_firmware_update(hostname, username, key_filename, firmware_file):
+    # Calculate firmware hash
+    with open(firmware_file, "rb") as f:
+        firmware_data = f.read()
+        firmware_hash = hashlib.sha256(firmware_data).hexdigest()
 
-           # Apply firmware update
-           stdin, stdout, stderr = client.exec_command("sudo /usr/local/bin/update_firmware /tmp/new_firmware.bin")
-           if stderr.channel.recv_exit_status() != 0:
-               print("Firmware update failed!")
-           else:
-               print("Firmware updated successfully!")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-       except Exception as e:
-           print(f"Error during firmware update: {str(e)}")
-       finally:
-           client.close()
+    try:
+        # Connect to the device
+        client.connect(hostname, username=username, key_filename=key_filename)
 
-   # Example usage
-   if __name__ == "__main__":
-       secure_firmware_update("device_hostname", "device_username", "device_key.pem", "new_firmware.bin")
-   ```
+        # Transfer firmware file
+        sftp = client.open_sftp()
+        sftp.put(firmware_file, "/tmp/new_firmware.bin")
+        sftp.close()
+
+        # Verify firmware integrity
+        stdin, stdout, stderr = client.exec_command(f"sha256sum /tmp/new_firmware.bin")
+        remote_hash = stdout.read().decode().split()[0]
+
+        if remote_hash != firmware_hash:
+            print("Firmware integrity check failed!")
+            client.exec_command("rm /tmp/new_firmware.bin")
+            return
+
+        # Apply firmware update
+        stdin, stdout, stderr = client.exec_command("sudo /usr/local/bin/update_firmware /tmp/new_firmware.bin")
+        if stderr.channel.recv_exit_status() != 0:
+            print("Firmware update failed!")
+        else:
+            print("Firmware updated successfully!")
+
+    except Exception as e:
+        print(f"Error during firmware update: {str(e)}")
+    finally:
+        client.close()
+
+# Example usage
+if __name__ == "__main__":
+    secure_firmware_update("device_hostname", "device_username", "device_key.pem", "new_firmware.bin")
+```
+
+</details>
 
 ### 3.2 IoT SSH Security Concepts
 
@@ -432,7 +511,7 @@ Implement robust SSH solutions for resource-constrained IoT devices:
 - Key Management: Implements automated rotation and centralized authentication
 - Update Mechanisms: Provides OTA updates with rollback protection
 
-<img src="/api/placeholder/800/600" alt="IoT Fleet SSH Management Console" />
+![IoT Fleet SSH Management Console](https://via.placeholder.com/800x600.png?text=IoT+Fleet+SSH+Management+Console)
 
 This IoT Fleet SSH Management Console provides a comprehensive overview of your IoT device ecosystem's SSH security status. It displays real-time SSH session metrics, key rotation schedules, firmware update progress, resource usage statistics, and anomaly detection alerts for unexpected SSH behavior.
 
@@ -441,6 +520,9 @@ This IoT Fleet SSH Management Console provides a comprehensive overview of your 
 Design decoy systems to attract and detect potential attackers, providing valuable insights for security professionals:
 
 ### 4.1 Implementation Example
+
+<details>
+<summary>Click to expand/collapse</summary>
 
 ```python
 import paramiko
@@ -509,13 +591,15 @@ if __name__ == '__main__':
     start_server()
 ```
 
+</details>
+
 ### 4.2 SSH Honeypot Concepts
 
 - Deception Techniques: Implements service emulation and dynamic responses
 - Data Collection: Performs behavior analysis and attack pattern recognition
 - Threat Intelligence: Generates IOCs and enables attacker profiling
 
-<img src="/api/placeholder/800/600" alt="SSH Honeypot Analytics Dashboard" />
+![SSH Honeypot Analytics Dashboard](https://via.placeholder.com/800x600.png?text=SSH+Honeypot+Analytics+Dashboard)
 
 This SSH Honeypot Analytics Dashboard provides a comprehensive view of attacker behaviors and trends. It visualizes connection attempts over time, common usernames and passwords used in brute-force attempts, geographic origin of attacks, attack technique classification, and real-time alerts for sophisticated or unusual attack patterns.
 
@@ -531,7 +615,7 @@ This SSH Honeypot Analytics Dashboard provides a comprehensive view of attacker 
 
 Remember to use these advanced SSH techniques responsibly and in compliance with all applicable laws and regulations. With great power comes great responsibility in the world of cybersecurity.
 
-```ascii
+```
    _____  _____ _    _   __  __           _             
   / ____|/ ____| |  | | |  \/  |         | |            
  | (___ | (___ | |__| | | \  / | __ _ ___| |_ ___ _ __  
