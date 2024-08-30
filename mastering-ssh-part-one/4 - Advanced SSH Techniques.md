@@ -8,7 +8,7 @@
 |____/|____/|_| |_| |_|  |_|\__,_|___/\__\___|_|   
 ```
 
-## 📚 Table of Contents
+##  Table of Contents
 15. [SSH Nexus and Connection Sharing](#ssh-nexus-and-connection-sharing)
 16. [Hardware Security Modules (HSMs) for SSH](#hardware-security-modules-hsms-for-ssh)
 17. [SSH over Non-Standard Protocols](#ssh-over-non-standard-protocols)
@@ -18,15 +18,13 @@
 
 ---
 
-## 🌐 SSH Nexus and Connection Sharing
+##  SSH Nexus and Connection Sharing
 
 Elevate your SSH game with advanced nexus techniques that optimize performance and streamline connections.
 
-### 🚀 Key Techniques:
+###  Key Techniques:
 
 1. **ControlMaster Configuration**
-   <details>
-   <summary>🔧 Expand ControlMaster Config</summary>
 
    ```bash
    # ~/.ssh/config
@@ -35,29 +33,23 @@ Elevate your SSH game with advanced nexus techniques that optimize performance a
      ControlPath ~/.ssh/control:%h:%p:%r
      ControlPersist 4h
    ```
-   </details>
+  
 
 2. **Dynamic Proxy Tunneling**
-   <details>
-   <summary>🔧 Expand Dynamic Proxy Script</summary>
 
    ```bash
    #!/bin/bash
    ssh -D 8080 -f -C -q -N user@remote_host
    echo "SOCKS proxy established on localhost:8080"
    ```
-   </details>
 
 3. **Reverse Port Forwarding**
-   <details>
-   <summary>🔧 Expand Reverse Port Forwarding Command</summary>
 
    ```bash
    ssh -R 8080:localhost:80 user@remote_host
    ```
-   </details>
 
-### 📊 Nexus Performance Matrix
+###  Nexus Performance Matrix
 
 ```mermaid
 graph TD
@@ -76,45 +68,37 @@ graph TD
 
 ---
 
-## 🛡️ Hardware Security Modules (HSMs) for SSH
+## 🛡 Hardware Security Modules (HSMs) for SSH
 
 Take SSH security to the next level with cryptographic hardware integration.
 
-### 🔑 Key Implementation Steps:
+###  Key Implementation Steps:
 
 1. **HSM Integration for Key Storage**
-   <details>
-   <summary>🔧 Expand HSM Key Storage Script</summary>
 
    ```bash
    pkcs11-tool --module /usr/lib/libsofthsm2.so --login --pin 1234 --keypairgen --key-type rsa:2048 --label "ssh-key-label"
    ```
-   </details>
+
 
 2. **PKCS#11 SSH Configuration**
-   <details>
-   <summary>🔧 Expand PKCS#11 SSH Config</summary>
 
    ```bash
    # ~/.ssh/config
-   Host secure-server
+   Host -server
      PKCS11Provider /usr/lib/libsofthsm2.so
      IdentityFile pkcs11:object=ssh-key-label
    ```
-   </details>
 
 3. **HSM-Based SSH Agent**
-   <details>
-   <summary>🔧 Expand HSM-Based SSH Agent Script</summary>
 
    ```bash
    #!/bin/bash
    ssh-agent
    ssh-add -s /usr/lib/libsofthsm2.so
    ```
-   </details>
 
-### 📊 HSM Security Matrix
+###  HSM Security Matrix
 
 ```mermaid
 graph TD
@@ -133,7 +117,7 @@ graph TD
 
 **Screenshot Description:** This image displays an HSM-Powered SSH Security Console, showing real-time HSM operation metrics for SSH sessions, hardware-based key usage and rotation schedules, tamper attempt alerts with geolocation data, performance comparisons between software and HSM-based cryptographic operations, and compliance status for various security standards (FIPS, Common Criteria, etc.). The console provides a comprehensive view of the enhanced security posture achieved through HSM integration with SSH infrastructure.
 
-### 🏛️ Field Report: Government Agency Deployment
+###  Field Report: Government Agency Deployment
 
 Operation "Titanium Shield" implemented at a high-security intelligence agency:
 
@@ -147,24 +131,19 @@ Result: Achieved the highest level of assurance for SSH operations in classified
 
 ---
 
-## 🕵️ SSH over Non-Standard Protocols
+##  SSH over Non-Standard Protocols
 
 Master the art of bypassing restrictions and enhancing covert operations with these advanced techniques.
 
-### 🔍 Stealth Techniques:
+###  Stealth Techniques:
 
 1. **SSH over HTTPS**
-   <details>
-   <summary>🔧 Expand SSH over HTTPS Command</summary>
 
    ```bash
    ssh -o ProxyCommand='openssl s_client -connect %h:%p -quiet' user@remote_host
    ```
-   </details>
 
 2. **SSH over DNS**
-   <details>
-   <summary>🔧 Expand SSH over DNS Setup</summary>
 
    ```bash
    # Server side
@@ -173,11 +152,8 @@ Master the art of bypassing restrictions and enhancing covert operations with th
    # Client side
    ssh -o ProxyCommand='nc -x localhost:5353 %h %p' user@10.0.0.1
    ```
-   </details>
 
 3. **SSH over ICMP**
-   <details>
-   <summary>🔧 Expand SSH over ICMP Setup</summary>
 
    ```bash
    # Server side
@@ -187,9 +163,8 @@ Master the art of bypassing restrictions and enhancing covert operations with th
    sudo ptunnel -p server_ip -lp 2222 -da 127.0.0.1 -dp 22
    ssh -p 2222 user@localhost
    ```
-   </details>
 
-### 📊 Protocol Obfuscation Matrix
+###  Protocol Obfuscation Matrix
 
 ```mermaid
 graph TD
@@ -222,15 +197,15 @@ Result: Successfully established and maintained SSH connections in highly restri
 
 ---
 
-## 🛠️ Kernel-Level SSH Hardening
+##  Kernel-Level SSH Hardening
 
 Fortify SSH at the operating system core with these advanced kernel-level techniques.
 
-### 💻 Implementation Examples:
+###  Implementation Examples:
 
 1. **Custom Kernel Module for SSH Integrity**
-   <details>
-   <summary>🔧 Expand Kernel Module Code</summary>
+ <details>
+<summary> Expand script </summary>
 
    ```c
    #include <linux/module.h>
@@ -242,7 +217,7 @@ Fortify SSH at the operating system core with these advanced kernel-level techni
 
    asmlinkage long (*original_read)(unsigned int fd, char __user *buf, size_t count);
 
-   asmlinkage long secure_read(unsigned int fd, char __user *buf, size_t count) {
+   asmlinkage long _read(unsigned int fd, char __user *buf, size_t count) {
        struct file *file;
        char *filename;
        file = fget(fd);
@@ -262,7 +237,7 @@ Fortify SSH at the operating system core with these advanced kernel-level techni
 
    static int __init ssh_monitor_init(void) {
        original_read = (void *)kallsyms_lookup_name("__x64_sys_read");
-       ((unsigned long *)sys_call_table)[__NR_read] = (unsigned long)secure_read;
+       ((unsigned long *)sys_call_table)[__NR_read] = (unsigned long)_read;
        return 0;
    }
 
@@ -273,12 +248,12 @@ Fortify SSH at the operating system core with these advanced kernel-level techni
    module_init(ssh_monitor_init);
    module_exit(ssh_monitor_exit);
    ```
-   </details>
+ </details>
+ 
+3. **Secure Memory Allocation for SSH**
 
-2. **Secure Memory Allocation for SSH**
-   <details>
-   <summary>🔧 Expand Secure Memory Allocation Code</summary>
-
+ <details>
+<summary>Expand Secure Memory Allocation t</summary>
    ```c
    #include <sys/mman.h>
 
@@ -302,12 +277,11 @@ Fortify SSH at the operating system core with these advanced kernel-level techni
        }
    }
    ```
-   </details>
+</details>
 
-3. **SSH-Specific Syscall Filtering**
-   <details>
-   <summary>🔧 Expand Syscall Filtering Code</summary>
-
+4. **SSH-Specific Syscall Filtering**
+ <details>
+<summary> SSH-Specific Syscall Filtering </summary>
    ```c
    #include <linux/filter.h>
    #include <linux/seccomp.h>
@@ -341,9 +315,9 @@ Fortify SSH at the operating system core with these advanced kernel-level techni
        return 0;
    }
    ```
-   </details>
-
-### 📊 Kernel Hardening Matrix
+</details>
+  
+### Kernel Hardening Matrix
 
 ```mermaid
 graph TD
@@ -362,22 +336,21 @@ graph TD
 
 **Screenshot Description:** This image displays a Kernel-Level SSH Security Dashboard, showing real-time syscall monitoring for SSH processes, memory protection violations and attempted exploits, ASLR effectiveness metrics, integrity verification status for critical SSH binaries and configurations, and kernel module load/unload events related to SSH operations. The dashboard provides a comprehensive view of the enhanced security posture achieved through kernel-level hardening techniques specific to SSH operations.
 
-### 🏭 Field Report: Critical Infrastructure Protection (continued)
+###  Field Report: Critical Infrastructure Protection (continued)
 
 Result: Achieved unparalleled SSH security for critical infrastructure control systems, successfully mitigating advanced persistent threats and zero-day vulnerabilities.
 
 ---
 
-## 🤖 SSH in IoT and Embedded Systems
+##  SSH in IoT and Embedded Systems
 
 Secure communication for resource-constrained devices is crucial in our interconnected world. Here's how to implement robust SSH solutions for IoT.
 
-### 💡 Key Implementation Strategies:
+###  Key Implementation Strategies:
 
 1. **Lightweight SSH Implementation**
-   <details>
-   <summary>🔧 Expand Lightweight SSH Code</summary>
-
+<details>
+<summary> Lightweight SSH Implementationt </summary>
    ```c
    #include <libssh/libssh.h>
 
@@ -402,12 +375,12 @@ Secure communication for resource-constrained devices is crucial in our intercon
        return 0;
    }
    ```
-   </details>
+</details>
 
 2. **SSH Key Management for IoT Fleets**
-   <details>
-   <summary>🔑 Uncover IoT Key Rotation Script</summary>
-
+<details>
+<summary> Expand script </summary>
+ 
    ```python
    import paramiko
    import os
@@ -463,12 +436,11 @@ Secure communication for resource-constrained devices is crucial in our intercon
    with open("new_private_key.pem", "wb") as f:
        f.write(new_private_key)
    ```
-   </details>
 
 3. **Secure Firmware Updates over SSH**
-   <details>
-   <summary>🔧 Expose Firmware Update Script</summary>
-
+<details>
+<summary> Expand script </summary>  
+ 
    ```python
    import paramiko
    import hashlib
@@ -514,9 +486,9 @@ Secure communication for resource-constrained devices is crucial in our intercon
    # Usage
    secure_firmware_update("device.local", "admin", "device_key.pem", "new_firmware.bin")
    ```
-   </details>
+</details>
 
-### 📊 IoT SSH Security Matrix
+### IoT SSH Security Matrix
 
 ```mermaid
 graph TD
@@ -544,7 +516,7 @@ This sophisticated IoT Fleet SSH Management Console provides a comprehensive ove
 This visual representation empowers security professionals to maintain a robust security posture across a diverse and complex IoT landscape.
 
 <details>
-<summary>🌟 Field Report: Smart City Infrastructure Deployment</summary>
+<summary> Field Report: Smart City Infrastructure Deployment</summary>
 
 Operation "Urban Shield" implemented across ████████ Metropolitan Area:
 
@@ -560,7 +532,7 @@ Result: Successfully secured communication for over 1 million IoT devices, enabl
 
 ---
 
-## 🍯 SSH Honeypots for Pentesters
+##  SSH Honeypots for Pentesters
 
 SSH honeypots are decoy systems designed to attract and detect potential attackers, providing valuable insights for security professionals and pentesters.
 
@@ -570,12 +542,12 @@ SSH honeypots are decoy systems designed to attract and detect potential attacke
 2. **High-Interaction Honeypots**: Full SSH environments that allow attacker interaction
 3. **Data Collection**: Gathering information on attack patterns and techniques
 
-### 🛠️ Implementation Example:
+###  Implementation Example:
 
 Here's a simple Python script using the `paramiko` library to create a basic SSH honeypot:
 
 <details>
-<summary>🐝 Reveal SSH Honeypot Code</summary>
+<summary> Reveal SSH Honeypot Code</summary>
 
 ```python
 import paramiko
@@ -619,7 +591,7 @@ if __name__ == '__main__':
 - Test and improve detection capabilities
 - Distract attackers from real assets
 
-### 📊 SSH Honeypot Security Matrix
+### SSH Honeypot Security Matrix
 
 ```mermaid
 graph TD
@@ -667,5 +639,5 @@ This concludes our advanced exploration of SSH techniques for security professio
   ____) |___) | |  | | | |  | | (_| \__ \ ||  __/ |    
  |_____/_____/|_|  |_| |_|  |_|\__,_|___/\__\___|_|    
                                                         
-          Secure Shell, Secure Future!
+           Shell,  Future!
 ```
