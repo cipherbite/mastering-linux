@@ -111,7 +111,7 @@ $ ssh user@target_host
 
 ### 🖼️ Security Architecture Overview
 
-![SSH Security Diagram](https://placeholder-for-ssh-security-diagram.com)
+![SSH security Diagram](https://github.com/user-attachments/assets/6f13dd86-947f-431b-8e37-dfed55c61bc7)
 
 **Screenshot Description:**
 This diagram illustrates the enhanced SSH security architecture. It showcases:
@@ -302,7 +302,7 @@ graph TD
 
 ## 📸 SSH Intel Dashboard
 
-![SSH Intel Dashboard](https://placeholder-for-ssh-intel-dashboard.com)
+![SSH Intel Dash](https://github.com/user-attachments/assets/bcf949f9-1c40-4830-92b0-4c6ff208ff3b)
 
 **Screenshot Description:**
 This image displays a comprehensive SSH Intelligence Dashboard. The dashboard is divided into several panels:
@@ -439,7 +439,7 @@ graph TD
 
 ## 📸 SSH Penetration Dashboard
 
-![SSH Penetration Dashboard](https://placeholder-for-ssh-pentest-dashboard.com)
+![SSH Penetration Dashboard](https://github.com/user-attachments/assets/d63ae3e3-ff79-47e5-96c2-4a48a30782f2)
 
 **Screenshot Description:**
 This image displays a comprehensive SSH Penetration Testing Dashboard:
@@ -594,7 +594,7 @@ graph TD
 
 ## 📸 Cloud SSH Penetration Dashboard
 
-![Cloud SSH Pentest Dashboard](https://placeholder-for-cloud-ssh-pentest-dashboard.com)
+![cloud ssh penetration](https://github.com/user-attachments/assets/d3d95df5-ea54-4cb5-a708-f7476c2af3e1)
 
 **Dashboard Description:**
 This advanced Cloud SSH pentesting dashboard showcases:
