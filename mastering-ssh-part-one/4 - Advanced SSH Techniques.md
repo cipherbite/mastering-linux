@@ -331,7 +331,34 @@ int enable_ssh_syscall_filter(void) {
 - Syscall Filtering: Restricts available system calls and provides auditing
 - Integrity Monitoring: Ensures kernel module integrity and performs runtime checks
 
-![Kernel Level SSH Hardening](https://via.placeholder.com/800x600.png?text=Kernel+Level+SSH+Hardening+Diagram)
+```mermaid
+graph TD
+    A[Kernel-Level SSH Hardening] --> B[Memory Protection]
+    A --> C[Syscall Filtering]
+    A --> D[Integrity Monitoring]
+    
+    B --> B1[ASLR]
+    B --> B2[Stack Canaries]
+    
+    C --> C1[Restrict Available Syscalls]
+    C --> C2[Syscall Auditing]
+    
+    D --> D1[Kernel Module Integrity]
+    D --> D2[Runtime Integrity Checks]
+    
+    B1 --> E[SSH Process]
+    B2 --> E
+    C1 --> E
+    C2 --> E
+    D1 --> E
+    D2 --> E
+    
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#cfc,stroke:#333,stroke-width:2px
+    style D fill:#fcc,stroke:#333,stroke-width:2px
+    style E fill:#ff9,stroke:#333,stroke-width:4px
+```
 
 This diagram illustrates the key components of kernel-level SSH hardening, showing how Memory Protection, Syscall Filtering, and Integrity Monitoring work together to create a robust security framework at the kernel level.
 
