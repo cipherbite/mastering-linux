@@ -214,16 +214,16 @@ This diagram illustrates the key concepts in SSH protocol obfuscation, showing h
 
 ## 2. Kernel-Level SSH Hardening
 
-Enhance SSH security at the operating system core with these advanced kernel-level techniques:
+Enhance SSH security at the operating system core with these advanced kernel-level techniques.
 
-### 2.1 Implementation Examples
+### 1.1 Implementation Examples
 
-#### 1. Custom Kernel Module for SSH Integrity
+#### Custom Kernel Module for SSH Integrity
 
 This module monitors access to SSH configuration files for real-time tampering detection.
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```c
 #include <linux/module.h>
@@ -250,15 +250,14 @@ static void __exit ssh_integrity_exit(void) {
 module_init(ssh_integrity_init);
 module_exit(ssh_integrity_exit);
 ```
-
 </details>
 
-#### 2. Secure Memory Allocation for SSH
+#### Secure Memory Allocation for SSH
 
 Ensures sensitive SSH data is stored in protected memory areas.
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```c
 #include <sys/mman.h>
@@ -281,15 +280,14 @@ void secure_free(void *ptr, size_t size) {
     }
 }
 ```
-
 </details>
 
-#### 3. SSH-Specific Syscall Filtering
+#### SSH-Specific Syscall Filtering
 
 Restricts system calls available to SSH processes, reducing the attack surface.
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```c
 #include <linux/filter.h>
@@ -322,37 +320,32 @@ int enable_ssh_syscall_filter(void) {
     return 0;
 }
 ```
-
 </details>
 
-### 2.2 Kernel Hardening Concepts
-
-- Memory Protection: Implements ASLR and stack canaries
-- Syscall Filtering: Restricts available system calls and provides auditing
-- Integrity Monitoring: Ensures kernel module integrity and performs runtime checks
+### 1.2 Kernel Hardening Concepts
 
 ```mermaid
 graph TD
     A[Kernel-Level SSH Hardening] --> B[Memory Protection]
     A --> C[Syscall Filtering]
     A --> D[Integrity Monitoring]
-    
+
     B --> B1[ASLR]
     B --> B2[Stack Canaries]
-    
+
     C --> C1[Restrict Available Syscalls]
     C --> C2[Syscall Auditing]
-    
+
     D --> D1[Kernel Module Integrity]
     D --> D2[Runtime Integrity Checks]
-    
+
     B1 --> E[SSH Process]
     B2 --> E
     C1 --> E
     C2 --> E
     D1 --> E
     D2 --> E
-    
+
     style A fill:#f9f,stroke:#333,stroke-width:4px
     style B fill:#ccf,stroke:#333,stroke-width:2px
     style C fill:#cfc,stroke:#333,stroke-width:2px
@@ -360,20 +353,18 @@ graph TD
     style E fill:#ff9,stroke:#333,stroke-width:4px
 ```
 
-This diagram illustrates the key components of kernel-level SSH hardening, showing how Memory Protection, Syscall Filtering, and Integrity Monitoring work together to create a robust security framework at the kernel level.
-
 > **Pro Tip**: Always thoroughly test kernel-level SSH hardening in a controlled environment before deploying to production systems.
 
-## 3. SSH in IoT and Embedded Systems
+## 2. SSH in IoT and Embedded Systems
 
-Implement robust SSH solutions for resource-constrained IoT devices:
+Implement robust SSH solutions for resource-constrained IoT devices.
 
-### 3.1 Key Implementation Strategies
+### 2.1 Key Implementation Strategies
 
-#### 1. Lightweight SSH Implementation
+#### Lightweight SSH Implementation
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```c
 #include <stdio.h>
@@ -417,13 +408,12 @@ int main() {
     return 0;
 }
 ```
-
 </details>
 
-#### 2. SSH Key Management for IoT Fleets
+#### SSH Key Management for IoT Fleets
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```python
 import paramiko
@@ -474,13 +464,12 @@ if __name__ == "__main__":
     # Update the key on a device
     update_device_key("device_hostname", "device_username", "current_key.pem", public_key)
 ```
-
 </details>
 
-#### 3. Secure Firmware Updates over SSH
+#### Secure Firmware Updates over SSH
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```python
 import paramiko
@@ -529,27 +518,26 @@ def secure_firmware_update(hostname, username, key_filename, firmware_file):
 if __name__ == "__main__":
     secure_firmware_update("device_hostname", "device_username", "device_key.pem", "new_firmware.bin")
 ```
-
 </details>
 
-### 3.2 IoT SSH Security Concepts
+### 2.2 IoT SSH Security Concepts
 
-- Resource Optimization: Uses lightweight crypto and compressed SSH
-- Key Management: Implements automated rotation and centralized authentication
-- Update Mechanisms: Provides OTA updates with rollback protection
+- **Resource Optimization**: Uses lightweight crypto and compressed SSH
+- **Key Management**: Implements automated rotation and centralized authentication
+- **Update Mechanisms**: Provides OTA updates with rollback protection
 
 ![IoT Fleet SSH Management Console](https://via.placeholder.com/800x600.png?text=IoT+Fleet+SSH+Management+Console)
 
-This IoT Fleet SSH Management Console provides a comprehensive overview of your IoT device ecosystem's SSH security status. It displays real-time SSH session metrics, key rotation schedules, firmware update progress, resource usage statistics, and anomaly detection alerts for unexpected SSH behavior.
+*IoT Fleet SSH Management Console: Displays real-time SSH session metrics, key rotation schedules, firmware update progress, resource usage statistics, and anomaly detection alerts.*
 
-## 4. SSH Honeypots for Pentesters
+## 3. SSH Honeypots for Pentesters
 
-Design decoy systems to attract and detect potential attackers, providing valuable insights for security professionals:
+Design decoy systems to attract and detect potential attackers, providing valuable insights for security professionals.
 
-### 4.1 Implementation Example
+### 3.1 Implementation Example
 
 <details>
-<summary>Click to expand/collapse</summary>
+<summary>View Code</summary>
 
 ```python
 import paramiko
@@ -617,20 +605,19 @@ def start_server():
 if __name__ == '__main__':
     start_server()
 ```
-
 </details>
 
-### 4.2 SSH Honeypot Concepts
+### 3.2 SSH Honeypot Concepts
 
-- Deception Techniques: Implements service emulation and dynamic responses
-- Data Collection: Performs behavior analysis and attack pattern recognition
-- Threat Intelligence: Generates IOCs and enables attacker profiling
+- **Deception Techniques**: Implements service emulation and dynamic responses
+- **Data Collection**: Performs behavior analysis and attack pattern recognition
+- **Threat Intelligence**: Generates IOCs and enables attacker profiling
 
 ![SSH Honeypot Analytics Dashboard](https://via.placeholder.com/800x600.png?text=SSH+Honeypot+Analytics+Dashboard)
 
-This SSH Honeypot Analytics Dashboard provides a comprehensive view of attacker behaviors and trends. It visualizes connection attempts over time, common usernames and passwords used in brute-force attempts, geographic origin of attacks, attack technique classification, and real-time alerts for sophisticated or unusual attack patterns.
+*SSH Honeypot Analytics Dashboard: Visualizes connection attempts over time, common usernames and passwords used in brute-force attempts, geographic origin of attacks, attack technique classification, and real-time alerts for sophisticated or unusual attack patterns.*
 
-### 4.3 Best Practices
+### 3.3 Best Practices
 
 1. Isolate honeypots from production networks
 2. Use realistic-looking but fake data
@@ -642,7 +629,7 @@ This SSH Honeypot Analytics Dashboard provides a comprehensive view of attacker 
 
 Remember to use these advanced SSH techniques responsibly and in compliance with all applicable laws and regulations. With great power comes great responsibility in the world of cybersecurity.
 
-```
+```ascii
    _____  _____ _    _   __  __           _             
   / ____|/ ____| |  | | |  \/  |         | |            
  | (___ | (___ | |__| | | \  / | __ _ ___| |_ ___ _ __  
