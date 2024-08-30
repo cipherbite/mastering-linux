@@ -176,7 +176,37 @@ Enhance SSH connectivity in restricted network environments with these advanced 
 - Protocol Encapsulation: Wraps SSH traffic within other protocols
 - Covert Channels: Advanced techniques for hidden data transmission
 
-<img src="/api/placeholder/800/400" alt="Protocol Obfuscation Diagram" />
+```mermaid
+graph TD
+    A[SSH Protocol Obfuscation] --> B[Traffic Morphing]
+    A --> C[Protocol Encapsulation]
+    A --> D[Covert Channels]
+
+    B --> B1[Packet Reshaping]
+    B --> B2[Traffic Pattern Alteration]
+    B --> B3[Bandwidth Throttling]
+
+    C --> C1[SSH over HTTPS]
+    C --> C2[SSH over DNS]
+    C --> C3[SSH over ICMP]
+
+    D --> D1[Timing-Based Communication]
+    D --> D2[Storage Channel Exfiltration]
+    D --> D3[Network Steganography]
+
+    B1 -.-> E[Enhanced Stealth Capabilities]
+    B2 -.-> E
+    B3 -.-> E
+    C1 -.-> E
+    C2 -.-> E
+    C3 -.-> E
+    D1 -.-> E
+    D2 -.-> E
+    D3 -.-> E
+
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style E fill:#bfb,stroke:#333,stroke-width:4px
+```
 
 This diagram illustrates the key concepts in SSH protocol obfuscation, showing how various techniques like Traffic Morphing, Protocol Encapsulation, and Covert Channels interact to enhance SSH stealth capabilities.
 
@@ -237,7 +267,7 @@ Enhance SSH security at the operating system core with these advanced kernel-lev
 - Syscall Filtering: Restricts available system calls and provides auditing
 - Integrity Monitoring: Ensures kernel module integrity and performs runtime checks
 
-<img src="/api/placeholder/800/400" alt="Kernel Hardening Matrix" />
+![Kernel Level SSH Hardening](https://github.com/user-attachments/assets/23c06798-41f4-46f0-acad-c9b79ec21c93)
 
 This diagram illustrates the key components of kernel-level SSH hardening, showing how Memory Protection, Syscall Filtering, and Integrity Monitoring work together to create a robust security framework at the kernel level.
 
@@ -254,10 +284,47 @@ Implement robust SSH solutions for resource-constrained IoT devices:
    ```c
    #include <libssh/libssh.h>
 
-   int main() {
-       ssh_session my_ssh_session = ssh_new();
-       // ... (rest of the implementation)
-   }
+  int main() {
+    ssh_session my_ssh_session;
+    int rc;
+
+    // Create new SSH session
+    my_ssh_session = ssh_new();
+    if (my_ssh_session == NULL) {
+        exit(-1);
+    }
+
+    // Set SSH connection options
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "localhost");
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_USER, "username");
+
+    // Connect to the SSH server
+    rc = ssh_connect(my_ssh_session);
+    if (rc != SSH_OK) {
+        fprintf(stderr, "Error connecting to host: %s\n", ssh_get_error(my_ssh_session));
+        ssh_free(my_ssh_session);
+        exit(-1);
+    }
+
+    // Authenticate (using password in this example)
+    rc = ssh_userauth_password(my_ssh_session, NULL, "password");
+    if (rc != SSH_AUTH_SUCCESS) {
+        fprintf(stderr, "Authentication failed: %s\n", ssh_get_error(my_ssh_session));
+        ssh_disconnect(my_ssh_session);
+        ssh_free(my_ssh_session);
+        exit(-1);
+    }
+
+    printf("Successfully connected and authenticated!\n");
+
+    // Perform SSH operations here...
+
+    // Disconnect and free the session
+    ssh_disconnect(my_ssh_session);
+    ssh_free(my_ssh_session);
+
+    return 0;
+}
    ```
 
 2. **SSH Key Management for IoT Fleets**
@@ -268,11 +335,48 @@ Implement robust SSH solutions for resource-constrained IoT devices:
    from cryptography.hazmat.primitives import serialization
    from cryptography.hazmat.primitives.asymmetric import rsa
 
-   def generate_key_pair():
-       # ... (implementation details)
+  def generate_key_pair():
+    key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048
+    )
+    private_key = key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    public_key = key.public_key().public_bytes(
+        encoding=serialization.Encoding.OpenSSH,
+        format=serialization.PublicFormat.OpenSSH
+    )
+    return private_key, public_key
 
-   def update_device_key(hostname, username, current_key_file, new_public_key):
-       # ... (implementation details)
+def update_device_key(hostname, username, current_key_file, new_public_key):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    
+    try:
+        client.connect(hostname, username=username, key_filename=current_key_file)
+        
+        # Add the new public key to authorized_keys
+        client.exec_command(f'echo "{new_public_key.decode()}" >> ~/.ssh/authorized_keys')
+        
+        print(f"Successfully updated key on {hostname}")
+    except Exception as e:
+        print(f"Error updating key on {hostname}: {str(e)}")
+    finally:
+        client.close()
+
+# Example usage
+if __name__ == "__main__":
+    private_key, public_key = generate_key_pair()
+    
+    # Save the new private key (in a secure location)
+    with open("new_private_key.pem", "wb") as f:
+        f.write(private_key)
+    
+    # Update the key on a device
+    update_device_key("device_hostname", "device_username", "current_key.pem", public_key)
    ```
 
 3. **Secure Firmware Updates over SSH**
@@ -281,8 +385,48 @@ Implement robust SSH solutions for resource-constrained IoT devices:
    import paramiko
    import hashlib
 
-   def secure_firmware_update(hostname, username, key_filename, firmware_file):
-       # ... (implementation details)
+  def secure_firmware_update(hostname, username, key_filename, firmware_file):
+    # Calculate firmware hash
+    with open(firmware_file, "rb") as f:
+        firmware_data = f.read()
+        firmware_hash = hashlib.sha256(firmware_data).hexdigest()
+
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    try:
+        # Connect to the device
+        client.connect(hostname, username=username, key_filename=key_filename)
+
+        # Transfer firmware file
+        sftp = client.open_sftp()
+        sftp.put(firmware_file, "/tmp/new_firmware.bin")
+        sftp.close()
+
+        # Verify firmware integrity
+        stdin, stdout, stderr = client.exec_command(f"sha256sum /tmp/new_firmware.bin")
+        remote_hash = stdout.read().decode().split()[0]
+
+        if remote_hash != firmware_hash:
+            print("Firmware integrity check failed!")
+            client.exec_command("rm /tmp/new_firmware.bin")
+            return
+
+        # Apply firmware update
+        stdin, stdout, stderr = client.exec_command("sudo /usr/local/bin/update_firmware /tmp/new_firmware.bin")
+        if stderr.channel.recv_exit_status() != 0:
+            print("Firmware update failed!")
+        else:
+            print("Firmware updated successfully!")
+
+    except Exception as e:
+        print(f"Error during firmware update: {str(e)}")
+    finally:
+        client.close()
+
+# Example usage
+if __name__ == "__main__":
+    secure_firmware_update("device_hostname", "device_username", "device_key.pem", "new_firmware.bin")
    ```
 
 ### 3.2 IoT SSH Security Concepts
