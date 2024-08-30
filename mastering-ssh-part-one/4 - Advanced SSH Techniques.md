@@ -282,49 +282,46 @@ Implement robust SSH solutions for resource-constrained IoT devices:
 1. **Lightweight SSH Implementation**
 
    ```c
+   #include <stdio.h>
+   #include <stdlib.h>
    #include <libssh/libssh.h>
 
-  int main() {
-    ssh_session my_ssh_session;
-    int rc;
+   int main() {
+       ssh_session session;
+       int rc;
 
-    // Create new SSH session
-    my_ssh_session = ssh_new();
-    if (my_ssh_session == NULL) {
-        exit(-1);
-    }
+       session = ssh_new();
+       if (session == NULL) {
+           fprintf(stderr, "Failed to create SSH session\n");
+           return 1;
+       }
 
-    // Set SSH connection options
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "localhost");
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_USER, "username");
+       ssh_options_set(session, SSH_OPTIONS_HOST, "localhost");
+       ssh_options_set(session, SSH_OPTIONS_USER, "username");
 
-    // Connect to the SSH server
-    rc = ssh_connect(my_ssh_session);
-    if (rc != SSH_OK) {
-        fprintf(stderr, "Error connecting to host: %s\n", ssh_get_error(my_ssh_session));
-        ssh_free(my_ssh_session);
-        exit(-1);
-    }
+       rc = ssh_connect(session);
+       if (rc != SSH_OK) {
+           fprintf(stderr, "Connection error: %s\n", ssh_get_error(session));
+           ssh_free(session);
+           return 1;
+       }
 
-    // Authenticate (using password in this example)
-    rc = ssh_userauth_password(my_ssh_session, NULL, "password");
-    if (rc != SSH_AUTH_SUCCESS) {
-        fprintf(stderr, "Authentication failed: %s\n", ssh_get_error(my_ssh_session));
-        ssh_disconnect(my_ssh_session);
-        ssh_free(my_ssh_session);
-        exit(-1);
-    }
+       rc = ssh_userauth_password(session, NULL, "password");
+       if (rc != SSH_AUTH_SUCCESS) {
+           fprintf(stderr, "Authentication error: %s\n", ssh_get_error(session));
+           ssh_disconnect(session);
+           ssh_free(session);
+           return 1;
+       }
 
-    printf("Successfully connected and authenticated!\n");
+       printf("Successfully connected and authenticated!\n");
 
-    // Perform SSH operations here...
+       // Perform SSH operations here...
 
-    // Disconnect and free the session
-    ssh_disconnect(my_ssh_session);
-    ssh_free(my_ssh_session);
-
-    return 0;
-}
+       ssh_disconnect(session);
+       ssh_free(session);
+       return 0;
+   }
    ```
 
 2. **SSH Key Management for IoT Fleets**
@@ -335,48 +332,48 @@ Implement robust SSH solutions for resource-constrained IoT devices:
    from cryptography.hazmat.primitives import serialization
    from cryptography.hazmat.primitives.asymmetric import rsa
 
-  def generate_key_pair():
-    key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048
-    )
-    private_key = key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption()
-    )
-    public_key = key.public_key().public_bytes(
-        encoding=serialization.Encoding.OpenSSH,
-        format=serialization.PublicFormat.OpenSSH
-    )
-    return private_key, public_key
+   def generate_key_pair():
+       key = rsa.generate_private_key(
+           public_exponent=65537,
+           key_size=2048
+       )
+       private_key = key.private_bytes(
+           encoding=serialization.Encoding.PEM,
+           format=serialization.PrivateFormat.PKCS8,
+           encryption_algorithm=serialization.NoEncryption()
+       )
+       public_key = key.public_key().public_bytes(
+           encoding=serialization.Encoding.OpenSSH,
+           format=serialization.PublicFormat.OpenSSH
+       )
+       return private_key, public_key
 
-def update_device_key(hostname, username, current_key_file, new_public_key):
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    
-    try:
-        client.connect(hostname, username=username, key_filename=current_key_file)
-        
-        # Add the new public key to authorized_keys
-        client.exec_command(f'echo "{new_public_key.decode()}" >> ~/.ssh/authorized_keys')
-        
-        print(f"Successfully updated key on {hostname}")
-    except Exception as e:
-        print(f"Error updating key on {hostname}: {str(e)}")
-    finally:
-        client.close()
+   def update_device_key(hostname, username, current_key_file, new_public_key):
+       client = paramiko.SSHClient()
+       client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-# Example usage
-if __name__ == "__main__":
-    private_key, public_key = generate_key_pair()
-    
-    # Save the new private key (in a secure location)
-    with open("new_private_key.pem", "wb") as f:
-        f.write(private_key)
-    
-    # Update the key on a device
-    update_device_key("device_hostname", "device_username", "current_key.pem", public_key)
+       try:
+           client.connect(hostname, username=username, key_filename=current_key_file)
+
+           # Add the new public key to authorized_keys
+           client.exec_command(f'echo "{new_public_key.decode()}" >> ~/.ssh/authorized_keys')
+
+           print(f"Successfully updated key on {hostname}")
+       except Exception as e:
+           print(f"Error updating key on {hostname}: {str(e)}")
+       finally:
+           client.close()
+
+   # Example usage
+   if __name__ == "__main__":
+       private_key, public_key = generate_key_pair()
+
+       # Save the new private key (in a secure location)
+       with open("new_private_key.pem", "wb") as f:
+           f.write(private_key)
+
+       # Update the key on a device
+       update_device_key("device_hostname", "device_username", "current_key.pem", public_key)
    ```
 
 3. **Secure Firmware Updates over SSH**
@@ -385,48 +382,48 @@ if __name__ == "__main__":
    import paramiko
    import hashlib
 
-  def secure_firmware_update(hostname, username, key_filename, firmware_file):
-    # Calculate firmware hash
-    with open(firmware_file, "rb") as f:
-        firmware_data = f.read()
-        firmware_hash = hashlib.sha256(firmware_data).hexdigest()
+   def secure_firmware_update(hostname, username, key_filename, firmware_file):
+       # Calculate firmware hash
+       with open(firmware_file, "rb") as f:
+           firmware_data = f.read()
+           firmware_hash = hashlib.sha256(firmware_data).hexdigest()
 
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+       client = paramiko.SSHClient()
+       client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    try:
-        # Connect to the device
-        client.connect(hostname, username=username, key_filename=key_filename)
+       try:
+           # Connect to the device
+           client.connect(hostname, username=username, key_filename=key_filename)
 
-        # Transfer firmware file
-        sftp = client.open_sftp()
-        sftp.put(firmware_file, "/tmp/new_firmware.bin")
-        sftp.close()
+           # Transfer firmware file
+           sftp = client.open_sftp()
+           sftp.put(firmware_file, "/tmp/new_firmware.bin")
+           sftp.close()
 
-        # Verify firmware integrity
-        stdin, stdout, stderr = client.exec_command(f"sha256sum /tmp/new_firmware.bin")
-        remote_hash = stdout.read().decode().split()[0]
+           # Verify firmware integrity
+           stdin, stdout, stderr = client.exec_command(f"sha256sum /tmp/new_firmware.bin")
+           remote_hash = stdout.read().decode().split()[0]
 
-        if remote_hash != firmware_hash:
-            print("Firmware integrity check failed!")
-            client.exec_command("rm /tmp/new_firmware.bin")
-            return
+           if remote_hash != firmware_hash:
+               print("Firmware integrity check failed!")
+               client.exec_command("rm /tmp/new_firmware.bin")
+               return
 
-        # Apply firmware update
-        stdin, stdout, stderr = client.exec_command("sudo /usr/local/bin/update_firmware /tmp/new_firmware.bin")
-        if stderr.channel.recv_exit_status() != 0:
-            print("Firmware update failed!")
-        else:
-            print("Firmware updated successfully!")
+           # Apply firmware update
+           stdin, stdout, stderr = client.exec_command("sudo /usr/local/bin/update_firmware /tmp/new_firmware.bin")
+           if stderr.channel.recv_exit_status() != 0:
+               print("Firmware update failed!")
+           else:
+               print("Firmware updated successfully!")
 
-    except Exception as e:
-        print(f"Error during firmware update: {str(e)}")
-    finally:
-        client.close()
+       except Exception as e:
+           print(f"Error during firmware update: {str(e)}")
+       finally:
+           client.close()
 
-# Example usage
-if __name__ == "__main__":
-    secure_firmware_update("device_hostname", "device_username", "device_key.pem", "new_firmware.bin")
+   # Example usage
+   if __name__ == "__main__":
+       secure_firmware_update("device_hostname", "device_username", "device_key.pem", "new_firmware.bin")
    ```
 
 ### 3.2 IoT SSH Security Concepts
@@ -455,10 +452,58 @@ class SSHServer(paramiko.ServerInterface):
         print(f"Login attempt - Username: {username}, Password: {password}")
         return paramiko.AUTH_FAILED
 
-    # ... (rest of the implementation)
+    def check_channel_request(self, kind, chanid):
+        return paramiko.OPEN_SUCCEEDED
+
+    def check_channel_exec_request(self, channel, command):
+        print(f"Exec request: {command}")
+        return True
+
+    def check_channel_shell_request(self, channel):
+        return True
+
+def handle_connection(client_socket, addr):
+    print(f"Connection from: {addr[0]}:{addr[1]}")
+    try:
+        transport = paramiko.Transport(client_socket)
+        transport.add_server_key(paramiko.RSAKey.generate(2048))
+        server = SSHServer()
+        transport.start_server(server=server)
+
+        channel = transport.accept(20)
+        if channel is None:
+            print("No channel.")
+            return
+
+        channel.send("Welcome to the SSH honeypot!\r\n")
+        channel.send("$ ")
+
+        while True:
+            data = channel.recv(1024)
+            if not data:
+                break
+            command = data.decode().strip()
+            print(f"Received command: {command}")
+            channel.send(f"You entered: {command}\r\n")
+            channel.send("$ ")
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+    finally:
+        client_socket.close()
 
 def start_server():
-    # ... (server setup and main loop)
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server_socket.bind(('0.0.0.0', 2222))
+    server_socket.listen(100)
+
+    print("SSH Honeypot running on port 2222...")
+
+    while True:
+        client_socket, addr = server_socket.accept()
+        thread = threading.Thread(target=handle_connection, args=(client_socket, addr))
+        thread.start()
 
 if __name__ == '__main__':
     start_server()
