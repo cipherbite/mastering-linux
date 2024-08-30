@@ -129,7 +129,7 @@ graph TD
     D --> J[Audit Logging]
 ```
 
-<img src="/api/placeholder/800/600" alt="HSM-Powered SSH Security Console" />
+![HSM powered SSH security Console](https://github.com/user-attachments/assets/652690ca-3ddb-486e-91c1-ad25bf9a37d6)
 
 **Screenshot Description:** This image displays an HSM-Powered SSH Security Console, showing real-time HSM operation metrics for SSH sessions, hardware-based key usage and rotation schedules, tamper attempt alerts with geolocation data, performance comparisons between software and HSM-based cryptographic operations, and compliance status for various security standards (FIPS, Common Criteria, etc.). The console provides a comprehensive view of the enhanced security posture achieved through HSM integration with SSH infrastructure.
 
