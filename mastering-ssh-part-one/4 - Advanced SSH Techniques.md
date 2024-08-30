@@ -1,4 +1,4 @@
-# 🔐 SSH Mastery: Advanced Techniques for Security Pros
+# 🔐 SSH Mastery: Advanced Techniques with a twist of pentesting
 
 ```ascii
  ____  ____  _   _   __  __           _            
@@ -9,7 +9,7 @@
 ```
 
 ## Table of Contents
-1. [SSH Nexus and Connection Sharing](#ssh-nexus-and-connection-sharing)
+1. [SSH Pentesting Techniques](#ssh-pentesting-techniques)
 2. [Hardware Security Modules (HSMs) for SSH](#hardware-security-modules-hsms-for-ssh)
 3. [SSH over Non-Standard Protocols](#ssh-over-non-standard-protocols)
 4. [Kernel-Level SSH Hardening](#kernel-level-ssh-hardening)
@@ -18,54 +18,109 @@
 
 ---
 
-## SSH Nexus and Connection Sharing
+# 🕵️‍♂️ SSH Pentesting Techniques
 
-<antArtifact identifier="ssh-connection-sharing" type="text/html" title="SSH Connection Sharing Diagram">
-<img src="/api/placeholder/800/600" alt="SSH Connection Sharing Diagram" />
-<p>
-  <strong>Figure 1: SSH Connection Sharing Diagram</strong><br>
-  This diagram illustrates the concept of SSH connection sharing. The main connection (ControlMaster) is established first, represented by a thick line. Subsequent connections (shown as thinner lines) reuse the existing channel, improving efficiency and reducing authentication overhead. This technique is particularly useful for frequent connections to the same server, significantly speeding up the process for additional SSH sessions, SCP file transfers, and remote commands.
-</p>
+<img src="/api/placeholder/800/400" alt="SSH Pentesting Techniques Diagram" />
 
+## 🔑 Key Techniques
 
-### Key Techniques:
-
-1. **ControlMaster Configuration**
+1. **SSH Banner Grabbing**
    ```bash
-   # ~/.ssh/config
-   Host *
-     ControlMaster auto
-     ControlPath ~/.ssh/control:%h:%p:%r
-     ControlPersist 4h
+   nc -vv 192.168.1.100 22
    ```
-   🔍 **H4x0r Analysis**: This config creates a master connection, allowing multiple SSH sessions to share a single network connection. Reduces connection setup time and auth overhead.
+   🔍 **H4x0r Analysis**: Reveals SSH/OS info. Tailor your attack.
 
-2. **Dynamic Proxy Tunneling**
+2. **Brute Force (Hydra)**
    ```bash
-   ssh -D 8080 -f -C -q -N user@remote_host
+   hydra -l root -P wordlist.txt 192.168.1.100 ssh
    ```
-   🕵️ **St34lth Mode**: Creates a SOCKS proxy tunnel. Perfect for anonymous browsing or bypassing network restrictions.
+   🔨 **Cr4ck3r's Note**: Noisy. Use cautiously.
 
-3. **Reverse Port Forwarding**
+3. **Key-Based Auth Exploit**
    ```bash
-   ssh -R 8080:localhost:80 user@remote_host
+   ssh-keygen -t rsa -b 4096
+   ssh-copy-id -i ~/.ssh/id_rsa.pub user@192.168.1.100
    ```
-   🔓 **Firewall Bypass**: Exposes local services to a remote server, bypassing inbound firewall rules.
+   🔑 **0wn3r's Tip**: `authorized_keys` access = jackpot!
 
-💀 **1337 Pro Tip**: Combine these techniques for maximum stealth and efficiency. Use `ControlMaster` for rapid connections, `DynamicProxy` for anonymous browsing, and `ReversePortForwarding` to bypass restrictive firewalls.
+4. **Port Forwarding Recon**
+   ```bash
+   ssh -L 8080:localhost:80 user@192.168.1.100
+   ```
+   🕵️ **St34lth Mode**: Perfect for pivoting.
 
+5. **SSH Protocol Fuzzing**
+   ```bash
+   nmap --script ssh2-enum-algos 192.168.1.100
+   ```
+   🐛 **Bug Hunt3r**: Find misconfigs/outdated crypto.
+
+6. **MITM Attacks**
+   ```bash
+   ssh-mitm --interface eth0 --target 192.168.1.100
+   ```
+   🎭 **Puppet Master**: Intercept creds/session data.
+
+7. **Timing Attacks**
+   ```python
+   import time
+   def ssh_login(username, password):
+       start_time = time.time()
+       # Perform SSH login here
+       return time.time() - start_time
+   ```
+   ⏱️ **Time Lord**: Infer password characteristics.
+
+💀 **1337 Pro Tip**: Combine techniques. Banner grab → brute-force/key exploit → port forward. Stay ethical!
+
+<img src="/api/placeholder/800/400" alt="SSH Attack Chain Visualization" />
+
+## 🧠 Advanced Strategies
+
+1. **Chained Exploitation**
+   ```bash
+   version=$(nc -vv 192.168.1.100 22 2>&1 | grep SSH)
+   searchsploit "$version"
+   # Exploit → initial access → lateral movement
+   ssh -L 3389:10.0.0.5:3389 user@192.168.1.100
+   ```
+
+2. **Honeypot Detection**
+   ```bash
+   ssh -v -F /dev/null 192.168.1.100
+   # Check for unusual responses/timings
+   ```
+
+3. **Key Exchange Manipulation**
+   ```bash
+   ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@192.168.1.100
+   ```
+
+4. **SSH Tunnel Pivoting**
+   ```bash
+   ssh -L 8080:localhost:8080 user1@host1 ssh -L 8080:localhost:80 user2@host2
+   ```
+
+5. **Config Analysis**
+   ```bash
+   grep -v '^#' /etc/ssh/sshd_config
+   # Hunt for 'PermitRootLogin yes' etc.
+   ```
+
+## 🛡️ Defensive Countermeasures
+
+1. **Strong Keys**: `ssh-keygen -t rsa -b 4096`
+2. **Key-Based Auth**: Set `PasswordAuthentication no` in `sshd_config`
+3. **Fail2Ban**: `sudo apt-get install fail2ban`
+4. **SSH CA**: `ssh-keygen -f /etc/ssh/ca -b 4096 -t rsa`
+5. **Monitoring**: Set `LogLevel VERBOSE` in `sshd_config`
+
+🚨 **IMPORTANT**: Always obtain proper authorization before testing!
 ---
 
-## 🛡 Hardware Security Modules (HSMs) for SSH
+## 🛡️ Hardware Security Modules (HSMs) for SSH
 
-```html
-<img src="/api/placeholder/800/600" alt="HSM SSH Integration Diagram" />
-<p>
-  <strong>Figure 2: HSM SSH Integration</strong><br>
-  This diagram shows how a Hardware Security Module (HSM) integrates with the SSH authentication process. The HSM securely stores private keys and performs cryptographic operations, ensuring that sensitive key material never leaves the secure hardware environment. This setup provides an additional layer of security, protecting against key theft even if the host system is compromised.
-</p>
-
-```
+Hardware Security Modules (HSMs) provide a robust layer of security for SSH implementations by safeguarding cryptographic keys and operations within a tamper-resistant hardware environment.
 
 ### Key Implementation Steps:
 
@@ -92,22 +147,85 @@
    ```
    🔐 **Key Management**: Initializes SSH agent with HSM-stored keys for seamless, secure authentication across sessions.
 
-🚀 **Level Up**: HSMs provide godlike key protection. Even if your system is pwned, private keys remain secure in the hardware vault.
+### Advanced Techniques for Pentesters:
 
+1. **Timing Analysis**: 
+   - Measure HSM response times for different operations.
+   - Look for patterns that might reveal information about key length or algorithm.
+   - Use statistical analysis to detect anomalies in response times.
+
+2. **Fault Injection**: 
+   - Attempt to disrupt HSM operations through voltage manipulation.
+   - Use precise timing to introduce faults during cryptographic operations.
+   - Analyze HSM behavior under stress conditions (e.g., extreme temperatures).
+
+3. **API Fuzzing**: 
+   - Develop custom fuzzing tools targeting HSM-specific APIs.
+   - Test boundary conditions and unexpected input combinations.
+   - Look for memory leaks or buffer overflows in HSM software interfaces.
+
+4. **Firmware Analysis**: 
+   - If possible, extract HSM firmware through side-channel attacks or physical access.
+   - Use reverse engineering tools to analyze firmware for vulnerabilities.
+   - Look for hardcoded credentials or cryptographic weaknesses.
+
+5. **Side-Channel Attacks**: 
+   - Monitor power consumption patterns during key operations.
+   - Analyze electromagnetic emissions for potential key leakage.
+   - Use high-precision equipment to capture and analyze side-channel data.
+
+🚀 **Expert Level**: Remember, HSMs are fortresses. Focus on finding bypasses rather than direct key extraction. Look for weaknesses in the integration between HSMs and SSH implementations, rather than attacking the HSM directly.
+
+### Additional Considerations:
+
+- **Key Lifecycle Management**: Implement robust processes for key generation, rotation, and revocation within the HSM.
+- **Access Control**: Enforce strict access policies for HSM operations, including multi-factor authentication for administrative tasks.
+- **Audit Logging**: Enable detailed logging of all HSM operations for forensic analysis and compliance.
+- **Redundancy**: Implement HSM clustering for high availability and load balancing of cryptographic operations.
+- **Compliance**: Ensure HSM implementations meet relevant standards (e.g., FIPS 140-2/3) for regulated environments.
+
+🎓 **Pro Tip**: Always stay updated on the latest HSM vulnerabilities and patch your systems promptly. Even the most secure HSMs can have weaknesses in their implementation or surrounding ecosystem.
+
+<antArtifact identifier="hsm-ssh-mermaid" type="application/vnd.ant.mermaid" title="HSM SSH Integration Diagram">
+graph TD
+    A[Client] -->|1. Initiate SSH Connection| B(SSH Server)
+    A -->|2. Authentication Request| C{HSM}
+    C -->|3. Sign Challenge| D[PKCS#11 Interface]
+    D -->|4. Signed Response| A
+    A -->|5. Present Signed Response| B
+    B -->|6. Verify Signature| E[Public Key]
+    E -->|7. Grant/Deny Access| B
+    
+    subgraph HSM Operations
+    C -->|Key Generation| F[Key Storage]
+    C -->|Cryptographic Operations| G[Secure Execution Environment]
+    end
+    
+    subgraph Security Measures
+    H[Tamper-Resistant Hardware]
+    I[Access Control]
+    J[Audit Logging]
+    end
+    
+    C -.-> H
+    C -.-> I
+    C -.-> J
+    
+    style C fill:#ff9900,stroke:#333,stroke-width:4px
+    style H fill:#ccffcc,stroke:#333,stroke-width:2px
+    style I fill:#ccffcc,stroke:#333,stroke-width:2px
+    style J fill:#ccffcc,stroke:#333,stroke-width:2px
 ---
 
 ## SSH over Non-Standard Protocols
 
-```html
-<img src="/api/placeholder/800/600" alt="SSH Tunneling Techniques" />
-<p>
-  <strong>Figure 3: SSH Tunneling Techniques</strong><br>
-  This image demonstrates various SSH tunneling techniques. On the left, we see local port forwarding, where a local port is forwarded to a remote server through an SSH connection. In the center, remote port forwarding is illustrated, showing how a remote port can be made accessible locally. On the right, dynamic port forwarding (SOCKS proxy) is depicted, allowing for flexible, application-level proxying. These tunneling methods are crucial for secure data transmission, bypassing firewalls, and accessing restricted services.
-</p>
+Utilizing non-standard protocols for SSH connections can be a powerful technique for bypassing network restrictions and evading detection. These methods are particularly useful in penetration testing scenarios where standard SSH traffic is blocked or monitored.
 
-```
+<img src="/api/placeholder/800/600" alt="SSH Tunneling Techniques Diagram" />
 
-### 1. Stealth Techniques
+*[Screenshot description: The image illustrates various SSH tunneling techniques. It shows a network diagram with multiple layers of firewalls and intrusion detection systems. Colored arrows represent different tunneling methods: green for HTTPS, blue for DNS, and red for ICMP. Each arrow bypasses traditional security measures, demonstrating how these techniques can evade detection. The diagram also includes simplified packet structures for each method, showing how SSH data is encapsulated within other protocols.]*
+
+### Stealth Techniques
 
 1. **SSH over HTTPS**
    ```bash
@@ -115,100 +233,85 @@
    ```
    🕵️ **DPI Evasion**: Disguises SSH traffic as HTTPS, bypassing firewalls and DPI.
 
-   <details>
-   <summary>Click to expand for in-depth explanation</summary>
-
-   This command uses OpenSSL to establish an SSL/TLS connection to the remote host, effectively wrapping the SSH traffic inside an HTTPS tunnel. Here's a breakdown:
-   
-   - `-o ProxyCommand=...`: Specifies a command to use for connecting to the server.
-   - `openssl s_client`: Initiates an SSL/TLS client connection.
-   - `-connect %h:%p`: Connects to the host (%h) and port (%p) specified in the SSH command.
-   - `-quiet`: Reduces the verbosity of the OpenSSL output.
-   
-   This technique is particularly useful when SSH traffic is blocked but HTTPS is allowed, as it makes the SSH connection appear as normal HTTPS traffic to network monitoring tools.
-   </details>
+   *Expanded details:*
+   - Uses OpenSSL to create a TLS tunnel
+   - SSH traffic is encapsulated within HTTPS packets
+   - Effective against most layer 7 firewalls
+   - Can use standard port 443 to blend with normal HTTPS traffic
 
 2. **SSH over DNS**
    ```bash
    # Server side
    iodined -f -c -P s3cr3t 10.0.0.1 tunnel.y0ur.domain
+
    # Client side
    ssh -o ProxyCommand='nc -x localhost:5353 %h %p' user@10.0.0.1
    ```
    🌐 **DNS Exfiltration**: Tunnels SSH through DNS queries, ideal for heavily restricted networks.
 
-   <details>
-   <summary>Click to expand for in-depth explanation</summary>
-
-   This technique tunnels SSH traffic through DNS queries, which are often less scrutinized than other traffic types.
-
-   Server side:
-   - `iodined`: A tool for tunneling IPv4 data through a DNS server.
-   - `-f`: Run in foreground.
-   - `-c`: Disable IP address checks.
-   - `-P s3cr3t`: Set a password for the tunnel.
-   - `10.0.0.1`: The IP address of the tunnel interface.
-   - `tunnel.y0ur.domain`: The domain to use for DNS tunneling.
-
-   Client side:
-   - `-o ProxyCommand=...`: Uses netcat to connect to the local DNS tunnel endpoint.
-   - `nc -x localhost:5353`: Connects to the local DNS tunnel on port 5353.
-   - `%h %p`: Placeholder for host and port.
-
-   This method is effective in environments where DNS traffic is allowed but other protocols are restricted.
-   </details>
+   *Expanded details:*
+   - Utilizes DNS protocol for data transfer
+   - Encodes SSH data into DNS queries and responses
+   - Extremely stealthy, as DNS is rarely blocked
+   - Can be slow due to DNS protocol limitations
+   - Requires control over a domain and its DNS server
 
 3. **SSH over ICMP**
    ```bash
    # Server side
    sudo ptunnel -tcp 22 -proxy 0.0.0.0 -daemon /var/run/ptunnel.pid
+
    # Client side
    sudo ptunnel -p server_ip -lp 2222 -da 127.0.0.1 -dp 22
    ssh -p 2222 user@localhost
    ```
    🐧 **Ping Tunnel**: Encapsulates SSH in ICMP echo requests, often overlooked by firewalls.
 
-   <details>
-   <summary>Click to expand for in-depth explanation</summary>
+   *Expanded details:*
+   - Uses ICMP echo requests/replies (ping) to tunnel data
+   - Often unfiltered by firewalls due to ICMP's diagnostic nature
+   - Can be detected by analyzing ICMP payload sizes and frequencies
+   - Requires root privileges on both client and server
 
-   This technique encapsulates SSH traffic within ICMP echo requests (pings), which are often allowed through firewalls.
+### Advanced Pentester Command
 
-   Server side:
-   - `ptunnel`: A tool for tunneling TCP connections over ICMP echo requests.
-   - `-tcp 22`: Specifies the TCP port to tunnel (SSH default port).
-   - `-proxy 0.0.0.0`: Listens on all interfaces.
-   - `-daemon /var/run/ptunnel.pid`: Runs as a daemon, writing PID to the specified file.
+For pentesters looking to automate and combine these techniques, here's a powerful command that attempts all three methods sequentially:
 
-   Client side:
-   - `-p server_ip`: Specifies the server IP address.
-   - `-lp 2222`: Sets the local port to listen on.
-   - `-da 127.0.0.1`: Sets the destination address (localhost).
-   - `-dp 22`: Sets the destination port (SSH port).
+```bash
+#!/bin/bash
 
-   The SSH command then connects to the local ptunnel endpoint, which forwards the traffic through ICMP to the server.
+TARGET="target.com"
+USER="pentester"
 
-   This method is particularly effective in environments where ICMP traffic is not closely monitored or restricted.
-   </details>
+# Try SSH over HTTPS
+ssh -o ProxyCommand='openssl s_client -connect %h:443 -quiet' $USER@$TARGET || \
+# If failed, try SSH over DNS
+(iodine -f 10.0.0.1 tunnel.$TARGET && ssh -o ProxyCommand='nc -x localhost:5353 %h %p' $USER@10.0.0.1) || \
+# If both failed, try SSH over ICMP
+(sudo ptunnel -p $TARGET -lp 2222 -da 127.0.0.1 -dp 22 && ssh -p 2222 $USER@localhost)
+```
 
-🕵️ **Gh0st Mode Activated**: These techniques can bypass deep packet inspection (DPI) and evade network-level SSH blocks. Use responsibly and only on networks you own or have explicit permission to test.
+This script attempts to connect using SSH over HTTPS first. If that fails, it tries SSH over DNS, and finally SSH over ICMP. This allows for automatic fallback to different evasion techniques.
+
+🕵️ **Gh0st Mode Activated**: These techniques can bypass deep packet inspection (DPI) and evade network-level SSH blocks. They are particularly effective against traditional firewall rules and intrusion detection systems that focus on standard protocol behaviors.
+
+### Additional Considerations
+
+- **Legal and Ethical Implications**: Always ensure you have explicit permission to use these techniques. They can be considered malicious if used without authorization.
+- **Detection and Mitigation**: Network administrators can detect these tunnels through careful traffic analysis, anomaly detection, and protocol validation.
+- **Performance Impact**: Non-standard tunneling often introduces latency and reduces throughput compared to direct SSH connections.
+- **Fallback Mechanisms**: In real-world scenarios, implement automatic fallback between different tunneling methods for resilience.
+
+🚀 **Advanced Tip**: Combine these techniques with traffic obfuscation tools like obfsproxy for an additional layer of stealth. This can help evade even sophisticated deep packet inspection systems.
+
 
 ---
 
 ## Kernel-Level SSH Hardening
 
-```html
-<img src="/api/placeholder/800/600" alt="Kernel-Level SSH Hardening Diagram" />
-<p>
-  <strong>Figure 4: Kernel-Level SSH Hardening</strong><br>
-  This diagram illustrates the concept of kernel-level SSH hardening. It shows how custom kernel modules can interact with the SSH process, providing additional layers of security at the system level. The diagram depicts the flow of SSH traffic through kernel-level integrity checks, secure memory allocation, and syscall filtering, creating a fortified environment for SSH operations.
-</p>
-
-```
+![Kernel-Level SSH Hardening Diagram](/api/placeholder/800/600)
 
 ### Custom Kernel Module for SSH Integrity
-
-<details>
-<summary>Click to view/hide the kernel module code</summary>
 
 ```c
 #include <linux/module.h>
@@ -235,14 +338,10 @@ static void __exit ssh_integrity_exit(void) {
 module_init(ssh_integrity_init);
 module_exit(ssh_integrity_exit);
 ```
-</details>
 
 🧠 **Kernel Fu**: This module hooks into the kernel to monitor SSH-related files and processes. Add your custom monitoring logic for godlike control.
 
 ### Secure Memory Allocation for SSH
-
-<details>
-<summary>Click to view/hide the secure memory allocation code</summary>
 
 ```c
 #include <sys/mman.h>
@@ -263,14 +362,10 @@ void secure_free(void *ptr, size_t size) {
     }
 }
 ```
-</details>
 
 💾 **Memory Lockdown**: Prevents sensitive SSH data from being swapped to disk, protecting against memory dumps and swap file analysis.
 
 ### SSH-Specific Syscall Filtering
-
-<details>
-<summary>Click to view/hide the syscall filtering code</summary>
 
 ```c
 #include <linux/filter.h>
@@ -290,41 +385,215 @@ int enable_ssh_syscall_filter(void) {
         .len = (unsigned short)(sizeof(filter) / sizeof(filter[0])),
         .filter = filter,
     };
-
     if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) return -1;
     if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog)) return -1;
     return 0;
 }
 ```
-</details>
 
 🛡️ **Syscall Fortress**: Restricts SSH processes to specific syscalls, dramatically reducing the attack surface.
 
-🚀 **K3rn3l H4ck**: These techniques provide deep system-level protection for SSH. Remember, with great power comes great responsibility. Test thoroughly in a controlled environment before deployment.
+### Advanced SSH Pentesting Techniques
+
+1. **SSH Key Harvesting**:
+   ```bash
+   find / -name id_rsa 2>/dev/null
+   ```
+   Scans the entire filesystem for private SSH keys.
+
+2. **SSH Port Scanning with Nmap**:
+   ```bash
+   nmap -p 22 -sV -sC -oN ssh_scan.txt 192.168.1.0/24
+   ```
+   Scans a subnet for SSH services, including version detection and default scripts.
+
+3. **SSH Brute Force with Hydra**:
+   ```bash
+   hydra -l user -P /path/to/wordlist.txt ssh://192.168.1.100
+   ```
+   Attempts to brute force SSH credentials.
+
+4. **SSH Config Auditing**:
+   ```bash
+   sshaudit.py --level=high 192.168.1.100
+   ```
+   Uses the `ssh-audit` tool to check for SSH configuration weaknesses.
+
+5. **Man-in-the-Middle Attack with SSHarperd**:
+   ```bash
+   ssharperd -i eth0 -c cert.pem -k key.pem
+   ```
+   Sets up an SSH MITM proxy to intercept and analyze SSH traffic.
+
+🚀 **K3rn3l H4ck**: These techniques provide deep system-level protection and testing capabilities for SSH. Remember, with great power comes great responsibility. Always obtain proper authorization before penetration testing.
+
+### SSH Honeypot Setup
+
+```bash
+pip install ssh-honeypot
+ssh-honeypot --port 2222 --log-file ssh_honeypot.log
+```
 
 ---
 
-Certainly! I'll provide you with the remaining part of the document, starting from "SSH in IoT and Embedded Systems" and continuing to the end.
+Oczywiście, rozwinę ten dokument, dodając miejsce na screenshot, mały graf w Mermaid oraz dodatkową treść, aby był bardziej zrozumiały i profesjonalny. Oto ulepszona wersja:
 
 
 
 
 
+
+# Advanced SSH Security: From Kernel to IoT
+
+## Kernel-Level SSH Hardening
+
+![Kernel-Level SSH Hardening Diagram](/api/placeholder/800/600)
+
+### Custom Kernel Module for SSH Integrity
+
+```c
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/syscalls.h>
+#include <linux/file.h>
+#include <linux/fs.h>
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("1337h4x0r");
+MODULE_DESCRIPTION("SSH Integrity Monitor");
+
+static int __init ssh_integrity_init(void) {
+    printk(KERN_INFO "SSH Integrity Monitor: Initialized\n");
+    // Implementation details here
+    return 0;
+}
+
+static void __exit ssh_integrity_exit(void) {
+    printk(KERN_INFO "SSH Integrity Monitor: Unloaded\n");
+}
+
+module_init(ssh_integrity_init);
+module_exit(ssh_integrity_exit);
+```
+
+🧠 **Kernel Fu**: This module hooks into the kernel to monitor SSH-related files and processes, providing a deep layer of security.
+
+### SSH Security Layers Visualization
+
+<antArtifact identifier="ssh-security-layers" type="application/vnd.ant.mermaid" title="SSH Security Layers">
+graph TD
+    A[Application Layer] --> B[Transport Layer]
+    B --> C[Network Layer]
+    C --> D[Link Layer]
+    D --> E[Physical Layer]
+    
+    F[SSH Protocol] --> A
+    G[Encryption] --> B
+    H[IP Routing] --> C
+    I[Ethernet] --> D
+    J[Hardware] --> E
+
+    K[Kernel Module] -.-> A
+    K -.-> B
+    K -.-> C
+    L[Syscall Filtering] -.-> A
+    M[Secure Memory] -.-> B
+
+
+This diagram illustrates how our kernel-level hardening techniques integrate with the standard OSI model for network communications.
+
+### Secure Memory Allocation for SSH
+
+```c
+#include <sys/mman.h>
+#include <string.h>
+
+void *secure_alloc(size_t size) {
+    void *ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (ptr == MAP_FAILED) return NULL;
+    mlock(ptr, size);
+    return ptr;
+}
+
+void secure_free(void *ptr, size_t size) {
+    if (ptr) {
+        memset(ptr, 0, size);
+        munlock(ptr, size);
+        munmap(ptr, size);
+    }
+}
+```
+
+💾 **Memory Lockdown**: This technique prevents sensitive SSH data from being swapped to disk, protecting against memory dumps and swap file analysis.
+
+### SSH-Specific Syscall Filtering
+
+```c
+#include <linux/filter.h>
+#include <linux/seccomp.h>
+#include <sys/prctl.h>
+#include <unistd.h>
+
+int enable_ssh_syscall_filter(void) {
+    struct sock_filter filter[] = {
+        BPF_STMT(BPF_LD | BPF_W | BPF_ABS, (offsetof(struct seccomp_data, nr))),
+        BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, __NR_read, 0, 1),
+        BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_ALLOW),
+        // Add more allowed syscalls here
+        BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_KILL),
+    };
+    struct sock_fprog prog = {
+        .len = (unsigned short)(sizeof(filter) / sizeof(filter[0])),
+        .filter = filter,
+    };
+    if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) return -1;
+    if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog)) return -1;
+    return 0;
+}
+```
+
+🛡️ **Syscall Fortress**: This code restricts SSH processes to specific syscalls, dramatically reducing the attack surface.
+
+## Advanced SSH Pentesting Techniques
+
+![Advanced SSH Pentesting Techniques](/api/placeholder/800/600)
+
+1. **SSH Key Harvesting**:
+   ```bash
+   find / -name id_rsa 2>/dev/null
+   ```
+   This command scans the entire filesystem for private SSH keys, a crucial step in privilege escalation.
+
+2. **SSH Port Scanning with Nmap**:
+   ```bash
+   nmap -p 22 -sV -sC -oN ssh_scan.txt 192.168.1.0/24
+   ```
+   Performs a comprehensive scan of SSH services on a subnet, including version detection and default scripts.
+
+3. **SSH Brute Force with Hydra**:
+   ```bash
+   hydra -l user -P /path/to/wordlist.txt ssh://192.168.1.100
+   ```
+   Demonstrates a brute force attack on SSH credentials, useful for testing password policies.
+
+4. **SSH Config Auditing**:
+   ```bash
+   sshaudit.py --level=high 192.168.1.100
+   ```
+   Uses the `ssh-audit` tool to check for SSH configuration weaknesses, essential for hardening SSH servers.
+
+5. **Man-in-the-Middle Attack with SSHarperd**:
+   ```bash
+   ssharperd -i eth0 -c cert.pem -k key.pem
+   ```
+   Sets up an SSH MITM proxy to intercept and analyze SSH traffic, crucial for understanding potential vulnerabilities.
+
+🚀 **K3rn3l H4ck**: These techniques provide deep system-level protection and testing capabilities for SSH. Always obtain proper authorization before penetration testing.
 
 ## SSH in IoT and Embedded Systems
 
-<antArtifact identifier="iot-ssh-implementation" type="text/html" title="IoT SSH Implementation Diagram">
-<img src="/api/placeholder/800/600" alt="IoT SSH Implementation Diagram" />
-<p>
-  <strong>Figure 5: IoT SSH Implementation</strong><br>
-  This diagram illustrates the implementation of SSH in IoT and embedded systems. It shows how lightweight SSH clients can be integrated into resource-constrained devices, enabling secure communication while minimizing the memory and processing footprint. The diagram also depicts the concept of centralized key management for IoT device fleets, showcasing how automated key rotation can be implemented to enhance security across a large number of devices.
-</p>
-
-
 ### Lightweight SSH Implementation
-
-<details>
-<summary>Click to view/hide the lightweight SSH implementation code</summary>
 
 ```c
 #include <stdio.h>
@@ -362,14 +631,10 @@ int main() {
     return 0;
 }
 ```
-</details>
 
-🤖 **IoT Optimization**: This lightweight SSH client is suitable for resource-constrained devices. It minimizes memory footprint while maintaining security.
+🤖 **IoT Optimization**: This lightweight SSH client is tailored for resource-constrained IoT devices, balancing security with minimal memory footprint.
 
 ### SSH Key Management for IoT Fleets
-
-<details>
-<summary>Click to view/hide the IoT fleet key management code</summary>
 
 ```python
 import paramiko
@@ -395,29 +660,12 @@ def update_device_key(hostname, username, current_key_file, new_public_key):
 private_key, public_key = generate_key_pair()
 update_device_key("iot.device", "admin", "current_key.pem", public_key)
 ```
-</details>
 
-🔄 **Fleet Management**: This script automates key rotation for IoT device fleets. It enhances security while maintaining scalable remote access.
-
-🚀 **IoT Sec Tip**: Implement automated key rotation and centralized authentication for your IoT fleet. This enhances security while maintaining scalable remote access.
-
----
+🔄 **Fleet Management**: This script automates key rotation for IoT device fleets, enhancing security while maintaining scalable remote access.
 
 ## SSH Honeypots for Pentesters
 
-```html
-<img src="/api/placeholder/800/600" alt="SSH Honeypot Architecture" />
-<p>
-  <strong>Figure 6: SSH Honeypot Architecture</strong><br>
-  This diagram illustrates the architecture of an SSH honeypot system. It shows how the honeypot attracts and interacts with potential attackers, logging their activities and commands. The diagram also depicts the data flow from the honeypot to analysis tools, demonstrating how security teams can gain insights into attacker techniques and generate threat intelligence.
-</p>
-
-```
-
 ### Implementation Example
-
-<details>
-<summary>Click to view/hide the SSH honeypot implementation code</summary>
 
 ```python
 import paramiko
@@ -482,7 +730,6 @@ def start_server(port=2222):
 if __name__ == '__main__':
     start_server()
 ```
-</details>
 
 🍯 **Honeypot Heaven**: This SSH honeypot lures attackers, logs their attempts, and provides valuable intel on attack techniques.
 
@@ -494,13 +741,11 @@ if __name__ == '__main__':
 
 🕵️ **Pentester's Paradise**: Use honeypots to understand attacker methodologies, test your defensive measures, and generate threat intelligence.
 
----
-
 ## Conclusion
 
-Mastering these advanced SSH techniques elevates your security game to 1337 status. From kernel-level hardening to IoT fleet management and honeypot deployment, you're now equipped with the tools to secure, penetrate, and analyze SSH implementations like a true cyber ninja.
+Mastering these advanced SSH techniques elevates your security expertise to an elite level. From kernel-level hardening to IoT fleet management and honeypot deployment, you're now equipped with the tools to secure, penetrate, and analyze SSH implementations across various environments.
 
-Remember, with great power comes great responsibility. Use these techniques ethically and always obtain proper authorization before testing on any systems or networks.
+Remember, ethical considerations are paramount. Always obtain proper authorization before testing on any systems or networks.
 
 ```ascii
    _____  _____ _    _   __  __           _             
@@ -511,6 +756,7 @@ Remember, with great power comes great responsibility. Use these techniques ethi
  |_____/_____/|_|  |_| |_|  |_|\__,_|___/\__\___|_|   
 ```
 
+Stay curious, keep learning, and may your shells always be secure (or successfully penetrated, depending on which side you're on)! 🚀🔒
+
 </antArtifact>
 
-This completes the SSH Mastery document with the added visual aids, collapsible code sections, and in-depth explanations for the commands. The document now provides a comprehensive overview of advanced SSH techniques with improved readability and visual support.
