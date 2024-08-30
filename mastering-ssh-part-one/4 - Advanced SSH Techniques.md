@@ -252,6 +252,27 @@ module_exit(ssh_integrity_exit);
 ```
 </details>
 
+**In-depth explanation:**
+
+This kernel module is designed to monitor the integrity of SSH configuration files in real-time. Here's a breakdown of its components:
+
+1. **Header Inclusions**: The module includes necessary kernel headers for module development, system calls, and file operations.
+
+2. **Module Metadata**: `MODULE_LICENSE`, `MODULE_AUTHOR`, and `MODULE_DESCRIPTION` provide metadata about the module, which is important for kernel module management.
+
+3. **Initialization Function**: `ssh_integrity_init` is called when the module is loaded. This is where you would implement the logic to set up file monitoring, potentially using kernel hooks or the Linux Security Module (LSM) framework.
+
+4. **Exit Function**: `ssh_integrity_exit` is called when the module is unloaded, allowing for cleanup of any resources used by the module.
+
+5. **Module Registration**: `module_init` and `module_exit` register the initialization and exit functions with the kernel.
+
+To implement the actual monitoring, you would typically:
+- Use the LSM framework to hook into file access operations.
+- Monitor specific paths (e.g., `/etc/ssh/sshd_config`) for any write attempts.
+- Log suspicious activities and potentially prevent unauthorized modifications.
+
+This module provides a foundation for kernel-level SSH configuration protection, which is much harder for attackers to bypass compared to userspace solutions.
+
 #### Secure Memory Allocation for SSH
 
 Ensures sensitive SSH data is stored in protected memory areas.
@@ -281,6 +302,27 @@ void secure_free(void *ptr, size_t size) {
 }
 ```
 </details>
+
+**In-depth explanation:**
+
+This code implements secure memory allocation and deallocation for sensitive SSH data. Here's a detailed breakdown:
+
+1. **Secure Allocation (`secure_alloc`):**
+   - Uses `mmap` to allocate memory, which allows for more control over memory properties compared to `malloc`.
+   - `MAP_PRIVATE | MAP_ANONYMOUS` creates a private, unnamed memory mapping.
+   - `mlock` is called to prevent the allocated memory from being swapped to disk, reducing the risk of sensitive data being written to non-volatile storage.
+
+2. **Secure Deallocation (`secure_free`):**
+   - `memset` is used to overwrite the memory with zeros, erasing any sensitive data.
+   - `munlock` releases the lock on the memory, allowing it to be swapped if necessary.
+   - `munmap` properly deallocates the memory mapping.
+
+The benefits of this approach include:
+- Prevention of sensitive data leakage through memory dumps or swap files.
+- Reduced risk of other processes accessing the memory.
+- Explicit zeroing of memory to prevent data remanence attacks.
+
+This method is particularly useful for storing encryption keys, passwords, or other sensitive data used in SSH operations. However, it's important to note that while this provides a higher level of security, it's not foolproof against all types of attacks, especially in scenarios where an attacker has gained root access to the system.
 
 #### SSH-Specific Syscall Filtering
 
@@ -322,38 +364,33 @@ int enable_ssh_syscall_filter(void) {
 ```
 </details>
 
-### 1.2 Kernel Hardening Concepts
+**In-depth explanation:**
 
-```mermaid
-graph TD
-    A[Kernel-Level SSH Hardening] --> B[Memory Protection]
-    A --> C[Syscall Filtering]
-    A --> D[Integrity Monitoring]
+This code implements a syscall filter using seccomp-bpf (Secure Computing with Berkeley Packet Filters) to restrict the system calls available to an SSH process. Here's a detailed breakdown:
 
-    B --> B1[ASLR]
-    B --> B2[Stack Canaries]
+1. **Filter Definition:**
+   - The `filter` array defines a BPF program that will be applied to syscalls.
+   - It loads the syscall number, compares it with allowed syscalls (in this example, only `read` is allowed), and either allows or kills the process based on the result.
 
-    C --> C1[Restrict Available Syscalls]
-    C --> C2[Syscall Auditing]
+2. **Filter Program Structure:**
+   - `BPF_STMT` and `BPF_JUMP` macros define the BPF instructions.
+   - The filter checks the syscall number and allows `read`, killing the process for any other syscall.
 
-    D --> D1[Kernel Module Integrity]
-    D --> D2[Runtime Integrity Checks]
+3. **Seccomp Configuration:**
+   - `PR_SET_NO_NEW_PRIVS` is set to prevent the process from gaining new privileges (e.g., through setuid binaries).
+   - `PR_SET_SECCOMP` applies the seccomp filter to the current process.
 
-    B1 --> E[SSH Process]
-    B2 --> E
-    C1 --> E
-    C2 --> E
-    D1 --> E
-    D2 --> E
+Benefits of this approach:
+- Dramatically reduces the attack surface by limiting available syscalls.
+- Provides fine-grained control over process behavior.
+- Can prevent many types of exploits and unauthorized actions.
 
-    style A fill:#f9f,stroke:#333,stroke-width:4px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#cfc,stroke:#333,stroke-width:2px
-    style D fill:#fcc,stroke:#333,stroke-width:2px
-    style E fill:#ff9,stroke:#333,stroke-width:4px
-```
+Considerations:
+- The filter needs to be carefully designed to allow all necessary syscalls for SSH functionality.
+- Overly restrictive filters can break legitimate functionality.
+- This should be implemented and tested thoroughly to ensure SSH operations are not disrupted.
 
-> **Pro Tip**: Always thoroughly test kernel-level SSH hardening in a controlled environment before deploying to production systems.
+In a real-world scenario, you would expand this filter to include all necessary syscalls for SSH operation, potentially categorizing them by risk level and applying different actions (allow, log, kill) based on the specific syscall and context.
 
 ## 2. SSH in IoT and Embedded Systems
 
@@ -409,6 +446,42 @@ int main() {
 }
 ```
 </details>
+
+**In-depth explanation:**
+
+This code demonstrates a lightweight SSH client implementation using the libssh library, suitable for IoT and embedded systems. Here's a detailed breakdown:
+
+1. **Session Creation:**
+   - `ssh_new()` creates a new SSH session object.
+   - Error checking ensures the session was created successfully.
+
+2. **Session Configuration:**
+   - `ssh_options_set()` is used to configure the session options, including the target host and username.
+   - In a real-world scenario, these would likely be parameterized rather than hardcoded.
+
+3. **Connection Establishment:**
+   - `ssh_connect()` initiates the connection to the SSH server.
+   - Error handling ensures that connection issues are caught and reported.
+
+4. **Authentication:**
+   - `ssh_userauth_password()` performs password-based authentication.
+   - In production, key-based authentication would often be preferred for security and automation.
+
+5. **Session Management:**
+   - After successful authentication, SSH operations can be performed (not shown in this example).
+   - `ssh_disconnect()` and `ssh_free()` ensure proper cleanup of resources.
+
+Key considerations for IoT and embedded systems:
+- **Resource Efficiency:** This implementation is relatively lightweight, suitable for constrained devices.
+- **Error Handling:** Robust error checking is crucial in embedded systems to prevent crashes or hangs.
+- **Security:** While this example uses password authentication, key-based auth would be more secure and easier to automate.
+- **Memory Management:** Proper cleanup of SSH sessions is vital to prevent memory leaks in long-running IoT applications.
+
+To adapt this for production use in IoT:
+- Implement key-based authentication
+- Add retry logic for unreliable networks
+- Implement keepalive mechanisms for long-running connections
+- Consider using non-blocking I/O for better integration with event-driven IoT frameworks
 
 #### SSH Key Management for IoT Fleets
 
@@ -466,6 +539,61 @@ if __name__ == "__main__":
 ```
 </details>
 
+**In-depth explanation:**
+
+This Python script demonstrates SSH key management for IoT fleets, including key generation and device key updates. Here's a detailed breakdown:
+
+1. **Key Pair Generation (`generate_key_pair`):**
+   - Uses the `cryptography` library to generate a 2048-bit RSA key pair.
+   - The private key is encoded in PEM format without encryption (suitable for automated processes, but consider encryption for higher security).
+   - The public key is encoded in OpenSSH format for easy addition to `authorized_keys` files.
+
+2. **Device Key Update (`update_device_key`):**
+   - Uses `paramiko` to establish an SSH connection to the device using the current key.
+   - Appends the new public key to the device's `authorized_keys` file.
+   - Implements basic error handling and connection cleanup.
+
+3. **Usage Example:**
+   - Generates a new key pair.
+   - Saves the private key to a file (in a real scenario, this would be securely stored).
+   - Updates a device with the new public key.
+
+Key considerations for IoT fleet management:
+- **Scalability:** This script can be extended to update multiple devices in parallel.
+- **Security:** Ensure secure storage and transmission of private keys.
+- **Error Handling:** Implement robust error handling and logging for fleet-wide operations.
+- **Rollback Mechanism:** Consider implementing a way to revert key changes in case of issues.
+
+Potential improvements for production use:
+- Implement key rotation schedules.
+- Add validation to ensure the new key works before removing old keys.
+- Integrate with a centralized key management system.
+- Implement rate limiting and retries for large fleet updates.
+- Add logging and alerting for failed key updates.
+
+This approach allows for efficient management of SSH keys across a large number of IoT devices, enhancing security through regular key rotations while maintaining the ability to access and manage devices remotely.
+
+#### Secure Firmware Updates over SSH
+
+<details>
+<summary>View Code</summary>
+
+```python
+import paramiko
+import hashlib
+
+def secure_firmware_update(hostname, username, key_filename, firmware_file):
+    # Calculate firmware hash
+    with open(firmware_file, "rb") as f:
+        firmware_data = f.read()
+        firmware_hash = hashlib.sha256(firmware_data).hexdigest()
+
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    try:
+        # Connect to the device
+        client.connect(hostname,
 #### Secure Firmware Updates over SSH
 
 <details>
