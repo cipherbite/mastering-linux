@@ -1,4 +1,4 @@
-# 🔐 SSH Mastery: Advanced Techniques for Pentesters and IoT Developers
+# 🔐 SSH Mastery: Advanced Techniques with twist of pentesting
 
 ```ascii
  ____  ____  _   _   __  __           _            
@@ -98,6 +98,8 @@ HSMs provide a robust layer of security for SSH implementations by safeguarding 
 ### HSM SSH Integration Diagram
 
 <antArtifact identifier="hsm-ssh-mermaid" type="application/vnd.ant.mermaid" title="HSM SSH Integration Diagram">
+
+```mermaid
 graph TD
     A[Client] -->|1. Initiate SSH Connection| B(SSH Server)
     A -->|2. Authentication Request| C{HSM}
@@ -126,7 +128,7 @@ graph TD
     style H fill:#ccffcc,stroke:#333,stroke-width:2px
     style I fill:#ccffcc,stroke:#333,stroke-width:2px
     style J fill:#ccffcc,stroke:#333,stroke-width:2px
-
+```
 
 ---
 
