@@ -397,8 +397,5 @@ class SSHServer(paramiko.ServerInterface):
   `-=========-`()
 ```
 
-<img src="/api/placeholder/800/600" alt="SSH Attack Pattern Analysis" />
-
-**Screenshot description:** This screenshot shows the analysis of SSH attack patterns detected by the honeypot. At the top is a pie chart representing the most popular usernames used in attacks. Below is a table with the most frequently used passwords and their percentage share. On the right side of the screen, we see a line graph showing attack activity over time, with clear peaks at specific hours.
 
 </antArtifact>
