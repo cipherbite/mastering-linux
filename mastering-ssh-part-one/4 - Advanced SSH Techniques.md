@@ -54,7 +54,8 @@
 
 ### Screenshot
 
-![SSH Pentesting](https://example.com/ssh_pentesting_screenshot.png)
+![SSH Pentesting](https://github.com/user-attachments/assets/3391a79f-df6d-40cf-9726-94dcf5777d6e)
+
 
 The screenshot above shows sample results of an SSH port scan using Nmap. It displays information about the SSH version, available encryption algorithms, and other server configuration details. This type of information is crucial for pentesters when assessing the security of an SSH infrastructure.
 
