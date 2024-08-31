@@ -136,7 +136,7 @@ graph TD
 
 Bypassing network restrictions and evading detection using non-standard protocols for SSH connections.
 
-<img src="/api/placeholder/800/600" alt="SSH Tunneling Techniques Diagram" />
+![Non-Standard Protocols](https://github.com/user-attachments/assets/df7bc747-373d-4ce0-b7d0-dee511e12744)
 
 ### Stealth Techniques Overview
 
@@ -195,7 +195,7 @@ ssh -o ProxyCommand='openssl s_client -connect %h:443 -quiet' $USER@$TARGET || \
 
 ## Kernel-Level SSH Hardening
 
-<img src="/api/placeholder/800/600" alt="Kernel-Level SSH Hardening Diagram" />
+![kernel-levl ssh hardening](https://github.com/user-attachments/assets/d523bd9d-ca50-40eb-b566-3e10277839b5)
 
 ### Custom Kernel Module for SSH Integrity
 
@@ -343,7 +343,7 @@ def update_device_key(hostname, username, current_key_file, new_public_key):
 1. `ssh-keygen -t rsa -b 4096 -C "iot_device@example.com"` - Generate a new RSA key pair
 2. `ssh-copy-id -i ~/.ssh/id_rsa.pub user@iot_device` - Copy the public key to an IoT device
 
-<img src="/api/placeholder/800/600" alt="IoT Fleet Key Management Interface" />
+![IoT Fleet Key](https://github.com/user-attachments/assets/8f68650d-b257-41d8-9d4e-573304cbca7d)
 
 **Screenshot description:** This screenshot shows the SSH key management panel for an IoT device fleet. At the top, you can see a list of all connected devices with their names and IP addresses. Below is a "Key Management" section where you can generate a new key, add it to selected devices, or remove old keys. At the bottom of the screen is an activity log showing recent key operations.
 
@@ -376,7 +376,7 @@ class SSHServer(paramiko.ServerInterface):
 1. `sudo python3 ssh_honeypot.py` - Start the SSH honeypot
 2. `tail -f honeypot_logs.txt` - Monitor honeypot logs in real-time
 
-<img src="/api/placeholder/800/600" alt="SSH Honeypot Dashboard" />
+![SSH Honeypot Dasboard](https://github.com/user-attachments/assets/c9d07335-e686-4eeb-aef2-3221595a96dc)
 
 **Screenshot description:** This screenshot displays the SSH Honeypot control panel. On the left side of the screen, we see a bar graph showing the number of login attempts over the last 24 hours. On the right side is a list of recent login attempts with information about the attacker's IP address, username, and password used. At the bottom of the screen is a world map with points marking the origins of the attacks.
 
