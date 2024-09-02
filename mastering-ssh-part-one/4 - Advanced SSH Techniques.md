@@ -1,4 +1,4 @@
-# 🔐 SSH Mastery: Advanced Techniques with twist of pentesting
+# SSH Mastery: Advanced Techniques with a Twist of Pentesting
 
 ```ascii
  ____  ____  _   _   __  __           _            
@@ -16,9 +16,7 @@
 5. [SSH in IoT and Embedded Systems](#ssh-in-iot-and-embedded-systems)
 6. [SSH Honeypots for Pentesters](#ssh-honeypots-for-pentesters)
 
----
-
-### SSH Pentesting Techniques
+## SSH Pentesting Techniques
 
 | Technique | Command | Description |
 |-----------|---------|-------------|
@@ -51,16 +49,9 @@
 4. SSH CA: `ssh-keygen -f /etc/ssh/ca -b 4096 -t rsa`
 5. Monitoring: Set `LogLevel VERBOSE` in `sshd_config`
 
-
-### Screenshot
-
 ![SSH Pentesting](https://github.com/user-attachments/assets/3391a79f-df6d-40cf-9726-94dcf5777d6e)
 
-
 The screenshot above shows sample results of an SSH port scan using Nmap. It displays information about the SSH version, available encryption algorithms, and other server configuration details. This type of information is crucial for pentesters when assessing the security of an SSH infrastructure.
-
----
-
 
 ## Hardware Security Modules (HSMs) for SSH
 
@@ -98,8 +89,6 @@ HSMs provide a robust layer of security for SSH implementations by safeguarding 
 
 ### HSM SSH Integration Diagram
 
-<antArtifact identifier="hsm-ssh-mermaid" type="application/vnd.ant.mermaid" title="HSM SSH Integration Diagram">
-
 ```mermaid
 graph TD
     A[Client] -->|1. Initiate SSH Connection| B(SSH Server)
@@ -130,8 +119,6 @@ graph TD
     style I fill:#ccffcc,stroke:#333,stroke-width:2px
     style J fill:#ccffcc,stroke:#333,stroke-width:2px
 ```
-
----
 
 ## SSH over Non-Standard Protocols
 
@@ -190,13 +177,11 @@ ssh -o ProxyCommand='openssl s_client -connect %h:443 -quiet' $USER@$TARGET || \
  ssh -p 2222 $USER@localhost)
 ```
 
-🕶️ **Gh0st Mode**: This script attempts all three methods sequentially, providing maximum evasion capability.
-
----
+**Gh0st Mode**: This script attempts all three methods sequentially, providing maximum evasion capability.
 
 ## Kernel-Level SSH Hardening
 
-![kernel-levl ssh hardening](https://github.com/user-attachments/assets/d523bd9d-ca50-40eb-b566-3e10277839b5)
+![kernel-level ssh hardening](https://github.com/user-attachments/assets/d523bd9d-ca50-40eb-b566-3e10277839b5)
 
 ### Custom Kernel Module for SSH Integrity
 
@@ -226,7 +211,7 @@ module_init(ssh_integrity_init);
 module_exit(ssh_integrity_exit);
 ```
 
-🧠 **Kernel Fu**: This module hooks into the kernel to monitor SSH-related files and processes, providing a deep layer of security.
+**Kernel Fu**: This module hooks into the kernel to monitor SSH-related files and processes, providing a deep layer of security.
 
 ### SSH Security Layers Visualization
 
@@ -248,7 +233,6 @@ graph TD
     K -.-> C
     L[Syscall Filtering] -.-> A
     M[Secure Memory] -.-> B
-
 ```
 
 ### Secure Memory Allocation for SSH
@@ -273,7 +257,7 @@ void secure_free(void *ptr, size_t size) {
 }
 ```
 
-💾 **Memory Lockdown**: This technique prevents sensitive SSH data from being swapped to disk, protecting against memory dumps and swap file analysis.
+**Memory Lockdown**: This technique prevents sensitive SSH data from being swapped to disk, protecting against memory dumps and swap file analysis.
 
 ### SSH-Specific Syscall Filtering
 
@@ -301,13 +285,11 @@ int enable_ssh_syscall_filter(void) {
 }
 ```
 
-🛡️ **Syscall Fortress**: This code restricts SSH processes to specific syscalls, dramatically reducing the attack surface.
-
----
+**Syscall Fortress**: This code restricts SSH processes to specific syscalls, dramatically reducing the attack surface.
 
 ## SSH in IoT and Embedded Systems
 
-### IoT Lightweight SSH 🤖
+### IoT Lightweight SSH
 
 ```c
 ssh_session session = ssh_new();
@@ -329,7 +311,7 @@ ssh_connect(session);
   +--------+                    +-----------+
 ```
 
-### IoT Fleet Key Management 🔄
+### IoT Fleet Key Management
 
 ```python
 def update_device_key(hostname, username, current_key_file, new_public_key):
@@ -358,7 +340,6 @@ graph TD
     E -->|No| G[Rollback Changes]
     F --> B
     G --> B
-
 ```
 
 ## SSH Honeypots for Pentesters 🍯
@@ -377,7 +358,7 @@ class SSHServer(paramiko.ServerInterface):
 1. `sudo python3 ssh_honeypot.py` - Start the SSH honeypot
 2. `tail -f honeypot_logs.txt` - Monitor honeypot logs in real-time
 
-![SSH Honeypot Dasboard](https://github.com/user-attachments/assets/c9d07335-e686-4eeb-aef2-3221595a96dc)
+![SSH Honeypot Dashboard](https://github.com/user-attachments/assets/c9d07335-e686-4eeb-aef2-3221595a96dc)
 
 **Screenshot description:** This screenshot displays the SSH Honeypot control panel. On the left side of the screen, we see a bar graph showing the number of login attempts over the last 24 hours. On the right side is a list of recent login attempts with information about the attacker's IP address, username, and password used. At the bottom of the screen is a world map with points marking the origins of the attacks.
 
@@ -397,6 +378,3 @@ class SSHServer(paramiko.ServerInterface):
   |:::::::::::|\\
   `-=========-`()
 ```
-
-
-</antArtifact>
